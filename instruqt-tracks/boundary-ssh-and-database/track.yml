@@ -1,0 +1,38 @@
+slug: boundary-ssh-and-database
+type: track
+title: Using Boundary for SSH and Database Access
+teaser: TODO
+description: |-
+  TODO
+icon: https://storage.googleapis.com/instruqt-frontend/assets/hashicorp/tracks/boundary.png
+tags:
+- terraform
+owner: hashicorp
+developers:
+- neil@hashicorp.com
+private: true
+published: false
+show_timer: true
+challenges:
+- slug: setup-and-implement-read
+  type: challenge
+  title: Getting Started
+  teaser: TODO
+  assignment: |-
+    *Set up your development environment*
+
+    TODO
+  notes:
+  - type: text
+    contents: |-
+      TODO
+  tabs:
+  - title: VS Code
+    type: service
+    hostname: workstation
+    port: 8443
+  - title: Terminal
+    type: terminal
+    hostname: workstation
+  difficulty: advanced
+  timelimit: 600
