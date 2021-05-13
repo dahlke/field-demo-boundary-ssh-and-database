@@ -14,14 +14,28 @@ private: true
 published: false
 show_timer: true
 challenges:
-- slug: setup-and-implement-read
+- slug: install-boundary
   type: challenge
-  title: Getting Started
-  teaser: TODO
+  title: Install Boundary
+  teaser: Boundary must first be installed on your machine.
   assignment: |-
     *Set up your development environment*
 
-    TODO
+    ```
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+    ```
+
+    ```
+    sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    ```
+
+    ```
+    sudo apt-get update && sudo apt-get install boundary
+    ```
+
+    ```
+    boundary
+    ```
   notes:
   - type: text
     contents: |-
