@@ -135,7 +135,55 @@ EOF
 systemctl enable code-server
 systemctl start code-server
 
-# TODO: systemctl start vault;
-# TODO: systemctl start boundary-worker; journalctl -u boundary-worker -f
+
+sudo cat << EOF > /etc/systemd/system/boundary-controller.service
+[Unit]
+Description=Boundary Controller
+
+[Service]
+ExecStart=/usr/local/bin/boundary server -config /root/boundary-controller.hcl
+User=boundary
+Group=boundary
+LimitMEMLOCK=infinity
+Capabilities=CAP_IPC_LOCK+ep
+CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+sudo cat << EOF > /etc/systemd/system/boundary-worker.service
+[Unit]
+Description=Boundary Worker
+
+[Service]
+ExecStart=/usr/local/bin/boundary server -config /root/boundary-worker.hcl
+User=boundary
+Group=boundary
+LimitMEMLOCK=infinity
+Capabilities=CAP_IPC_LOCK+ep
+CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Add the boundary system user and group to ensure we have a no-login
+# user capable of owning and running Boundary
+# sudo adduser --system --group boundary || true
+# sudo chown boundary:boundary /etc/boundary-controller.hcl
+# sudo chown boundary:boundary /etc/boundary-worker.hcl
+# sudo chown boundary:boundary /usr/local/bin/boundary
+
+# sudo chmod 664 /etc/systemd/system/boundary-controller.service
+# sudo chmod 664 /etc/systemd/system/boundary-worker.service
+# sudo systemctl daemon-reload
+# sudo systemctl enable boundary-controller
+# sudo systemctl enable boundary-worker
+# sudo systemctl start boundary-controller
+# sudo systemctl start boundary-worker
+
+# TODO: install vault and added it to systemd
 
 exit 0

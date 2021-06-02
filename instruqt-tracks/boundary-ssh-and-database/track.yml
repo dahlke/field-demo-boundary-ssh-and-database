@@ -45,23 +45,91 @@ challenges:
     docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
     ```
 
-    Update the Postgres connection string in `/root/boundary-controller.hcl`.
-
-    Configure Postgres.
+    Create a a database and user in Postgres that we will use in Boundary.
 
     ````
     PGPASSWORD=postgres psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
     PGPASSWORD=postgres psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
     ````
 
-    Initialize the database in Postgres.
+    Note the Postgres connection string in `/root/boundary-controller.hcl`, then initialize the database.
 
     ```
     boundary database init -config=/root/boundary-controller.hcl
     ```
 
+    Or, without the initial resource creation.
+
     ```
+    boundary database init -skip-initial-login-role-creation -config /etc/boundary.hcl
     ```
+
+    *Create a Login Account*
+
+    We're going to create an org and project scope and skip creating an administrator and admin role for each scope. We're going to specify a role for managing these scopes by selected users in a later step.
+
+    ```
+    boundary scopes create -name 'org' -scope-id 'global' \
+      -recovery-config /tmp/recovery.hcl \
+      -skip-admin-role-creation \
+      -skip-default-role-creation
+    ```
+
+    ```
+    boundary scopes create -name 'project' -scope-id <org_scope_id_from_last_step> \
+      -recovery-config /tmp/recovery.hcl \
+      -skip-admin-role-creation \
+      -skip-default-role-creation
+    ```
+
+    *Create an Auth Method*
+
+    Create an auth method in the organization scope.
+
+    ```
+    boundary auth-methods create password \
+      -recovery-config /tmp/recovery.hcl \
+      -scope-id <org_scope_id> \
+      -name 'my_method' \
+      -description 'My password auth method'
+    ```
+
+
+    *Create a Login Account*
+
+    Create a login account for the auth method.
+
+    ```
+    boundary accounts create password \
+      -recovery-config /tmp/recovery.hcl \
+      -login-name "myuser" \
+      -password "foofoofoo" \
+      -auth-method-id <auth_method_id_from_last_step>
+    ```
+
+    *Create a User*
+
+    Create a user and associate the user with the login account created in the previous step. This user will also be the principal in the role we create in the following step.
+
+    ```
+    boundary users create -scope-id <org_scope_id> \
+      -recovery-config /tmp/recovery.hcl \
+      -name "myuser" \
+      -description "My user!"
+    ```
+
+    ```
+    boundary users add-accounts \
+      -recovery-config /tmp/recovery.hcl \
+      -id <myuser_user_id> \
+      -account <myuser_account_id>
+    ```
+
+    *Create Roles to Manage Scopes*
+
+    TODO...
+
+    https://www.boundaryproject.io/docs/installing/systemd#systemd-all-in-one-installation-script
   tabs:
   - title: VS Code
     type: service
@@ -72,4 +140,4 @@ challenges:
     hostname: workstation
   difficulty: advanced
   timelimit: 1800
-checksum: "2864917334374464205"
+checksum: "1634512440471094492"
