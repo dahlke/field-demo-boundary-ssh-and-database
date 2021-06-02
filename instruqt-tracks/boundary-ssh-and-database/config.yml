@@ -1,6 +1,6 @@
 version: "2"
 virtualmachines:
 - name: workstation
-  image: instruqt-hashicorp/hashistack-0-9-1-go-1-16-3-developmen
+  image: instruqt-hashicorp/hashistack-0-9-1
   shell: /bin/bash
   machine_type: n1-standard-2

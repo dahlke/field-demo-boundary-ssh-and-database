@@ -12,9 +12,9 @@ docker run --name postgres -e POSTGRES_PASSWORD=postgres -d postgres
 
 # Install Boundary
 
-# Set up a Boundary Controller
+# Set up a Boundary Controller (or 3) w/ systemctl
 
-# Set up a Boundary Worker (w/ systemctl)
+# Set up a Boundary Worker (or 3) w/ systemctl
 
 # Set up an Org
 

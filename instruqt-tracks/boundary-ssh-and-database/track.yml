@@ -37,12 +37,30 @@ challenges:
     sudo apt-get update && sudo apt-get install boundary
     ```
 
+    _TODO: Start up Vault?_
+
+    Start up Postgres.
+
     ```
-    boundary
+    docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+    ```
+
+    Update the Postgres connection string in `/root/boundary-controller.hcl`.
+
+    Configure Postgres.
+
+    ````
+    PGPASSWORD=postgres psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
+    PGPASSWORD=postgres psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
+    ````
+
+    Initialize the database in Postgres.
+
+    ```
+    boundary database init -config=/root/boundary-controller.hcl
     ```
 
     ```
-    systemctl start boundary-worker; journalctl -u boundary-worker -f
     ```
   tabs:
   - title: VS Code
@@ -53,5 +71,5 @@ challenges:
     type: terminal
     hostname: workstation
   difficulty: advanced
-  timelimit: 600
-checksum: "15865580250435866583"
+  timelimit: 1800
+checksum: "2864917334374464205"

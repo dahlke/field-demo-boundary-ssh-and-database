@@ -1,0 +1,141 @@
+#!/bin/bash -l
+
+# https://www.boundaryproject.io/docs/getting-started#what-is-dev-mode
+
+#########
+# Install Boundary
+#########
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+apt-get update && apt-get install boundary
+
+#########
+# Install Postgres client
+#########
+apt-get install -y postgresql-client
+
+#########
+# Set up a Controller
+#########
+cat <<-EOF > /root/boundary-controller.hcl
+listener "tcp" {
+  purpose = "api"
+  address = "0.0.0.0"
+  tls_disable = "true"
+}
+
+listener "tcp" {
+  purpose = "cluster"
+  address = "0.0.0.0"
+  tls_disable = "true"
+}
+
+controller {
+  name = "boundary-controller"
+  description = "Boundary controller"
+  public_cluster_addr = "boundary-controller"
+  database {
+    url = "postgres://postgres:postgres@localhost:5432/boundary?sslmode=disable"
+  }
+}
+
+# Root KMS configuration block: this is the root key for Boundary
+# Use a production KMS such as Vault or AWS KMS for production installs
+kms "aead" {
+  purpose = "root"
+  aead_type = "aes-gcm"
+  key = "sP1fnF5Xz85RrXyELHFeZg9Ad2qt4Z4bgNHVGtD6ung="
+  key_id = "global_root"
+}
+
+# Worker authorization KMS
+# Use a production KMS such as Vault or AWS KMS for production installs
+kms "aead" {
+  purpose = "worker-auth"
+  aead_type = "aes-gcm"
+  key = "8fZBjCUfN0TzjEGLQldGY4+iE9AkOvCfjh7+p0GtRBQ="
+  key_id = "global_worker-auth"
+}
+
+# Recovery KMS block: configures the recovery key for Boundary
+# Use a production KMS such as Vault or AWS KMS for production installs
+kms "aead" {
+  purpose = "recovery"
+  aead_type = "aes-gcm"
+  key = "8fZBjCUfN0TzjEGLQldGY4+iE9AkOvCfjh7+p0GtRBQ="
+  key_id = "global_recovery"
+}
+
+disable_mlock = true
+EOF
+
+#########
+# Set up a Worker
+#########
+cat <<-EOF > /root/boundary-worker.hcl
+listener "tcp" {
+  purpose = "proxy"
+  address = "0.0.0.0"
+  tls_disable = "true"
+}
+
+worker {
+  name = "boundary-worker"
+  description = "Demo worker instance"
+  controllers = [
+    "boundary-controller"
+  ]
+}
+
+# Worker authorization KMS
+# Use a production KMS such as Vault or AWS KMS for production installs
+kms "aead" {
+    purpose = "worker-auth"
+    aead_type = "aes-gcm"
+    key = "8fZBjCUfN0TzjEGLQldGY4+iE9AkOvCfjh7+p0GtRBQ="
+    key_id = "global_worker-auth"
+}
+
+disable_mlock = true
+EOF
+
+
+#########
+# Start a Dev Vault
+#########
+# docker run --cap-add=IPC_LOCK -d --name=dev-vault vault
+
+#########
+# Start a Postgres Instance
+#########
+# docker run --name some-postgres -e POSTGRES_PASSWORD=postgres -d postgres
+
+#########
+# Install VS Code Server
+#########
+curl -fsSL https://code-server.dev/install.sh | sh
+
+# Create a unit file for VS Code server
+cat <<-EOF > /etc/systemd/system/code-server.service
+[Unit]
+Description=Code Server
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/usr/bin/code-server --host 0.0.0.0 --port 8443 --cert --auth none /root/
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Enable and start VS Code server
+systemctl enable code-server
+systemctl start code-server
+
+# TODO: systemctl start vault;
+# TODO: systemctl start boundary-worker; journalctl -u boundary-worker -f
+
+exit 0
