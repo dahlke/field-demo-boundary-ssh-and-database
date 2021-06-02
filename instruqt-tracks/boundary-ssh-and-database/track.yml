@@ -1,9 +1,9 @@
 slug: boundary-ssh-and-database
+id: adnyt8negprv
 type: track
 title: Using Boundary for SSH and Database Access
 teaser: TODO
-description: |-
-  TODO
+description: TODO
 icon: https://storage.googleapis.com/instruqt-frontend/assets/hashicorp/tracks/boundary.png
 tags:
 - terraform
@@ -15,9 +15,13 @@ published: false
 show_timer: true
 challenges:
 - slug: install-boundary
+  id: wyaxsa25ysd1
   type: challenge
   title: Install Boundary
   teaser: Boundary must first be installed on your machine.
+  notes:
+  - type: text
+    contents: TODO
   assignment: |-
     *Set up your development environment*
 
@@ -36,10 +40,10 @@ challenges:
     ```
     boundary
     ```
-  notes:
-  - type: text
-    contents: |-
-      TODO
+
+    ```
+    systemctl start boundary-worker; journalctl -u boundary-worker -f
+    ```
   tabs:
   - title: VS Code
     type: service
@@ -50,3 +54,4 @@ challenges:
     hostname: workstation
   difficulty: advanced
   timelimit: 600
+checksum: "15865580250435866583"
