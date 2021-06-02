@@ -1,0 +1,82 @@
+services:
+  vault:
+    image: hashicorp/vault
+    container_name: ${UNIQUE_NAME:-boundary_test}_vault
+    networks:
+    - boundary
+    ports:
+    - 8200:8200
+    environment:
+      SKIP_SETCAP: "true"
+      VAULT_DEV_ROOT_TOKEN_ID: "boundary-test"
+  vault-init:
+    image: hashicorp/vault
+    command: [ "sh", "-c", "while ! vault status; do sleep 2; done; vault secrets enable -path boundary transit; vault write -f boundary/keys/root; vault write -f boundary/keys/recovery; vault write -f boundary/keys/worker-auth" ]
+    container_name: ${UNIQUE_NAME:-boundary_test}_vault_init
+    networks:
+    - boundary
+    environment:
+      VAULT_ADDR: "http://vault:8200"
+      VAULT_TOKEN: "boundary-test"
+    depends_on:
+    - vault
+  postgres:
+    image: postgres
+    volumes:
+    - "./pg_data:/var/lib/postgresql/data:rw,z"
+    container_name: ${UNIQUE_NAME:-boundary_test}_postgres
+    networks:
+    - boundary
+    environment:
+      POSTGRES_USER: "boundary"
+      POSTGRES_PASSWORD: "boundary_pw"
+      POSTGRES_DB: "boundary"
+    deploy:
+      restart_policy:
+        condition: on-failure
+  boundary-db-init:
+    image: hashicorp/boundary:${BOUNDARY_VERSION:-0.2.2}
+    command: [ "database", "init", "-config", "/etc/boundary/boundary-controller.hcl" ]
+    volumes:
+    - "./boundary_config:/etc/boundary:rw,z"
+    container_name: ${UNIQUE_NAME:-boundary_test}_db_init
+    networks:
+    - boundary
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+    - vault-init
+  boundary-controller:
+    image: hashicorp/boundary:${BOUNDARY_VERSION:-0.2.2}
+    command: [ "server", "-config", "/etc/boundary/boundary-controller.hcl" ]
+    volumes:
+    - "./boundary_config:/etc/boundary:rw,z"
+    container_name: ${UNIQUE_NAME:-boundary_test}_controller
+    networks:
+    - boundary
+    ports:
+    - 9200:9200
+    - 9201:9201
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+    - boundary-db-init
+  boundary-worker:
+    image: hashicorp/boundary:${BOUNDARY_VERSION:-0.2.2}
+    command: [ "server", "-config", "/etc/boundary/boundary-worker.hcl" ]
+    volumes:
+    - "./boundary_config:/etc/boundary:rw,z"
+    container_name: ${UNIQUE_NAME:-boundary_test}_worker
+    networks:
+    - boundary
+    ports:
+    - 9202:9202
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+    - boundary-controller
+networks:
+  boundary: {}
