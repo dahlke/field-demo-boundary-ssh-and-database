@@ -25,17 +25,8 @@ challenges:
   assignment: |-
     *Set up your development environment*
 
-    ```
-    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-    ```
-
-    ```
-    sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-    ```
-
-    ```
-    sudo apt-get update && sudo apt-get install boundary
-    ```
+    Boundary has already been [installed](https://learn.hashicorp.com/tutorials/boundary/getting-started-install?in=boundary/getting-started)
+    for you.
 
     _TODO: Start up Vault?_
 
@@ -138,6 +129,10 @@ challenges:
   - title: Terminal
     type: terminal
     hostname: workstation
+  - title: Boundary UI
+    type: service
+    hostname: workstation
+    port: 9200
   difficulty: advanced
-  timelimit: 1800
-checksum: "1634512440471094492"
+  timelimit: 3600
+checksum: "13154709848976479090"

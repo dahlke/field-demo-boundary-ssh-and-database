@@ -135,13 +135,22 @@ EOF
 systemctl enable code-server
 systemctl start code-server
 
+# TODO: document this
+
+docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+export PGPASSWORD=postgres
+psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
+psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
+
+# boundary database init -skip-initial-login-role-creation -config=/root/boundary-controller.hcl
+boundary database init -config=/root/boundary-controller.hcl
 
 sudo cat << EOF > /etc/systemd/system/boundary-controller.service
 [Unit]
 Description=Boundary Controller
 
 [Service]
-ExecStart=/usr/local/bin/boundary server -config /root/boundary-controller.hcl
+ExecStart=/usr/bin/boundary server -config /root/boundary-controller.hcl
 User=boundary
 Group=boundary
 LimitMEMLOCK=infinity
@@ -158,7 +167,7 @@ sudo cat << EOF > /etc/systemd/system/boundary-worker.service
 Description=Boundary Worker
 
 [Service]
-ExecStart=/usr/local/bin/boundary server -config /root/boundary-worker.hcl
+ExecStart=/usr/bin/boundary server -config /root/boundary-worker.hcl
 User=boundary
 Group=boundary
 LimitMEMLOCK=infinity
@@ -172,17 +181,17 @@ EOF
 # Add the boundary system user and group to ensure we have a no-login
 # user capable of owning and running Boundary
 # sudo adduser --system --group boundary || true
-# sudo chown boundary:boundary /etc/boundary-controller.hcl
-# sudo chown boundary:boundary /etc/boundary-worker.hcl
-# sudo chown boundary:boundary /usr/local/bin/boundary
+# sudo chown boundary:boundary /root/boundary-controller.hcl
+# sudo chown boundary:boundary /root/boundary-worker.hcl
+# sudo chown boundary:boundary /usr/bin/boundary
 
-# sudo chmod 664 /etc/systemd/system/boundary-controller.service
-# sudo chmod 664 /etc/systemd/system/boundary-worker.service
-# sudo systemctl daemon-reload
-# sudo systemctl enable boundary-controller
-# sudo systemctl enable boundary-worker
-# sudo systemctl start boundary-controller
-# sudo systemctl start boundary-worker
+sudo chmod 664 /etc/systemd/system/boundary-controller.service
+sudo chmod 664 /etc/systemd/system/boundary-worker.service
+sudo systemctl daemon-reload
+sudo systemctl enable boundary-controller
+sudo systemctl enable boundary-worker
+sudo systemctl start boundary-controller
+sudo systemctl start boundary-worker
 
 # TODO: install vault and added it to systemd
 
