@@ -23,77 +23,14 @@ challenges:
   - type: text
     contents: TODO
   assignment: |-
-    *Set up your development environment*
+    *Explore the Admin UI*
 
     Boundary has already been [installed](https://learn.hashicorp.com/tutorials/boundary/getting-started-install?in=boundary/getting-started)
     for you.
 
-    *Create a Login Account*
+    https://learn.hashicorp.com/tutorials/boundary/getting-started-console?in=boundary/getting-started
 
-    We're going to create an org and project scope and skip creating an administrator and admin role for each scope. We're going to specify a role for managing these scopes by selected users in a later step.
-
-    ```
-    boundary scopes create -name 'org' -scope-id 'global' \
-      -recovery-config /tmp/recovery.hcl \
-      -skip-admin-role-creation \
-      -skip-default-role-creation
-    ```
-
-    ```
-    boundary scopes create -name 'project' -scope-id <org_scope_id_from_last_step> \
-      -recovery-config /tmp/recovery.hcl \
-      -skip-admin-role-creation \
-      -skip-default-role-creation
-    ```
-
-    *Create an Auth Method*
-
-    Create an auth method in the organization scope.
-
-    ```
-    boundary auth-methods create password \
-      -recovery-config /tmp/recovery.hcl \
-      -scope-id <org_scope_id> \
-      -name 'my_method' \
-      -description 'My password auth method'
-    ```
-
-
-    *Create a Login Account*
-
-    Create a login account for the auth method.
-
-    ```
-    boundary accounts create password \
-      -recovery-config /tmp/recovery.hcl \
-      -login-name "myuser" \
-      -password "foofoofoo" \
-      -auth-method-id <auth_method_id_from_last_step>
-    ```
-
-    *Create a User*
-
-    Create a user and associate the user with the login account created in the previous step. This user will also be the principal in the role we create in the following step.
-
-    ```
-    boundary users create -scope-id <org_scope_id> \
-      -recovery-config /tmp/recovery.hcl \
-      -name "myuser" \
-      -description "My user!"
-    ```
-
-    ```
-    boundary users add-accounts \
-      -recovery-config /tmp/recovery.hcl \
-      -id <myuser_user_id> \
-      -account <myuser_account_id>
-    ```
-
-    *Create Roles to Manage Scopes*
-
-    TODO...
-
-    https://www.boundaryproject.io/docs/installing/systemd#systemd-all-in-one-installation-script
+    https://learn.hashicorp.com/tutorials/boundary/getting-started-connect?in=boundary/getting-started
   tabs:
   - title: VS Code
     type: service

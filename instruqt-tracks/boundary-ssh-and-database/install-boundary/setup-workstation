@@ -113,7 +113,12 @@ sleep 3
 export PGPASSWORD=postgres
 psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
 psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
-boundary database init -config=/root/boundary-controller.hcl
+
+# TODO: get the initial admin password
+INIT_OUTPUT=$(boundary database init -config=/root/boundary-controller.hcl)
+touch /root/init-output.txt
+echo $INIT_OUTPUT >> /root/init-output.txt
+
 
 #########
 # Install VS Code Server
