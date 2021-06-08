@@ -138,6 +138,7 @@ systemctl start code-server
 # TODO: document this
 
 docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+sleep 3
 export PGPASSWORD=postgres
 psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
 psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
@@ -151,8 +152,7 @@ Description=Boundary Controller
 
 [Service]
 ExecStart=/usr/bin/boundary server -config /root/boundary-controller.hcl
-User=boundary
-Group=boundary
+User=root
 LimitMEMLOCK=infinity
 Capabilities=CAP_IPC_LOCK+ep
 CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
@@ -168,8 +168,7 @@ Description=Boundary Worker
 
 [Service]
 ExecStart=/usr/bin/boundary server -config /root/boundary-worker.hcl
-User=boundary
-Group=boundary
+User=root
 LimitMEMLOCK=infinity
 Capabilities=CAP_IPC_LOCK+ep
 CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
@@ -186,12 +185,14 @@ EOF
 # sudo chown boundary:boundary /usr/bin/boundary
 
 sudo chmod 664 /etc/systemd/system/boundary-controller.service
-sudo chmod 664 /etc/systemd/system/boundary-worker.service
+sudo chmod 664 /etc/systemd/system/boundary-controller.service
 sudo systemctl daemon-reload
 sudo systemctl enable boundary-controller
 sudo systemctl enable boundary-worker
 sudo systemctl start boundary-controller
 sudo systemctl start boundary-worker
+systemctl status boundary-controller
+systemctl status boundary-worker
 
 # TODO: install vault and added it to systemd
 
