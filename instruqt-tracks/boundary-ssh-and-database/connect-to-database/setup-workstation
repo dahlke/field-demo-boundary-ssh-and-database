@@ -99,7 +99,6 @@ kms "aead" {
 disable_mlock = true
 EOF
 
-
 #########
 # Install, Configure and Run Vault
 #########
@@ -117,8 +116,8 @@ psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'bo
 # TODO: get the initial admin password
 INIT_OUTPUT=$(boundary database init -config=/root/boundary-controller.hcl)
 touch /root/init-output.txt
+echo $INIT_OUTPUT
 echo $INIT_OUTPUT >> /root/init-output.txt
-
 
 #########
 # Install VS Code Server

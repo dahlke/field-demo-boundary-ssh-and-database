@@ -14,11 +14,11 @@ private: true
 published: false
 show_timer: true
 challenges:
-- slug: install-boundary
+- slug: explore-the-admin-ui
   id: wyaxsa25ysd1
   type: challenge
-  title: Install Boundary
-  teaser: Boundary must first be installed on your machine.
+  title: Explore the Admin UI
+  teaser: Get familiar with Bonudary's admin UI before jumping into accessing targets.
   notes:
   - type: text
     contents: TODO
@@ -45,4 +45,73 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "6422063518185074562"
+- slug: configure-boundary
+  id: yi1uavzhjjzw
+  type: challenge
+  title: Configure Boundary
+  teaser: Build out the host catalog, host sets, hosts as well as some targets.
+  notes:
+  - type: text
+    contents: TODO
+  assignment: '*Configure Boundary*'
+  tabs:
+  - title: VS Code
+    type: service
+    hostname: workstation
+    port: 8443
+  - title: Terminal
+    type: terminal
+    hostname: workstation
+  - title: Boundary UI
+    type: service
+    hostname: workstation
+    port: 9200
+  difficulty: advanced
+  timelimit: 3600
+- slug: connect-to-host-with-ssh
+  id: kzy7pthbem69
+  type: challenge
+  title: Connect to Host with SSH
+  teaser: Connect to a remote host with an SSH session brokered by Boundary
+  notes:
+  - type: text
+    contents: TODO
+  assignment: '*Connect to Host with SSH*'
+  tabs:
+  - title: VS Code
+    type: service
+    hostname: workstation
+    port: 8443
+  - title: Terminal
+    type: terminal
+    hostname: workstation
+  - title: Boundary UI
+    type: service
+    hostname: workstation
+    port: 9200
+  difficulty: advanced
+  timelimit: 3600
+- slug: connect-to-database
+  id: 29dntojnecqc
+  type: challenge
+  title: Connect to a Database
+  teaser: Connect to a remote database with a session brokered by Boundary
+  notes:
+  - type: text
+    contents: TODO
+  assignment: '*Connect to a Database*'
+  tabs:
+  - title: VS Code
+    type: service
+    hostname: workstation
+    port: 8443
+  - title: Terminal
+    type: terminal
+    hostname: workstation
+  - title: Boundary UI
+    type: service
+    hostname: workstation
+    port: 9200
+  difficulty: advanced
+  timelimit: 3600
+checksum: "11619063168883490361"
