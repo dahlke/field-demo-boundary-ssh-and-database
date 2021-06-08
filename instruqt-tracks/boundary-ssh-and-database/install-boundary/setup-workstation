@@ -15,7 +15,7 @@ apt-get update && apt-get install boundary
 apt-get install -y postgresql-client
 
 #########
-# Set up a Controller
+# Set up Boundary Controller Config
 #########
 cat <<-EOF > /root/boundary-controller.hcl
 listener "tcp" {
@@ -70,7 +70,7 @@ disable_mlock = true
 EOF
 
 #########
-# Set up a Worker
+# Set up Boundary Worker Config
 #########
 cat <<-EOF > /root/boundary-worker.hcl
 listener "tcp" {
@@ -101,14 +101,19 @@ EOF
 
 
 #########
-# Start a Dev Vault
+# Install, Configure and Run Vault
 #########
-# docker run --cap-add=IPC_LOCK -d --name=dev-vault vault
+# TODO
 
 #########
-# Start a Postgres Instance
+# Start a Postgres Instance and Initialize the Database
 #########
-# docker run --name some-postgres -e POSTGRES_PASSWORD=postgres -d postgres
+docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+sleep 3
+export PGPASSWORD=postgres
+psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
+psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
+boundary database init -config=/root/boundary-controller.hcl
 
 #########
 # Install VS Code Server
@@ -135,17 +140,9 @@ EOF
 systemctl enable code-server
 systemctl start code-server
 
-# TODO: document this
-
-docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
-sleep 3
-export PGPASSWORD=postgres
-psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
-psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
-
-# boundary database init -skip-initial-login-role-creation -config=/root/boundary-controller.hcl
-boundary database init -config=/root/boundary-controller.hcl
-
+#########
+# Install, Configure and Run Boundary
+#########
 sudo cat << EOF > /etc/systemd/system/boundary-controller.service
 [Unit]
 Description=Boundary Controller
@@ -160,7 +157,6 @@ CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
 [Install]
 WantedBy=multi-user.target
 EOF
-
 
 sudo cat << EOF > /etc/systemd/system/boundary-worker.service
 [Unit]
@@ -177,13 +173,6 @@ CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
 WantedBy=multi-user.target
 EOF
 
-# Add the boundary system user and group to ensure we have a no-login
-# user capable of owning and running Boundary
-# sudo adduser --system --group boundary || true
-# sudo chown boundary:boundary /root/boundary-controller.hcl
-# sudo chown boundary:boundary /root/boundary-worker.hcl
-# sudo chown boundary:boundary /usr/bin/boundary
-
 sudo chmod 664 /etc/systemd/system/boundary-controller.service
 sudo chmod 664 /etc/systemd/system/boundary-controller.service
 sudo systemctl daemon-reload
@@ -194,6 +183,7 @@ sudo systemctl start boundary-worker
 systemctl status boundary-controller
 systemctl status boundary-worker
 
-# TODO: install vault and added it to systemd
+# journalctl -u boundary-controller.service
+# journalctl -u boundary-worker.service
 
 exit 0

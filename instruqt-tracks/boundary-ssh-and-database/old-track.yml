@@ -28,6 +28,33 @@ challenges:
     Boundary has already been [installed](https://learn.hashicorp.com/tutorials/boundary/getting-started-install?in=boundary/getting-started)
     for you.
 
+    _TODO: Start up Vault?_
+
+    Start up Postgres.
+
+    ```
+    docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+    ```
+
+    Create a a database and user in Postgres that we will use in Boundary.
+
+    ````
+    PGPASSWORD=postgres psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
+    PGPASSWORD=postgres psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
+    ````
+
+    Note the Postgres connection string in `/root/boundary-controller.hcl`, then initialize the database.
+
+    ```
+    boundary database init -config=/root/boundary-controller.hcl
+    ```
+
+    Or, without the initial resource creation.
+
+    ```
+    boundary database init -skip-initial-login-role-creation -config /etc/boundary.hcl
+    ```
+
     *Create a Login Account*
 
     We're going to create an org and project scope and skip creating an administrator and admin role for each scope. We're going to specify a role for managing these scopes by selected users in a later step.
