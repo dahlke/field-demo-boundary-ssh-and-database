@@ -8,6 +8,7 @@
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 apt-get update && apt-get install boundary
+boundary config autocomplete install
 
 #########
 # Install Postgres client
@@ -114,10 +115,17 @@ psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
 psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
 
 # TODO: get the initial admin password
-INIT_OUTPUT=$(boundary database init -config=/root/boundary-controller.hcl)
+INIT_OUTPUT=$(boundary database init -config=/root/boundary-controller.hcl -format=json)
 touch /root/init-output.txt
-echo $INIT_OUTPUT
 echo $INIT_OUTPUT >> /root/init-output.txt
+
+GEN_AUTH_METHOD=$(echo $INIT_OUTPUT | jq -r .auth_method.auth_method_id)
+GEN_LOGIN_NAME=$(echo $INIT_OUTPUT | jq -r .auth_method.login_name)
+GEN_PASSWORD=$(echo $INIT_OUTPUT | jq -r .auth_method.password)
+
+echo "export GEN_AUTH_METHOD=$GEN_AUTH_METHOD" >> ~/.bashrc
+echo "export GEN_LOGIN_NAME=$GEN_LOGIN_NAME" >> ~/.bashrc
+echo "export GEN_PASSWORD=$GEN_PASSWORD" >> ~/.bashrc
 
 #########
 # Install VS Code Server
