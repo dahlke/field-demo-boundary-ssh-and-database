@@ -89,6 +89,7 @@ challenges:
     ---
 
     TODO: move this to it's own challenge
+
     *Exploring Projects, Host Catalogs, Host Sets, Hosts and Targets in the Admin UI*
 
     TODO: move this to it's own challenge
@@ -108,10 +109,10 @@ challenges:
       -format=json \
       -auth-method-id=$GEN_AUTH_METHOD \
       -login-name=$GEN_LOGIN_NAME \
-      -password=$GEN_PASSWORD | jq .
+      -password=$GEN_PASSWORD | jq -r .
     ```
 
-    With `gnome-keyring`:
+    With [`gnome-keyring`](https://wiki.gnome.org/Projects/GnomeKeyring):
 
     ```
     boundary authenticate password \
@@ -119,7 +120,7 @@ challenges:
       -auth-method-id=$GEN_AUTH_METHOD \
       -keyring-type="secret-service"\
       -login-name=$GEN_LOGIN_NAME \
-      -password=$GEN_PASSWORD | jq .
+      -password=$GEN_PASSWORD | jq -r .
     ```
 
     With no password manager:
@@ -130,25 +131,80 @@ challenges:
       -auth-method-id=$GEN_AUTH_METHOD \
       -keyring-type="none"\
       -login-name=$GEN_LOGIN_NAME \
-      -password=$GEN_PASSWORD | jq .
+      -password=$GEN_PASSWORD | jq -r .
     ```
 
-    Set the Boundary token.
+    Set the Boundary token using the token from above, or, use the simple one liner below.
 
     ```
     export BOUNDARY_TOKEN=<token_from_above>
     ```
 
+    ```
+    export BOUNDARY_TOKEN=$( \
+      boundary authenticate password \
+      -format=json \
+      -auth-method-id=$GEN_AUTH_METHOD \
+      -keyring-type="none"\
+      -login-name=$GEN_LOGIN_NAME \
+      -password=$GEN_PASSWORD | jq -r .item.attributes.token)
+    ```
+
+    Now that you understand the different components in boundary and how they are related to each other, it's time to
+    navigate to our first target and connect to it.
+
+    List the scopes in Boundary. You will use the automatically generated scope for this challenge.
+
+    ```
+    boundary scopes list
+    ```
+
+    ```
+    ```
+
+    You can put that ID into an env var easily using the following command.
+
+    _TODO: stuff this into the bashrc in setup or solve._
+
+    ```
+    # NOTE: This is the global scope ID, we need the project scope ID
+    export GEN_GLOBAL_SCOPE_ID=$(boundary scopes list -format=json | jq -r '.items[0].id')
+    export GEN_PROJ_SCOPE_ID=$(boundary scopes list -scope-id=$GEN_GLOBAL_SCOPE_ID -format=json | jq -r '.items[0].id')
+    echo $GEN_GLOBAL_SCOPE_ID
+    echo $GEN_PROJ_SCOPE_ID
+    ```
+
+    Then, you want to list all the targets for your generated scope.
+
+    ```
+    boundary targets list
+    ```
+
+    ```
+    boundary targets list -scope-id=$GEN_PROJ_SCOPE_ID
+    ```
+
+    ```
+    export GEN_TARGET_ID=$(boundary targets list -scope-id=$GEN_PROJ_SCOPE_ID -format=json | jq -r '.items[0].id')
+    echo $GEN_TARGET_ID
+    ```
+
+    _TODO: add a diagram of the components to the notes and tell the user they can go view that if they need a refresher._
+
     Get the details.
 
     ```
-    boundary targets read -id=ttcp_ZvXVbGnDIq
+    boundary targets read -id=<target_id>
+    ```
+
+    ```
+    boundary targets read -id=$GEN_TARGET_ID
     ```
 
     Connect.
 
     ```
-    boundary connect ssh -target-id=ttcp_ZvXVbGnDIq
+    boundary connect ssh -target-id=$GEN_TARGET_ID
     // No workers error
     ```
 
@@ -236,4 +292,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "8814741804538768335"
+checksum: "13235570116474968243"
