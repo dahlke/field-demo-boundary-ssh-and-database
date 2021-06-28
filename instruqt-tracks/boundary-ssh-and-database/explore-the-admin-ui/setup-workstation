@@ -11,6 +11,18 @@ apt-get update && apt-get install boundary
 boundary config autocomplete install
 
 #########
+# Install Gnome Keyring and dbus-x11 as Boundary requires
+#########
+apt-get install -y gnome-keyring dbus-x11
+
+export DISPLAY=:0
+echo "export DISPLAY=:0" >> ~/.bashrc
+export $(dbus-launch)
+
+eval "$(printf 'foobar\n' | gnome-keyring-daemon --unlock)"
+eval "$(printf 'foobar\n' | gnome-keyring-daemon --start)"
+
+#########
 # Install Postgres client
 #########
 apt-get install -y postgresql-client

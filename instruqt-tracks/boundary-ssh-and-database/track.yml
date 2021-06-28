@@ -101,6 +101,38 @@ challenges:
       -password=nqiUrFmjlmRI84HHq71E
     ```
 
+    With [`pass`](https://www.passwordstore.org/):
+
+    ```
+    boundary authenticate password \
+      -format=json \
+      -auth-method-id=$GEN_AUTH_METHOD \
+      -login-name=$GEN_LOGIN_NAME \
+      -password=$GEN_PASSWORD | jq .
+    ```
+
+    With `gnome-keyring`:
+
+    ```
+    boundary authenticate password \
+      -format=json \
+      -auth-method-id=$GEN_AUTH_METHOD \
+      -keyring-type="secret-service"\
+      -login-name=$GEN_LOGIN_NAME \
+      -password=$GEN_PASSWORD | jq .
+    ```
+
+    With no password manager:
+
+    ```
+    boundary authenticate password \
+      -format=json \
+      -auth-method-id=$GEN_AUTH_METHOD \
+      -keyring-type="none"\
+      -login-name=$GEN_LOGIN_NAME \
+      -password=$GEN_PASSWORD | jq .
+    ```
+
     Set the Boundary token.
 
     ```
@@ -204,4 +236,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "689397905095276825"
+checksum: "8814741804538768335"
