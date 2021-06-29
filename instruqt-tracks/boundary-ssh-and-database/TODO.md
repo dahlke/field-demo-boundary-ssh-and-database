@@ -25,3 +25,4 @@
 - Vault Integration
 - Multiple boxes or containers for workers and controllers
 - Have the user create all their own stuff that is auto generated
+- Use the auto-generated / worker on the controller box, then have the user create the rest of the stuff for the worker box.

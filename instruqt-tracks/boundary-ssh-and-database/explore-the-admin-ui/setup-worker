@@ -25,7 +25,8 @@ worker {
   description = "Demo worker instance"
   controllers = [
     # "boundary-controller"
-    "0.0.0.0:9201"
+    # "0.0.0.0:9201"
+    "controller"
   ]
 }
 

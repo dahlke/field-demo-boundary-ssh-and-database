@@ -97,8 +97,7 @@ worker {
   name = "boundary-worker"
   description = "Demo worker instance"
   controllers = [
-    # "boundary-controller"
-    "0.0.0.0:9201"
+    "controller"
   ]
 }
 
@@ -184,10 +183,32 @@ CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
 WantedBy=multi-user.target
 EOF
 
+sudo cat << EOF > /etc/systemd/system/boundary-worker.service
+[Unit]
+Description=Boundary Worker
+
+[Service]
+ExecStart=/usr/bin/boundary server -config /root/boundary-worker.hcl
+User=root
+LimitMEMLOCK=infinity
+Capabilities=CAP_IPC_LOCK+ep
+CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 sudo chmod 664 /etc/systemd/system/boundary-controller.service
+sudo chmod 664 /etc/systemd/system/boundary-worker.service
 sudo systemctl daemon-reload
+sudo systemctl enable boundary-controller
 sudo systemctl enable boundary-worker
+sudo systemctl start boundary-controller
 sudo systemctl start boundary-worker
+systemctl status boundary-controller
 systemctl status boundary-worker
+
+# journalctl -u boundary-controller.service
+# journalctl -u boundary-worker.service
 
 exit 0
