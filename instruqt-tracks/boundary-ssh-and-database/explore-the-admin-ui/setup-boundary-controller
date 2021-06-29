@@ -97,7 +97,7 @@ worker {
   name = "boundary-worker"
   description = "Demo worker instance"
   controllers = [
-    "controller"
+    "boundary-controller"
   ]
 }
 

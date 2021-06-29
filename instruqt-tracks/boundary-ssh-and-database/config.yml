@@ -1,14 +1,10 @@
 version: "2"
 virtualmachines:
-- name: workstation
+- name: boundary-controller
   image: instruqt-hashicorp/hashistack-0-9-1
   shell: /bin/bash
   machine_type: n1-standard-2
-- name: controller
-  image: instruqt-hashicorp/hashistack-0-9-1
-  shell: /bin/bash
-  machine_type: n1-standard-2
-- name: worker
+- name: boundary-worker
   image: instruqt-hashicorp/hashistack-0-9-1
   shell: /bin/bash
   machine_type: n1-standard-2

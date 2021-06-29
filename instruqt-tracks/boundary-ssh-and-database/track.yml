@@ -203,24 +203,24 @@ challenges:
     ```
     boundary connect ssh -target-id=$GEN_TARGET_ID
     // No workers error
+
+    # ERROR IN WORKER JOURNAL
+    # Jun 29 00:53:59 worker boundary[3986]: 2021-06-29T00:53:59.886Z [ERROR] worker: error making status request to controller: error="rpc error: code = Unavailable desc = last connection error: connection error: desc = "transport: Error while dialing unable to dial to controller: dial tcp: lookup boundary-controller on 127.0.0.53:53: server misbehaving"
     ```
   tabs:
   - title: VS Code
     type: service
-    hostname: workstation
+    hostname: boundary-controller
     port: 8443
-  - title: Workstation
-    type: terminal
-    hostname: workstation
   - title: Controller
     type: terminal
-    hostname: controller
+    hostname: boundary-controller
   - title: Worker
     type: terminal
-    hostname: worker
+    hostname: boundary-worker
   - title: Boundary UI
     type: service
-    hostname: controller
+    hostname: boundary-controller
     port: 9200
   difficulty: advanced
   timelimit: 3600
@@ -236,14 +236,14 @@ challenges:
   tabs:
   - title: VS Code
     type: service
-    hostname: workstation
+    hostname: boundary-controller
     port: 8443
   - title: Terminal
     type: terminal
-    hostname: workstation
+    hostname: boundary-controller
   - title: Boundary UI
     type: service
-    hostname: workstation
+    hostname: boundary-controller
     port: 9200
   difficulty: advanced
   timelimit: 3600
@@ -259,14 +259,14 @@ challenges:
   tabs:
   - title: VS Code
     type: service
-    hostname: workstation
+    hostname: boundary-controller
     port: 8443
   - title: Terminal
     type: terminal
-    hostname: workstation
+    hostname: boundary-controller
   - title: Boundary UI
     type: service
-    hostname: workstation
+    hostname: boundary-controller
     port: 9200
   difficulty: advanced
   timelimit: 3600
@@ -282,15 +282,15 @@ challenges:
   tabs:
   - title: VS Code
     type: service
-    hostname: workstation
+    hostname: boundary-controller
     port: 8443
   - title: Terminal
     type: terminal
-    hostname: workstation
+    hostname: boundary-controller
   - title: Boundary UI
     type: service
-    hostname: workstation
+    hostname: boundary-controller
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "10513954023563911515"
+checksum: "1079296278744496475"
