@@ -4,3 +4,11 @@ virtualmachines:
   image: instruqt-hashicorp/hashistack-0-9-1
   shell: /bin/bash
   machine_type: n1-standard-2
+- name: controller
+  image: instruqt-hashicorp/hashistack-0-9-1
+  shell: /bin/bash
+  machine_type: n1-standard-2
+- name: worker
+  image: instruqt-hashicorp/hashistack-0-9-1
+  shell: /bin/bash
+  machine_type: n1-standard-2

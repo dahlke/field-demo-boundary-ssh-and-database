@@ -3,13 +3,11 @@
 ## TODO: Explain the Architecture
 
 - [Architecture](https://learn.hashicorp.com/img/boundary/boundary-resources.png)
-    - Controller
-    - Worker
-    - Database
+- Controller
+- Worker
+- Database
 
-## TODO: Explain Using Boundary
-
-### Resources: Description
+## TODO: Resources: Description
 
 - Scope: Abstract permission boundary modeled as a container. A scope can contain scopes forming a tree.
 - Organization: Top-level container (scope) which owns zero to many projects and zero to many authentication methods. An organization inherits from scope allowing it to own zero to many groups, roles, policies, targets, host catalogs or credential stores.
@@ -22,20 +20,8 @@
 - Host set: Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted.
 - Target: Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets.
 
-### Type: Name (Notes)
-
-- Organization: corp_one	A new organization
-- Users: (multiple)	(Creates 9 users (Jim, Jeff, Randy, etc.))
-- Group: read-only	(A new group with 3 users)
-- Roles: (multiple)	2 new roles (Read-only and admin)
-- Auth Method: Corp Password	A new password auth method
-- Project: core_infra	A new project within the corp_one organization
-- Host catalog:	backend_servers	(A new host catalog with one host set
-- Host set:	backend_servers_ssh	A new host set with 2 hosts
-- Targets: (multiple)	2 new targets (ssh_server and backend_server)
-
-
-# TODO: General
+## TODO: General
 
 - Vault Integration
-- Make the above tables in the track somewhere
+- Multiple boxes or containers for workers and controllers
+- Have the user create all their own stuff that is auto generated

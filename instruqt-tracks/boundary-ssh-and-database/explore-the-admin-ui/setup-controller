@@ -8,6 +8,20 @@
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 apt-get update && apt-get install boundary
+boundary config autocomplete install
+
+#########
+# Install Gnome Keyring and dbus-x11 as Boundary requires
+#########
+apt-get install -y gnome-keyring dbus-x11
+apt-get install -y pass
+
+export DISPLAY=:0
+echo "export DISPLAY=:0" >> ~/.bashrc
+export $(dbus-launch)
+
+eval "$(printf 'foobar\n' | gnome-keyring-daemon --unlock)"
+eval "$(printf 'foobar\n' | gnome-keyring-daemon --start)"
 
 #########
 # Install Postgres client
@@ -83,7 +97,8 @@ worker {
   name = "boundary-worker"
   description = "Demo worker instance"
   controllers = [
-    "boundary-controller"
+    # "boundary-controller"
+    "0.0.0.0:9201"
   ]
 }
 
@@ -114,10 +129,17 @@ psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
 psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
 
 # TODO: get the initial admin password
-INIT_OUTPUT=$(boundary database init -config=/root/boundary-controller.hcl)
+INIT_OUTPUT=$(boundary database init -config=/root/boundary-controller.hcl -format=json)
 touch /root/init-output.txt
-echo $INIT_OUTPUT
 echo $INIT_OUTPUT >> /root/init-output.txt
+
+GEN_AUTH_METHOD=$(echo $INIT_OUTPUT | jq -r .auth_method.auth_method_id)
+GEN_LOGIN_NAME=$(echo $INIT_OUTPUT | jq -r .auth_method.login_name)
+GEN_PASSWORD=$(echo $INIT_OUTPUT | jq -r .auth_method.password)
+
+echo "export GEN_AUTH_METHOD=$GEN_AUTH_METHOD" >> ~/.bashrc
+echo "export GEN_LOGIN_NAME=$GEN_LOGIN_NAME" >> ~/.bashrc
+echo "export GEN_PASSWORD=$GEN_PASSWORD" >> ~/.bashrc
 
 #########
 # Install VS Code Server
@@ -162,32 +184,10 @@ CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
 WantedBy=multi-user.target
 EOF
 
-sudo cat << EOF > /etc/systemd/system/boundary-worker.service
-[Unit]
-Description=Boundary Worker
-
-[Service]
-ExecStart=/usr/bin/boundary server -config /root/boundary-worker.hcl
-User=root
-LimitMEMLOCK=infinity
-Capabilities=CAP_IPC_LOCK+ep
-CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo chmod 664 /etc/systemd/system/boundary-controller.service
 sudo chmod 664 /etc/systemd/system/boundary-controller.service
 sudo systemctl daemon-reload
-sudo systemctl enable boundary-controller
 sudo systemctl enable boundary-worker
-sudo systemctl start boundary-controller
 sudo systemctl start boundary-worker
-systemctl status boundary-controller
 systemctl status boundary-worker
-
-# journalctl -u boundary-controller.service
-# journalctl -u boundary-worker.service
 
 exit 0

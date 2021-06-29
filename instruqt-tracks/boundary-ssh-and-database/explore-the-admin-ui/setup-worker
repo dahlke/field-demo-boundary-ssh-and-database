@@ -1,0 +1,93 @@
+#!/bin/bash -l
+
+# https://www.boundaryproject.io/docs/getting-started#what-is-dev-mode
+
+#########
+# Install Boundary
+#########
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+apt-get update && apt-get install boundary
+boundary config autocomplete install
+
+#########
+# Set up Boundary Worker Config
+#########
+cat <<-EOF > /root/boundary-worker.hcl
+listener "tcp" {
+  purpose = "proxy"
+  address = "0.0.0.0"
+  tls_disable = "true"
+}
+
+worker {
+  name = "boundary-worker"
+  description = "Demo worker instance"
+  controllers = [
+    # "boundary-controller"
+    "0.0.0.0:9201"
+  ]
+}
+
+# Worker authorization KMS
+# Use a production KMS such as Vault or AWS KMS for production installs
+kms "aead" {
+    purpose = "worker-auth"
+    aead_type = "aes-gcm"
+    key = "8fZBjCUfN0TzjEGLQldGY4+iE9AkOvCfjh7+p0GtRBQ="
+    key_id = "global_worker-auth"
+}
+
+disable_mlock = true
+EOF
+
+#########
+# Install VS Code Server
+#########
+curl -fsSL https://code-server.dev/install.sh | sh
+
+# Create a unit file for VS Code server
+cat <<-EOF > /etc/systemd/system/code-server.service
+[Unit]
+Description=Code Server
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/usr/bin/code-server --host 0.0.0.0 --port 8443 --cert --auth none /root/
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Enable and start VS Code server
+systemctl enable code-server
+systemctl start code-server
+
+#########
+# Install, Configure and Run Boundary
+#########
+sudo cat << EOF > /etc/systemd/system/boundary-worker.service
+[Unit]
+Description=Boundary Worker
+
+[Service]
+ExecStart=/usr/bin/boundary server -config /root/boundary-worker.hcl
+User=root
+LimitMEMLOCK=infinity
+Capabilities=CAP_IPC_LOCK+ep
+CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo chmod 664 /etc/systemd/system/boundary-worker.service
+sudo systemctl daemon-reload
+sudo systemctl enable boundary-worker
+sudo systemctl start boundary-worker
+systemctl status boundary-worker
+
+exit 0

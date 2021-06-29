@@ -204,23 +204,19 @@ challenges:
     boundary connect ssh -target-id=$GEN_TARGET_ID
     // No workers error
     ```
+
+    TODO: have the user create all their own stuff that is auto created above.
   tabs:
   - title: VS Code
     type: service
     hostname: workstation
     port: 8443
-  - title: Workstation
+  - title: Terminal
     type: terminal
     hostname: workstation
-  - title: Controller
-    type: terminal
-    hostname: controller
-  - title: Worker
-    type: terminal
-    hostname: worker
   - title: Boundary UI
     type: service
-    hostname: controller
+    hostname: workstation
     port: 9200
   difficulty: advanced
   timelimit: 3600
@@ -293,4 +289,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "382926752583584708"
+checksum: "13235570116474968243"
