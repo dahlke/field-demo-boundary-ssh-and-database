@@ -48,7 +48,7 @@ challenges:
       to zero or more groups. |\n| Group\t| Collection of users used for access control.
       A group is owned by one and only one scope. |\n| Role | Collection of capabilities
       granted to any principal (user, group, or project) the role is assigned to.
-      A role belongs to one and only one scope, and owns zero or more direct grants.
+      A role belongs to one and only one scope, and owns zero or more direct grants
       |\n| Host | Computing element with a network address reachable from Boundary.
       |\n| Host catalog | Permission boundary modeled as a container containing scopes
       forming a tree. |\n| Host set |Subset of hosts from the set of hosts of the
@@ -377,7 +377,110 @@ challenges:
   notes:
   - type: text
     contents: TODO
-  assignment: '*Configure a New Host Set *'
+  assignment: |-
+    # Configure a New Host Set
+
+    # Create an Org
+    ```
+    boundary scopes create -scope-id=global -name=IT_Support -description="IT Support Team"
+    ```
+
+    You should see some output like the below.
+
+    ```
+    TODO
+    ```
+
+    List your scopes to confirm it has been created.
+
+    ```
+    boundary scopes list
+    ```
+
+    Then put the newly created org ID into the environment.
+
+    ```
+    export ORG_ID=<ORG_ID_FROM_ABOVE>
+    ```
+
+    TODO: one-liner
+
+    # Create a Project
+    ```
+    boundary scopes create -scope-id=$ORG_ID -name=QA_Tests \
+      -description="Manage QA machines"
+    ```
+
+    You should see some output like the below.
+
+    ```
+    TODO
+    ```
+
+    List the project under the IT_Support org to verify it was created correctly.
+
+    ```
+    boundary scopes list -scope-id=$ORG_ID
+    ```
+
+    Then put the newly created project ID into the environment.
+
+    ```
+    export PROJECT_ID=<PROJECT_ID_FROM_ABOVE>
+    ```
+
+    TODO: one-liner
+
+    ---
+
+    Now that you have created a new org and project, you can configure the new hosts that you will connect to. All
+    hosts must be part of a host set, both of which must be within a host catalog, so you need to create a host catalog
+    first.
+
+    ```
+    boundary host-catalogs create static -scope-id=$PROJECT_ID -name=DevOps \
+        -description="For DevOps usage"
+    ```
+
+    You should see some output like the below.
+
+    ```
+    TODO
+    ```
+
+    Then put the newly created host catalog ID into the environment.
+
+    ```
+    export HOST_CATALOG_ID=<HOST_CATALOG_ID_FROM_ABOVE>
+    ```
+
+    TODO: one-liner
+
+    Now, create a new host named, "postgres" with description, "Postgres host" under the newly created host catalog.
+
+    ```
+    boundary hosts create static -name=postgres -description="Postgres host" \
+    -address="127.0.0.1" -host-catalog-id=$HOST_CATALOG_ID
+    ```
+
+    You should see some output like the below.
+
+    ```
+    TODO
+    ```
+
+    Repeat the step to create another host named, `localhost`.
+
+    ```
+    boundary hosts create static -name=localhost -description="Localhost for testing" \
+      -address="localhost" -host-catalog-id=$HOST_CATALOG_ID
+    ```
+
+    You should see some output like the below.
+
+    ```
+    TODO
+    ```
   tabs:
   - title: VS Code
     type: service
@@ -421,4 +524,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "13680998589276138937"
+checksum: "6036032733014024908"
