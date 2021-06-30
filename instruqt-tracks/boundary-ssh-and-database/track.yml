@@ -13,6 +13,7 @@ developers:
 private: true
 published: false
 show_timer: true
+skipping_enabled: true
 challenges:
 - slug: explore-the-admin-ui
   id: wyaxsa25ysd1
@@ -110,6 +111,11 @@ challenges:
 
     Select *Host Catalogs -> Generated host catalog -> Host Sets -> Generated host set* to view the details of the
     *Host Set*. You can then select the *Hosts* tab to view attached hosts.
+
+    ---
+
+    Now that you have taken a tour of the admin UI and understand the generated resources, you are ready to connect
+    to your first target via Boundary.
   tabs:
   - title: Controller
     type: terminal
@@ -131,19 +137,20 @@ challenges:
   assignment: |-
     *Connecting to Your First Target with SSH*
 
-    Now that you've familiarized yourself with the generated resources and have explored the UI, it's time to connect
-    to your first target. You will connect to the generated host, first.
+    In the admin console, you saw that `localhost` was listed as *Generated target* with connection type, TCP. The
+    default target is a TCP target with a default port of `22` (SSH). In this tutorial, you will initiate an `ssh`
+    session to this default target using the CLI .
 
-    In the Controller tab, you will authenticate using the CLI client using the generated auth method, username and
-    password. You can see those values in the environment easily, with the below.
+    Before you authenticate, you'll need the generated auth method, username and password.  You can see those values
+    in the environment on the Controller. Run the below commands in the Controller tab.
 
     ```
-    echo $GEN_AUTH_METHOD
-    echo $ADMIN_USERNAME
-    echo $ADMIN_PASSWORD
+    echo "AUTH METHOD ID:" $GEN_AUTH_METHOD
+    echo "ADMIN USERNAME:" $ADMIN_USERNAME
+    echo "ADMIN PASSWORD:" $ADMIN_PASSWORD
     ```
 
-    Now that you can see the values you will be using, log in using those environment variables.
+    You should see the values you will be using, log in using those environment variables.
 
     ```
     boundary authenticate password \
@@ -153,10 +160,25 @@ challenges:
       -password=$ADMIN_PASSWORD
     ```
 
-    You should see a Boundary token returned. You want to store that value in an environment variable.
+    You should see output similar to the below.
 
     ```
-    export BOUNDARY_TOKEN=<token_from_above>
+    Authentication information:
+      Account ID:      acctpw_3po3pAsJBp
+      Auth Method ID:  ampw_nqedpwu2Vh
+      Expiration Time: Wed, 07 Jul 2021 00:43:12 UTC
+      User ID:         u_pNPr4pFTTz
+
+    Storing the token in a keyring was disabled. The token is:
+    at_oRx...truncated...j6i
+    ...
+
+    ```
+
+    You can see a Boundary token returned. You want to store that value in an environment variable.
+
+    ```
+    export BOUNDARY_TOKEN="<TOKEN_FROM_ABOVE>"
     ```
 
     For a simple one-liner to to store that value in the environment for later usage, use the below command.
@@ -171,63 +193,165 @@ challenges:
       -password=$ADMIN_PASSWORD | jq -r .item.attributes.token)
     ```
 
-    Now that you understand the different components in Boundary and how they are related to each other, it's time to
-    navigate to our first target and connect to it.
-
-    List the scopes in Boundary. You will use the automatically generated scope for this challenge.
+    Now that you are authenticated, you need to get the project scope ID so you can see it's host sets and hosts.  You
+    will use the generated project scope for this challenge. List the scopes currently in Boundary.
 
     ```
     boundary scopes list
     ```
 
-    You can put that ID into an env var easily using the following command.
-
-    _TODO: stuff this into the bashrc in setup or solve._
+    You should output similar to the below text. Note that it is an *org scope*.
 
     ```
-    # NOTE: This is the global scope ID, we need the project scope ID
+    Scope information:
+      ID:                    o_fCudeW87DE
+        Version:             1
+        Name:                Generated org scope
+        Description:         Provides an initial org scope in Boundary
+        Authorized Actions:
+          no-op
+          read
+          update
+          delete
+    ```
+
+    This returns your *org* scopes. You need the *project* scope, so you will need to run another `scopes list`
+    command, but this time, with the org scope ID passed in as an argument.
+
+    ```
+    boundary scopes list -scope-id=<ORG_SCOPE_ID_FROM_ABOVE>
+    ```
+
+    You should see output like the below. Note this time we are getting a *project scope*, not an org scope.
+
+    ```
+    Scope information:
+      ID:                    p_N4JvIZWqZc
+        Version:             1
+        Name:                Generated project scope
+        Description:         Provides an initial project scope in Boundary
+        Authorized Actions:
+          no-op
+          read
+          update
+          delete
+    ```
+
+    An easy one liner to store both the global org scope ID as well as the project scope ID in the environment would
+    look like the below.
+
+    ```
     export GEN_GLOBAL_SCOPE_ID=$(boundary scopes list -format=json | jq -r '.items[0].id')
     export GEN_PROJ_SCOPE_ID=$(boundary scopes list -scope-id=$GEN_GLOBAL_SCOPE_ID -format=json | jq -r '.items[0].id')
-    echo $GEN_GLOBAL_SCOPE_ID
-    echo $GEN_PROJ_SCOPE_ID
     ```
 
-    Then, you want to list all the targets for your generated scope.
+    With your project scope ID in hand, you can now look up the targets associated with the scope. You can paste the
+    scope ID from above in the below command.
 
     ```
-    boundary targets list
+    boundary targets list -scope-id=<PROJECT_SCOPE_ID_FROM_ABOVE>
     ```
+
+    Or you can use the project scope ID you stored in the environment to make it a little easier.
 
     ```
     boundary targets list -scope-id=$GEN_PROJ_SCOPE_ID
     ```
 
+    You should see output like the below, including the target ID. This is the ID of the target that you will connect
+    to.
+
+    ```
+    Target information:
+      ID:                    ttcp_s3ngxT2ofL
+        Version:             1
+        Type:                tcp
+        Name:                Generated target
+        Description:         Provides an initial target in Boundary
+        Authorized Actions:
+          no-op
+          read
+          update
+          delete
+          add-host-sets
+          set-host-sets
+          remove-host-sets
+          authorize-session
+    ```
+
+    Again, a simple one-liner to store the target ID in the environment.
+
     ```
     export GEN_TARGET_ID=$(boundary targets list -scope-id=$GEN_PROJ_SCOPE_ID -format=json | jq -r '.items[0].id')
-    echo $GEN_TARGET_ID
     ```
 
-    _TODO: add a diagram of the components to the notes and tell the user they can go view that if they need a refresher._
-
-    Get the details.
+    You can view the details of the target using the `targets read` command. An example:
 
     ```
-    boundary targets read -id=<target_id>
+    boundary targets read -id=<TARGET_ID_FROM_ABOVE>
     ```
+
+    Or, using the value stored in the environment.
 
     ```
     boundary targets read -id=$GEN_TARGET_ID
     ```
 
-    Connect.
+    You should see output like the below.
+
+    ```
+    Target information:
+      Created Time:               Wed, 30 Jun 2021 00:37:51 UTC
+      Description:                Provides an initial target in Boundary
+      ID:                         ttcp_s3ngxT2ofL
+      Name:                       Generated target
+      Session Connection Limit:   -1
+      Session Max Seconds:        28800
+      Type:                       tcp
+      Updated Time:               Wed, 30 Jun 2021 00:37:51 UTC
+      Version:                    1
+
+      Scope:
+        ID:                       p_N4JvIZWqZc
+        Name:                     Generated project scope
+        Parent Scope ID:          o_fCudeW87DE
+        Type:                     project
+
+      Authorized Actions:
+        no-op
+        read
+        update
+        delete
+        add-host-sets
+        set-host-sets
+        remove-host-sets
+        authorize-session
+
+      Host Sets:
+        Host Catalog ID:          hcst_jLHX9jl2kL
+        ID:                       hsst_4eg3luVSyC
+
+      Attributes:
+        Default Port:             22
+    ```
+
+    You are ready to connect to the target. You can paste the target ID into the below command to connect.
+
+    ```
+    boundary connect ssh -target-id=<TARGET_ID_FROM_ABOVE>
+    ```
+
+    Or, you can use the target ID you stored in the environment.
 
     ```
     boundary connect ssh -target-id=$GEN_TARGET_ID
-    // No workers error
-
-    # ERROR IN WORKER JOURNAL
-    # Jun 29 00:53:59 worker boundary[3986]: 2021-06-29T00:53:59.886Z [ERROR] worker: error making status request to controller: error="rpc error: code = Unavailable desc = last connection error: connection error: desc = "transport: Error while dialing unable to dial to controller: dial tcp: lookup boundary-controller on 127.0.0.53:53: server misbehaving"
     ```
+
+    Be sure to respond `yes` when asked if you are sure you want to continue connecting.
+
+    _TODO: add a diagram of the ref architecture and components to the notes and tell the user they can go view that if they need a refresher._
+
+    You have now successfully connected to your first target using Boundary!
   tabs:
   - title: VS Code
     type: service
@@ -297,4 +421,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "16214055451935354854"
+checksum: "13680998589276138937"
