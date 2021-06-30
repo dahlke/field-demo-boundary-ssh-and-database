@@ -18,7 +18,8 @@ challenges:
   id: wyaxsa25ysd1
   type: challenge
   title: Explore the Admin UI
-  teaser: Get familiar with Bonudary's admin UI before jumping into accessing targets.
+  teaser: Get familiar with Bonudary's concepts and admin UI before jumping into accessing
+    targets.
   notes:
   - type: text
     contents: |-
@@ -35,110 +36,130 @@ challenges:
       the private network. Boundary provides a secure way to access to hosts and critical
       systems without having to manage credentials or expose your network.
   - type: text
-    contents: 'TODO: Explain Controllers vs Workers.'
+    contents: "| Resource | Description |\n| --- | --- |\n| Scope\t| Abstract permission
+      boundary modeled as a container. A scope can contain scopes forming a tree.
+      |\n| Organization | Top-level container (scope) which owns zero to many projects
+      and zero to many authentication methods. An organization inherits from scope
+      allowing it to own zero to many groups, roles, policies, targets, host catalogs
+      or credential stores. |\n| Project\t| Child scope of an organization. |\n| User
+      | Any entity authorized to access Boundary using authentication credentials
+      specific to one of the configured authentication methods. A user can belong
+      to zero or more groups. |\n| Group\t| Collection of users used for access control.
+      A group is owned by one and only one scope. |\n| Role | Collection of capabilities
+      granted to any principal (user, group, or project) the role is assigned to.
+      A role belongs to one and only one scope, and owns zero or more direct grants.
+      |\n| Host | Computing element with a network address reachable from Boundary.
+      |\n| Host catalog | Permission boundary modeled as a container containing scopes
+      forming a tree. |\n| Host set |Subset of hosts from the set of hosts of the
+      host catalog it belongs to. A host set belongs to one and only one host; therefore,
+      it gets deleted when its host catalog is deleted. |\n| Target | Networked service
+      a user can connect to and interact with through Boundary. A target can contain
+      zero or more host sets. |"
   - type: text
-    contents: 'TODO: Explain Roles, Principals, Grants, Projects, Host Catalogs, etc.'
-  - type: text
-    contents: 'TODO: Show a picture of all the moving pieces here.'
+    contents: '''TODO: Explain Controllers vs Workers and show/ reference architecture.'''
   assignment: |-
     # Explore the Admin Console
 
-    _TODO: make this more useful that the content in Learn_
+    Boundary's Admin Console provides an easy way to manage resources. Before using Boundary to securely access any
+    dynamic infrastructure, you should take a tour of the console to understand all the components.
 
-    Boundary's Admin Console  provides an easy way to manage resources. Before using Bonudary to securely access any dynamic infrastructure,
-    you should take a tour of the console to understand all the components.
+    In this track, Boundary has already been
+    [installed](https://learn.hashicorp.com/tutorials/boundary/getting-started-install?in=boundary/getting-started)
+    for you. A Boundary Controller and a Boundary Worker are also already running. To make your initial tour through
+    Boundary a little more interesting, Boundary was
+    [initialized with generated resources](https://www.boundaryproject.io/docs/installing/no-gen-resources).
 
-    In this track, Boundary has already been [installed](https://learn.hashicorp.com/tutorials/boundary/getting-started-install?in=boundary/getting-started)
-    for you. A Boundary Controller and a Boundary Worker are also already running. To make your initial
-    tour through Boundary a little more interesting, Boundary was [initialized with the initial login role
-    creation](https://www.boundaryproject.io/docs/installing/no-gen-resources#initialize-the-database).
+    What are generated resources? Boundary can automatically generate a number of resources to make getting started
+    easier. Default scopes, auth methods, user, account, and targets are just some of the resources Boundary will
+    generate unless you tell it not to.
 
-    _TODO: link the other track that shows how to set everything up, and note that it should be done before this track to learn all the components._
-
-    Identity is a core concept in Boundary. Identity is represented by two types of resources, mapping to common security principals:
-
-    - [Users](https://www.boundaryproject.io/docs/concepts/domain-model/users), which represent distinct entities that can be tied to authentication accounts
-    - [Groups](https://www.boundaryproject.io/docs/concepts/domain-model/groups), which are collections of Users that allow for easier access management
-
-    [Roles](https://www.boundaryproject.io/docs/concepts/domain-model/roles) map users and groups to a set of grants, which provide the ability to perform actions within the system.
+    If you are not familiar with installing Boundary, the reference architecture, or concepts like scopes, auth methods,
+    users, accounts, and more - check out the [Install and Configure Boundary Track](TODO).
 
     ---
 
     # Exploring Roles, Principals and Grants in the Admin UI
 
-    Open the Boundary UI tab. You should see a login screen.
+    Open the Boundary UI tab. You should see a login screen. To access the password for the `admin` user that was
+    generated for you, grab it from the environment in the Controller terminal tab.
 
-    _TODO: instructions on how to get the admin password to login_
+    ```
+    echo $ADMIN_PASSWORD
+    ```
 
-    Once you have logged in, you will see the home screen containing all the top level resources in Boundary. Select *Roles* in the left sidebar, then select the "Administration" role.
+    Once you have logged in, you will see the home screen containing all the top level resources in Boundary. Select
+    *Roles* in the left sidebar, then select the "Administration" role.
 
-    Notice that `admin` user is listed. *User*, *group*, and *project* are a type of principal which can be assigned to roles.
+    Notice that `admin` user is listed. *User*, *group*, and *project* are a type of principal which can be assigned to
+    roles.
 
-    Click on the *Grants* tab to view the permissions allowed on this role.  Grants represent strings of actions on resources: `id=<resource_id>; action=<actions>`
+    Click on the *Grants* tab to view the permissions allowed on this role.  Grants represent strings of actions on
+    resources: `id=<resource_id>; action=<actions>`
 
-    The grant for Administration role indicates that all actions (`actions=*`) on all resources (`id=*;type=*`) are permitted. Refer to the documentation for more details.
+    The grant for Administration role indicates that all actions (`actions=*`) on all resources (`id=*;type=*`) are
+    permitted. Refer to the [documentation](https://www.boundaryproject.io/docs/concepts/security/permissions#permission-grant-formats)
+    for more details.
 
     Return to the *Roles* list and select *Login and Default Grants* role.  Click *Grants* to view its permissions.
 
-    A role can have multiple grants defined. Those grants are deleted when the role is deleted. A grant is also deleted if its associated resource is deleted.
+    A role can have multiple grants defined. Those grants are deleted when the role is deleted. A grant is also deleted
+    if its associated resource is deleted.
 
-    Select *Projects* and then *Generated project scope*. Notice that you can see *Sessions*, *Targets* and *Host Catalogs*.
+    Select *Projects* and then *Generated project scope*. Notice that you can see *Sessions*, *Targets* and
+    *Host Catalogs*.
 
-    Select *Host Catalogs -> Generated host catalog -> Host Sets -> Generated host set* to view the details of the *Host Set*. You can then select the *Hosts* tab to view attached hosts.
+    Select *Host Catalogs -> Generated host catalog -> Host Sets -> Generated host set* to view the details of the
+    *Host Set*. You can then select the *Hosts* tab to view attached hosts.
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
+  difficulty: advanced
+  timelimit: 3600
+- slug: connect-to-your-first-target-with-ssh
+  id: wm0enxxguhie
+  type: challenge
+  title: Connect to Your First Target with SSH
+  teaser: Use Boundary to SSH into a target host.
+  notes:
+  - type: text
+    contents: TODO
+  assignment: |-
+    *Connecting to Your First Target with SSH*
 
-    ---
+    Now that you've familiarized yourself with the generated resources and have explored the UI, it's time to connect
+    to your first target. You will connect to the generated host, first.
 
-    TODO: move this to it's own challenge
+    In the Controller tab, you will authenticate using the CLI client using the generated auth method, username and
+    password. You can see those values in the environment easily, with the below.
 
-    *Exploring Projects, Host Catalogs, Host Sets, Hosts and Targets in the Admin UI*
+    ```
+    echo $GEN_AUTH_METHOD
+    echo $ADMIN_USERNAME
+    echo $ADMIN_PASSWORD
+    ```
 
-    TODO: move this to it's own challenge
-    *Connecting to Your First Target*
+    Now that you can see the values you will be using, log in using those environment variables.
 
     ```
     boundary authenticate password \
-      -auth-method-id=ampw_CU9oKwC4Q4 \
-      -login-name=admin \
-      -password=nqiUrFmjlmRI84HHq71E
-    ```
-
-    With [`pass`](https://www.passwordstore.org/):
-
-    ```
-    boundary authenticate password \
-      -format=json \
-      -auth-method-id=$GEN_AUTH_METHOD \
-      -login-name=$GEN_LOGIN_NAME \
-      -password=$GEN_PASSWORD | jq -r .
-    ```
-
-    With [`gnome-keyring`](https://wiki.gnome.org/Projects/GnomeKeyring):
-
-    ```
-    boundary authenticate password \
-      -format=json \
-      -auth-method-id=$GEN_AUTH_METHOD \
-      -keyring-type="secret-service"\
-      -login-name=$GEN_LOGIN_NAME \
-      -password=$GEN_PASSWORD | jq -r .
-    ```
-
-    With no password manager:
-
-    ```
-    boundary authenticate password \
-      -format=json \
       -auth-method-id=$GEN_AUTH_METHOD \
       -keyring-type="none"\
-      -login-name=$GEN_LOGIN_NAME \
-      -password=$GEN_PASSWORD | jq -r .
+      -login-name=$ADMIN_USERNAME \
+      -password=$ADMIN_PASSWORD
     ```
 
-    Set the Boundary token using the token from above, or, use the simple one liner below.
+    You should see a Boundary token returned. You want to store that value in an environment variable.
 
     ```
     export BOUNDARY_TOKEN=<token_from_above>
     ```
+
+    For a simple one-liner to to store that value in the environment for later usage, use the below command.
 
     ```
     export BOUNDARY_TOKEN=$( \
@@ -146,11 +167,11 @@ challenges:
       -format=json \
       -auth-method-id=$GEN_AUTH_METHOD \
       -keyring-type="none"\
-      -login-name=$GEN_LOGIN_NAME \
-      -password=$GEN_PASSWORD | jq -r .item.attributes.token)
+      -login-name=$ADMIN_USERNAME \
+      -password=$ADMIN_PASSWORD | jq -r .item.attributes.token)
     ```
 
-    Now that you understand the different components in boundary and how they are related to each other, it's time to
+    Now that you understand the different components in Boundary and how they are related to each other, it's time to
     navigate to our first target and connect to it.
 
     List the scopes in Boundary. You will use the automatically generated scope for this challenge.
@@ -224,46 +245,26 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-- slug: configure-boundary
-  id: yi1uavzhjjzw
+- slug: configure-a-new-host-set
+  id: 1ut7x9mfbihc
   type: challenge
-  title: Configure Boundary
-  teaser: Build out the host catalog, host sets, hosts as well as some targets.
+  title: Configure a New Host Set
+  teaser: TODO
   notes:
   - type: text
     contents: TODO
-  assignment: '*Configure Boundary*'
+  assignment: '*Configure a New Host Set *'
   tabs:
   - title: VS Code
     type: service
     hostname: boundary-controller
     port: 8443
-  - title: Terminal
+  - title: Controller
     type: terminal
     hostname: boundary-controller
-  - title: Boundary UI
-    type: service
-    hostname: boundary-controller
-    port: 9200
-  difficulty: advanced
-  timelimit: 3600
-- slug: connect-to-host-with-ssh
-  id: kzy7pthbem69
-  type: challenge
-  title: Connect to Host with SSH
-  teaser: Connect to a remote host with an SSH session brokered by Boundary
-  notes:
-  - type: text
-    contents: TODO
-  assignment: '*Connect to Host with SSH*'
-  tabs:
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
-  - title: Terminal
+  - title: Worker
     type: terminal
-    hostname: boundary-controller
+    hostname: boundary-worker
   - title: Boundary UI
     type: service
     hostname: boundary-controller
@@ -284,13 +285,16 @@ challenges:
     type: service
     hostname: boundary-controller
     port: 8443
-  - title: Terminal
+  - title: Controller
     type: terminal
     hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
   - title: Boundary UI
     type: service
     hostname: boundary-controller
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "1079296278744496475"
+checksum: "16214055451935354854"

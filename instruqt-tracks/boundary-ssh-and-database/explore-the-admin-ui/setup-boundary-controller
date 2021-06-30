@@ -11,8 +11,14 @@ apt-get update && apt-get install boundary
 boundary config autocomplete install
 
 #########
+# Install Postgres client
+#########
+apt-get install -y postgresql-client
+
+#########
 # Install Gnome Keyring and dbus-x11 as Boundary requires
 #########
+# TODO: do I even want to use this?
 apt-get install -y gnome-keyring dbus-x11
 apt-get install -y pass
 
@@ -20,13 +26,9 @@ export DISPLAY=:0
 echo "export DISPLAY=:0" >> ~/.bashrc
 export $(dbus-launch)
 
+# TODO: this has to be run in the terminal
 eval "$(printf 'foobar\n' | gnome-keyring-daemon --unlock)"
 eval "$(printf 'foobar\n' | gnome-keyring-daemon --start)"
-
-#########
-# Install Postgres client
-#########
-apt-get install -y postgresql-client
 
 #########
 # Set up Boundary Controller Config
@@ -133,12 +135,12 @@ touch /root/init-output.txt
 echo $INIT_OUTPUT >> /root/init-output.txt
 
 GEN_AUTH_METHOD=$(echo $INIT_OUTPUT | jq -r .auth_method.auth_method_id)
-GEN_LOGIN_NAME=$(echo $INIT_OUTPUT | jq -r .auth_method.login_name)
-GEN_PASSWORD=$(echo $INIT_OUTPUT | jq -r .auth_method.password)
+ADMIN_USERNAME=$(echo $INIT_OUTPUT | jq -r .auth_method.login_name)
+ADMIN_PASSWORD=$(echo $INIT_OUTPUT | jq -r .auth_method.password)
 
 echo "export GEN_AUTH_METHOD=$GEN_AUTH_METHOD" >> ~/.bashrc
-echo "export GEN_LOGIN_NAME=$GEN_LOGIN_NAME" >> ~/.bashrc
-echo "export GEN_PASSWORD=$GEN_PASSWORD" >> ~/.bashrc
+echo "export ADMIN_USERNAME=$ADMIN_USERNAME" >> ~/.bashrc
+echo "export ADMIN_PASSWORD=$ADMIN_PASSWORD" >> ~/.bashrc
 
 #########
 # Install VS Code Server
@@ -210,5 +212,26 @@ systemctl status boundary-worker
 
 # journalctl -u boundary-controller.service
 # journalctl -u boundary-worker.service
+
+#########
+# Store some useful environment variables before letting the user in
+#########
+
+# TODO: do this in the solve script so it helps the user persist them across terminal sessions for ease of use
+export BOUNDARY_TOKEN=$( \
+  boundary authenticate password \
+  -format=json \
+  -auth-method-id=$GEN_AUTH_METHOD \
+  -keyring-type="none"\
+  -login-name=$GEN_LOGIN_NAME \
+  -password=$GEN_PASSWORD | jq -r .item.attributes.token)
+
+export GEN_GLOBAL_SCOPE_ID=$(boundary scopes list -format=json | jq -r '.items[0].id')
+export GEN_PROJ_SCOPE_ID=$(boundary scopes list -scope-id=$GEN_GLOBAL_SCOPE_ID -format=json | jq -r '.items[0].id')
+export GEN_TARGET_ID=$(boundary targets list -scope-id=$GEN_PROJ_SCOPE_ID -format=json | jq -r '.items[0].id')
+
+echo "export GEN_GLOBAL_SCOPE_ID=$GEN_GLOBAL_SCOPE_ID"
+echo "export GEN_PROJ_SCOPE_ID=$GEN_PROJ_SCOPE_ID"
+echo "export GEN_TARGET_ID=$GEN_TARGET_ID"
 
 exit 0
