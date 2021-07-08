@@ -33,6 +33,9 @@ eval "$(printf 'foobar\n' | gnome-keyring-daemon --start)"
 #########
 # Set up Boundary Controller Config
 #########
+
+# TODO: use Vault for the keys eventually
+
 cat <<-EOF > /root/boundary-controller.hcl
 listener "tcp" {
   purpose = "api"
@@ -85,31 +88,14 @@ kms "aead" {
 disable_mlock = true
 EOF
 
-#########
-# Set up Boundary Worker Config
-#########
-cat <<-EOF > /root/boundary-worker.hcl
-listener "tcp" {
-  purpose = "proxy"
-  address = "0.0.0.0"
-  tls_disable = "true"
-}
-
-worker {
-  name = "boundary-worker"
-  description = "Demo worker instance"
-  controllers = [
-    "boundary-controller"
-  ]
-}
-
-# Worker authorization KMS
+cat <<-EOF > /root/boundary-controller-recovery.hcl
+# Recovery KMS block: configures the recovery key for Boundary
 # Use a production KMS such as Vault or AWS KMS for production installs
 kms "aead" {
-    purpose = "worker-auth"
-    aead_type = "aes-gcm"
-    key = "8fZBjCUfN0TzjEGLQldGY4+iE9AkOvCfjh7+p0GtRBQ="
-    key_id = "global_worker-auth"
+  purpose = "recovery"
+  aead_type = "aes-gcm"
+  key = "8fZBjCUfN0TzjEGLQldGY4+iE9AkOvCfjh7+p0GtRBQ="
+  key_id = "global_recovery"
 }
 
 disable_mlock = true
@@ -130,7 +116,8 @@ psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
 psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
 
 # TODO: get the initial admin password
-INIT_OUTPUT=$(boundary database init -config=/root/boundary-controller.hcl -format=json)
+# INIT_OUTPUT=$(boundary database init -config=/root/boundary-controller.hcl -format=json)
+INIT_OUTPUT=$(boundary database init -skip-initial-login-role-creation -config=/root/boundary-controller.hcl -format=json)
 touch /root/init-output.txt
 echo $INIT_OUTPUT >> /root/init-output.txt
 
@@ -185,33 +172,13 @@ CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
 WantedBy=multi-user.target
 EOF
 
-sudo cat << EOF > /etc/systemd/system/boundary-worker.service
-[Unit]
-Description=Boundary Worker
-
-[Service]
-ExecStart=/usr/bin/boundary server -config /root/boundary-worker.hcl
-User=root
-LimitMEMLOCK=infinity
-Capabilities=CAP_IPC_LOCK+ep
-CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
 sudo chmod 664 /etc/systemd/system/boundary-controller.service
-sudo chmod 664 /etc/systemd/system/boundary-worker.service
 sudo systemctl daemon-reload
 sudo systemctl enable boundary-controller
-sudo systemctl enable boundary-worker
 sudo systemctl start boundary-controller
-sudo systemctl start boundary-worker
 systemctl status boundary-controller
-systemctl status boundary-worker
 
 # journalctl -u boundary-controller.service
-# journalctl -u boundary-worker.service
 
 #########
 # Store some useful environment variables before letting the user in

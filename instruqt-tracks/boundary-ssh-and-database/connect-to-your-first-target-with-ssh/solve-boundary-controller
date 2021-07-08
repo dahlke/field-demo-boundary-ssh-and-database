@@ -1,0 +1,35 @@
+#!/bin/bash -l
+
+# Enable bash history
+HISTFILE=/root/.bash_history
+set -o history
+
+# Log into boundary and store the token
+export BOUNDARY_TOKEN=$( \
+	boundary authenticate password \
+	-format=json \
+	-auth-method-id=$GEN_AUTH_METHOD \
+	-keyring-type="none"\
+	-login-name=$ADMIN_USERNAME \
+	-password=$ADMIN_PASSWORD | jq -r .item.attributes.token)
+
+# Get the generated org scope
+export GEN_GLOBAL_SCOPE_ID=$(boundary scopes list -format=json | jq -r '.items[0].id')
+
+# Get the generated project scope
+export GEN_PROJ_SCOPE_ID=$(boundary scopes list -scope-id=$GEN_GLOBAL_SCOPE_ID -format=json | jq -r '.items[0].id')
+
+# Get the target from the project scope
+export GEN_TARGET_ID=$(boundary targets list -scope-id=$GEN_PROJ_SCOPE_ID -format=json | jq -r '.items[0].id')
+
+# TODO: do I need these?
+boundary targets read -id=$GEN_TARGET_ID
+boundary connect ssh -target-id=$GEN_TARGET_ID
+
+# Add those variables to the bashrc
+echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
+echo "export GEN_GLOBAL_SCOPE_ID=$GEN_GLOBAL_SCOPE_ID" >> ~/.bashrc
+echo "export GEN_PROJ_SCOPE_ID=$GEN_PROJ_SCOPE_ID" >> ~/.bashrc
+echo "export GEN_TARGET_ID=$GEN_TARGET_ID" >> ~/.bashrc
+
+exit 0

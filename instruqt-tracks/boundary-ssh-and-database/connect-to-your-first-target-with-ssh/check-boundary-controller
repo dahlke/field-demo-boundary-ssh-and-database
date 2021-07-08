@@ -1,0 +1,6 @@
+#!/bin/bash -l
+
+# TODO: check that the commands were run and the tokens are present
+# TODO: check that I can log in w/ the token and read the target, host, etc.
+
+exit 0
