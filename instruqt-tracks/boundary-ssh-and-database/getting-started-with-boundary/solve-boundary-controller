@@ -4,4 +4,52 @@
 HISTFILE=/root/.bash_history
 set -o history
 
+export ORG_SCOPE_ID=$(
+	boundary scopes create -name 'HashiCups' -scope-id 'global' \
+		-recovery-config /root/boundary-controller-recovery.hcl \
+		-skip-admin-role-creation \
+		-skip-default-role-creation \
+		-format=json | jq -r .item.id
+)
+
+export PROJECT_SCOPE_ID=$(
+    boundary scopes create -name 'HashiCups App' -scope-id $ORG_SCOPE_ID \
+     	-recovery-config /root/boundary-controller-recovery.hcl \
+     	-skip-admin-role-creation \
+    	-skip-default-role-creation \
+		-format=json | jq -r .item.id
+)
+
+export AUTH_METHOD_ID=$(
+    boundary auth-methods create password \
+		-recovery-config /root/boundary-controller-recovery.hcl \
+		-scope-id $ORG_SCOPE_ID \
+		-name 'hashicups_auth_method' \
+		-description 'Password auth method for HashiCups org.'  \
+		-format=json | jq -r .item.id
+)
+
+export GLOBAL_ANON_LISTING_ID=$(
+    boundary roles create -name 'global_anon_listing' \
+    	-recovery-config /root/boundary-controller-recovery.hcl \
+    	-scope-id 'global' \
+		-format=json | jq -r .item.id
+)
+
+export ORG_ANON_LISTING_ID=$(
+    boundary roles create -name 'org_anon_listing' \
+     	-recovery-config /root/boundary-controller-recovery.hcl \
+     	-scope-id $ORG_SCOPE_ID \
+		-format=json | jq -r .item.id
+)
+
+export ORG_ADMIN_ID=$(
+    boundary roles create -name 'org_admin' \
+        -recovery-config /root/boundary-controller-recovery.hcl \
+        -scope-id 'global' \
+        -grant-scope-id $ORG_SCOPE_ID \
+		-format=json | jq -r .item.id
+)
+
+
 exit 0

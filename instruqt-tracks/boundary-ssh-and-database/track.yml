@@ -153,6 +153,8 @@ challenges:
     export PROJECT_SCOPE_ID=<PROJECT_SCOPE_ID_FROM_ABOVE>
     ```
 
+    You now have your two scopes ready to go.
+
     ---
 
     # Managing Initial Users and Roles
@@ -175,7 +177,22 @@ challenges:
     You should see some output like the below.
 
     ```
-    TODO
+    Auth Method information:
+      Created Time:                Thu, 08 Jul 2021 18:08:10 UTC
+      Description:                 Password auth method for HashiCups org.
+      ID:                          ampw_YXiGz3OWHI
+      Name:                        hashicups_auth_method
+      Type:                        password
+      Updated Time:                Thu, 08 Jul 2021 18:08:10 UTC
+      Version:                     1
+
+      Scope:
+        ID:                        o_tc3qudleXh
+        Name:                      HashiCups
+        Parent Scope ID:           global
+        Type:                      org
+
+    <...truncated...>
     ```
 
     Grab the auth method ID from the output and store it in an environment variable for later usage.
@@ -197,14 +214,28 @@ challenges:
     You should see some output like the below.
 
     ```
-    TODO
+    Account information:
+      Auth Method ID:      ampw_YXiGz3OWHI
+      Created Time:        Thu, 08 Jul 2021 18:09:35 UTC
+      ID:                  acctpw_nTGqpEt4OK
+      Type:                password
+      Updated Time:        Thu, 08 Jul 2021 18:09:35 UTC
+      Version:             1
+
+      Scope:
+        ID:                o_tc3qudleXh
+        Name:              HashiCups
+        Parent Scope ID:   global
+        Type:              org
+
+    <...truncated...>
     ```
 
-    Create a user and associate the user with the login account created in the previous step. This user will also be
+    Now create a user and associate that user with the login account you just created. This user will also be
     the principal in the role you create in the following step.
 
     ```
-    boundary users create -scope-id <org_scope_id> \
+    boundary users create -scope-id $ORG_SCOPE_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -name "myuser" \
       -description "My user!"
@@ -213,12 +244,32 @@ challenges:
     You should see some output like the below.
 
     ```
-    TODO
+    User information:
+      Created Time:        Thu, 08 Jul 2021 18:11:17 UTC
+      Description:         My user!
+      ID:                  u_7QXZs7ldt3
+      Name:                myuser
+      Updated Time:        Thu, 08 Jul 2021 18:11:17 UTC
+      Version:             1
+
+      Scope:
+        ID:                o_tc3qudleXh
+        Name:              HashiCups
+        Parent Scope ID:   global
+        Type:              org
+
+    <...truncated...>
     ```
+
+    You have now created your login account and user. It's time to associate those with some baseline roles.
+
+    ---
+
+    # Create Roles to Manage Scopes
 
     The following describes the four baseline roles you'll need to create to manage resources within the org and
     project scopes created above. These roles are similar to the roles created for you if generation had not been
-    skipped during boundary database init when executed with the `-skip-initial-login-role-creation` flag, Declaring
+    skipped during `boundary database init` when executed with the `-skip-initial-login-role-creation` flag, Declaring
     roles explicitly allows you to manage them independently and fully within Terraform or via the CLI. In doing so,
     you can precisely define their access.
 
@@ -229,7 +280,7 @@ challenges:
     - To allow `myuser` user administration grants at the org scope.
     - To allow `myuser` user administration grants at the project scope.
 
-    Create global anonymous listing roles.
+    First, create global anonymous listing roles.
 
     ```
     boundary roles create -name 'global_anon_listing' \
@@ -240,7 +291,20 @@ challenges:
     You should see some output like the below.
 
     ```
-    TODO
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:15:12 UTC
+      Grant Scope ID:      global
+      ID:                  r_h28yjg9dhH
+      Name:                global_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:15:12 UTC
+      Version:             1
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
+    <...truncated...>
     ```
 
     Grab the global anon listing ID from the output and store it in an environment variable for later usage.
@@ -248,6 +312,8 @@ challenges:
     ```
     export GLOBAL_ANON_LISTING_ID=<GLOBAL_ANON_LISTING_ID_FROM_ABOVE>
     ```
+
+    Then, add the required grants and principals to the global anonymous listing ID.
 
     ```
     boundary roles add-grants -id $GLOBAL_ANON_LISTING_ID \
@@ -264,7 +330,35 @@ challenges:
     You should see some output like the below.
 
     ```
-    TODO
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:15:12 UTC
+      Grant Scope ID:      global
+      ID:                  r_h28yjg9dhH
+      Name:                global_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:17:10 UTC
+      Version:             2
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
+    <...truncated...>
+
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:15:12 UTC
+      Grant Scope ID:      global
+      ID:                  r_h28yjg9dhH
+      Name:                global_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:17:11 UTC
+      Version:             3
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
+    <...truncated...>
     ```
 
     Then, you'll need to create the anonymous listing role for org scope.
@@ -278,7 +372,21 @@ challenges:
     You should see some output like the below.
 
     ```
-    TODO
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:18:26 UTC
+      Grant Scope ID:      o_tc3qudleXh
+      ID:                  r_u0dn7mU3uh
+      Name:                org_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:18:26 UTC
+      Version:             1
+
+      Scope:
+        ID:                o_tc3qudleXh
+        Name:              HashiCups
+        Parent Scope ID:   global
+        Type:              org
+
+    <...truncated...>
     ```
 
     Grab the org anon listing ID from the output and store it in an environment variable for later usage.
@@ -286,6 +394,8 @@ challenges:
     ```
     export ORG_ANON_LISTING_ID=<ORG_ANON_LISTING_ID_FROM_ABOVE>
     ```
+
+    Then, add the required grants and principals to the org anonymous listing ID.
 
     ```
     boundary roles add-grants -id $ORG_ANON_LISTING_ID \
@@ -302,7 +412,37 @@ challenges:
     You should see some output like the below.
 
     ```
-    TODO
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:18:26 UTC
+      Grant Scope ID:      o_tc3qudleXh
+      ID:                  r_u0dn7mU3uh
+      Name:                org_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:22:27 UTC
+      Version:             2
+
+      Scope:
+        ID:                o_tc3qudleXh
+        Name:              HashiCups
+        Parent Scope ID:   global
+        Type:              org
+
+    <...truncated...>
+
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:18:26 UTC
+      Grant Scope ID:      o_tc3qudleXh
+      ID:                  r_u0dn7mU3uh
+      Name:                org_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:22:28 UTC
+      Version:             3
+
+      Scope:
+        ID:                o_tc3qudleXh
+        Name:              HashiCups
+        Parent Scope ID:   global
+        Type:              org
+
+    <...truncated...>
     ```
 
     Create the org admin role for `myuser`.
@@ -314,11 +454,32 @@ challenges:
         -grant-scope-id $ORG_SCOPE_ID
     ```
 
+    You should see some output like the below.
+
+    ```
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:24:01 UTC
+      Grant Scope ID:      o_tc3qudleXh
+      ID:                  r_4xpg4AbE04
+      Name:                org_admin
+      Updated Time:        Thu, 08 Jul 2021 18:24:01 UTC
+      Version:             1
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
+    <...truncated...>
+    ```
+
     Grab the org admin ID from the output and store it in an environment variable for later usage.
 
     ```
     export ORG_ADMIN_ID=<ORG_ADMIN_ID_FROM_ABOVE>
     ```
+
+    Then, add the required grants and principals to the org admin ID.
 
     ```
     boundary roles add-grants -id $ORG_ADMIN_ID \
@@ -333,7 +494,23 @@ challenges:
     You should see some output like the below.
 
     ```
-    TODO
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:24:01 UTC
+      Grant Scope ID:      o_tc3qudleXh
+      ID:                  r_4xpg4AbE04
+      Name:                org_admin
+      Updated Time:        Thu, 08 Jul 2021 18:29:43 UTC
+      Version:             2
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
+    <...truncated...>
+
+    TODO: myuser_user_id
+    <...truncated...>
     ```
 
     Create the project admin for `mysuser`.
@@ -343,7 +520,11 @@ challenges:
       -recovery-config /tmp/recovery.hcl \
       -scope-id <org_scope_id> \
       -grant-scope-id $PROJECT_SCOPE_ID
+    ```
 
+    Then, add the required grants and principals to the project admin ID.
+
+    ```
     boundary roles add-grants -id <project_admin_id> \
       -recovery-config /tmp/recovery.hcl \
       -grant 'id=*;type=*;actions=*'
@@ -357,6 +538,8 @@ challenges:
 
     ```
     TODO
+
+    <...truncated...>
     ```
 
     Finally, log in as your new user.
@@ -372,6 +555,8 @@ challenges:
 
     ```
     TODO
+
+    <...truncated...>
     ```
 
     Congratulations! You have setup the initial resources in Boundary.
