@@ -261,6 +261,12 @@ challenges:
     <...truncated...>
     ```
 
+    Grab the user ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export MYUSER_ID=<MYUSER_ID_FROM_ABOVE>
+    ```
+
     You have now created your login account and user. It's time to associate those with some baseline roles.
 
     ---
@@ -522,16 +528,22 @@ challenges:
       -grant-scope-id $PROJECT_SCOPE_ID
     ```
 
+    Grab the project user ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export PROJECT_ADMIN_ID=<PROJECT_ADMIN_ID_FROM_ABOVE>
+    ```
+
     Then, add the required grants and principals to the project admin ID.
 
     ```
-    boundary roles add-grants -id <project_admin_id> \
+    boundary roles add-grants -id $PROJECT_ADMIN_ID \
       -recovery-config /tmp/recovery.hcl \
       -grant 'id=*;type=*;actions=*'
 
-    boundary roles add-principals -id <project_admin_id> \
+    boundary roles add-principals -id $PROJECT_ADMIN_ID \
       -recovery-config /tmp/recovery.hcl \
-      -principal <myuser_user_id>
+      -principal $MYUSER_ID
     ```
 
     You should see some output like the below.
@@ -1282,4 +1294,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "4141875781206578033"
+checksum: "2370814025450333086"

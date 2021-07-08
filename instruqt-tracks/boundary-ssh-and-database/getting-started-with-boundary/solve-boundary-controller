@@ -29,6 +29,14 @@ export AUTH_METHOD_ID=$(
 		-format=json | jq -r .item.id
 )
 
+export MYUSER_ID=$(
+    boundary users create -scope-id $ORG_SCOPE_ID \
+    	-recovery-config /root/boundary-controller-recovery.hcl \
+     	-name "myuser" \
+     	-description "My user!" \
+		-format=json | jq -r .item.id
+)
+
 export GLOBAL_ANON_LISTING_ID=$(
     boundary roles create -name 'global_anon_listing' \
     	-recovery-config /root/boundary-controller-recovery.hcl \
