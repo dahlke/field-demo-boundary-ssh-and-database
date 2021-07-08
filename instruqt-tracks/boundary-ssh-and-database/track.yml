@@ -666,16 +666,16 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: connect-to-your-first-target-with-ssh
+- slug: configure-and-connect-to-your-first-target-with-ssh
   id: wm0enxxguhie
   type: challenge
-  title: Connect to Your First Target with SSH
+  title: Configure Your First Host and Connect with SSH
   teaser: Use Boundary to SSH into a target host.
   notes:
   - type: text
     contents: TODO
   assignment: |-
-    *Connecting to Your First Target with SSH*
+    *Configure Your First Host and Connect with SSH*
 
     In the admin console, you saw that `localhost` was listed as *Generated target* with connection type, TCP. The
     default target is a TCP target with a default port of `22` (SSH). In this tutorial, you will initiate an `ssh`
@@ -1371,4 +1371,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "136950550514442862"
+checksum: "10035816458029047713"
