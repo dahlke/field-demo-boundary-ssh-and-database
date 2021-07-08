@@ -24,6 +24,7 @@ challenges:
   - type: text
     contents: |-
       TODO: why boundary?
+
       Boundary is a tool for managing identity-based access for modern, dynamic infrastructure. Just as infrastructure
       itself can be complex, at first glance Boundary can seem complex as well. As a result, it's helpful to understand
       how Boundary organizes security principals and resources, as well as how it allows you define granular
@@ -231,6 +232,12 @@ challenges:
         Type:              org
 
     <...truncated...>
+    ```
+
+    Grab the account ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export MYUSER_ACCOUNT_ID=<MYUSER_ACCOUNT_ID_FROM_ABOVE>
     ```
 
     Now create a user and associate that user with the login account you just created. This user will also be
@@ -533,7 +540,7 @@ challenges:
     <...truncated...>
     ```
 
-    Create the project admin for `mysuser`.
+    Create the project admin for `myuser`.
 
     ```
     boundary roles create -name 'project_admin' \
@@ -622,12 +629,26 @@ challenges:
     You should see some output like the below.
 
     ```
-    TODO
+    Authentication information:
+      Account ID:      acctpw_06knpvPLCZ
+      Auth Method ID:  ampw_JzC1XNwLtJ
+      Expiration Time: Thu, 15 Jul 2021 22:41:10 UTC
+      User ID:         u_ckElkdIo8V
 
-    <...truncated...>
+    Storing the token in a keyring was disabled. The token is:
+    at_bs81pgyoFg_s1N9twB2L8pfRPJhqdBzP1re8df48twb9Ww1655esNcU2T4UyCLJXsjugb9iRWR7cduoKCNFQvd6VWdymZX3xq46xRDKVEVaiHqVoQEV3qMyndK1UF6KQxxJE2s
+    Please be sure to store it safely!
     ```
 
-    Congratulations! You have setup the initial resources in Boundary.
+    Grab the token from the output and store it in an environment variable for later usage.
+
+    ```
+    export BOUNDARY_TOKEN=<BOUNDARY_TOKEN>
+    ```
+
+    TODO: put all these variables in the bashrc so they aren't lost if they refresh the page
+
+    Congratulations! You have setup the initial resources in Boundary, and retrieved your first Boundary token.
   tabs:
   - title: Controller
     type: terminal
@@ -1350,4 +1371,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "2370814025450333086"
+checksum: "136950550514442862"
