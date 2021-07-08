@@ -54,6 +54,8 @@ challenges:
       installing Boundary, the reference architecture, or concepts like scopes, auth methods, users, accounts, and
       more - check out the [Install and Configure Boundary Track](TODO).
   assignment: |-
+    # Getting Started
+
     In this track, you will learn how to manage all the different resources in Boundary, as well as how to leverage
     those resources to connect to a host via SSH, as well as a Postgres instance via TCP.
 
@@ -494,7 +496,7 @@ challenges:
 
     boundary roles add-principals -id $ORG_ADMIN_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -principal <myuser_user_id>
+      -principal $MYUSER_ID
     ```
 
     You should see some output like the below.
@@ -515,7 +517,19 @@ challenges:
 
     <...truncated...>
 
-    TODO: myuser_user_id
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 20:39:30 UTC
+      Grant Scope ID:      o_ya8JEJso6y
+      ID:                  r_oYoJ05W5zI
+      Name:                org_admin
+      Updated Time:        Thu, 08 Jul 2021 20:41:21 UTC
+      Version:             3
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
     <...truncated...>
     ```
 
@@ -524,8 +538,28 @@ challenges:
     ```
     boundary roles create -name 'project_admin' \
       -recovery-config /tmp/recovery.hcl \
-      -scope-id <org_scope_id> \
+      -scope-id $ORG_SCOPE_ID \
       -grant-scope-id $PROJECT_SCOPE_ID
+    ```
+
+    You should see some output like the below.
+
+    ```
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 20:46:20 UTC
+      Grant Scope ID:      p_4Z5uFpAkBZ
+      ID:                  r_Uh8SiJtFpg
+      Name:                project_admin
+      Updated Time:        Thu, 08 Jul 2021 20:46:20 UTC
+      Version:             1
+
+      Scope:
+        ID:                o_ya8JEJso6y
+        Name:              HashiCups
+        Parent Scope ID:   global
+        Type:              org
+
+    <...truncated...>
     ```
 
     Grab the project user ID from the output and store it in an environment variable for later usage.
@@ -538,18 +572,40 @@ challenges:
 
     ```
     boundary roles add-grants -id $PROJECT_ADMIN_ID \
-      -recovery-config /tmp/recovery.hcl \
+      -recovery-config /root/boundary-controller-recovery.hcl \
       -grant 'id=*;type=*;actions=*'
 
     boundary roles add-principals -id $PROJECT_ADMIN_ID \
-      -recovery-config /tmp/recovery.hcl \
+      -recovery-config /root/boundary-controller-recovery.hcl \
       -principal $MYUSER_ID
     ```
 
     You should see some output like the below.
 
     ```
-    TODO
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 20:45:52 UTC
+      Grant Scope ID:      p_4Z5uFpAkBZ
+      ID:                  r_x6Yv15DBLy
+      Name:                project_admin
+      Updated Time:        Thu, 08 Jul 2021 20:46:52 UTC
+      Version:             2
+
+    <...truncated...>
+
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 20:45:52 UTC
+      Grant Scope ID:      p_4Z5uFpAkBZ
+      ID:                  r_x6Yv15DBLy
+      Name:                project_admin
+      Updated Time:        Thu, 08 Jul 2021 20:46:52 UTC
+      Version:             3
+
+      Scope:
+        ID:                o_ya8JEJso6y
+        Name:              HashiCups
+        Parent Scope ID:   global
+        Type:              org
 
     <...truncated...>
     ```
@@ -558,7 +614,7 @@ challenges:
 
     ```
     boundary authenticate password \
-      -auth-method-id <auth_method_id> \
+      -auth-method-id $AUTH_METHOD_ID \
       -login-name myuser \
       -password foofoofoo
     ```
