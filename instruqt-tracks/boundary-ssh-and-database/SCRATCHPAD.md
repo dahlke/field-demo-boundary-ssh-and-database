@@ -1,11 +1,6 @@
 - slug: configure-and-connect-to-your-first-target-with-ssh
-  id: wm0enxxguhie
-  type: challenge
   title: Configure Your First Host and Connect with SSH
   teaser: Use Boundary to SSH into a target host.
-  notes:
-  - type: text
-    contents: TODO
   assignment: |-
     *Configure Your First Host and Connect with SSH*
 
@@ -226,31 +221,7 @@
 
 
     You have now successfully connected to your first target using Boundary!
-  tabs:
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
-  - title: Controller
-    type: terminal
-    hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
-  - title: Boundary UI
-    type: service
-    hostname: boundary-controller
-    port: 9200
-  difficulty: advanced
-  timelimit: 3600
 - slug: configure-a-new-host-set-connect-postgres
-  id: 1ut7x9mfbihc
-  type: challenge
-  title: Configure a New Host Set and Connect to a Postgres Host
-  teaser: TODO
-  notes:
-  - type: text
-    contents: TODO
   assignment: |-
     # Configure a New Host Set and Connect to a Postgres Host
 

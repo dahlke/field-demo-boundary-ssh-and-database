@@ -135,13 +135,13 @@ boundary roles add-principals -id $PROJECT_ADMIN_ID \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -principal=$MYUSER_ID
 
-BOUNDARY_TOKEN=$(
+export BOUNDARY_TOKEN=$(
 boundary authenticate password \
 -auth-method-id $AUTH_METHOD_ID \
 -login-name=$MYUSER_USERNAME \
 -keyring-type=none \
 -password=$MYUSER_PASSWORD \
--format=json | jq -r .item.attributes.token)
+-format=json | jq -r .item.attributes.token
 )
 
 echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
