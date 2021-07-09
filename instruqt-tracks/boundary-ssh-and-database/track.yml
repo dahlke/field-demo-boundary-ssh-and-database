@@ -34,19 +34,21 @@ challenges:
       how to leverage those resources to connect to a host via SSH, as well as a Postgres instance via TCP.
   - type: text
     contents: |-
-      TODO: remove this once the info is in other places
       TODO: https://www.boundaryproject.io/docs/installing/no-gen-resources
+      TODO: links
+
+      In this challenge, you will learn about the following Boundary resources.
 
       - Scope: Abstract permission boundary modeled as a container. A scope can contain scopes forming a tree.
       - Organization: Top-level container (scope) which owns zero to many projects and zero to many authentication methods. An organization inherits from scope allowing it to own zero to many groups, roles, policies, targets, host catalogs or credential stores.
       - Project: Child scope of an organization.
       - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
+      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
+
+      TODO: remove this once the info is in other places
+      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
       - Group: Collection of users used for access control. A group is owned by one and only one scope.
       - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
-      - Host: Computing element with a network address reachable from Boundary.
-      - Host catalog: Permission boundary modeled as a container containing scopes forming a tree.
-      - Host set: Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted.
-      - Target: Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets.
   - type: text
     contents: |-
       Boundary has already been
@@ -80,6 +82,7 @@ challenges:
 
     TODO: explain auth methods / users / roles
     TODO: explain boundary-controller-recovery.hcl
+    TODO: links to the resource types in the assingment text
 
     ---
 
@@ -674,55 +677,30 @@ challenges:
   notes:
   - type: text
     contents: TODO
+  - type: text
+    contents: |-
+      In this challenge, you will learn about the following Boundary resources.
+
+      - Host: Computing element with a network address reachable from Boundary.
+      - Host catalog: Permission boundary modeled as a container containing scopes forming a tree.
+      - Host set: Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted.
+      - Target: Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets.
   assignment: |-
-    *Configure Your First Host and Connect with SSH*
+    *Configure Your First Target and Connect with SSH*
 
-    In the admin console, you saw that `localhost` was listed as *Generated target* with connection type, TCP. The
-    default target is a TCP target with a default port of `22` (SSH). In this tutorial, you will initiate an `ssh`
-    session to this default target using the CLI .
+    [Targets](https://www.boundaryproject.io/docs/concepts/domain-model/targets) are Boundary resources that contain
+    one or more [host sets](https://www.boundaryproject.io/docs/concepts/domain-model/host-sets). A target allows
+    Boundary users to define an endpoint with a default port and a protocol to establish a session. Unless specified
+    with a `-host-id` flag, Boundary will choose one
+    [Host](https://www.boundaryproject.io/docs/concepts/domain-model/hosts) in the host set to connect to at random.
 
-    Before you authenticate, you'll need the generated auth method, username and password.  You can see those values
-    in the environment on the Controller. Run the below commands in the Controller tab.
 
-    ```
-    echo "AUTH METHOD ID:" $GEN_AUTH_METHOD
-    echo "ADMIN USERNAME:" $ADMIN_USERNAME
-    echo "ADMIN PASSWORD:" $ADMIN_PASSWORD
-    ```
+    Since you are already authenticated, you need to get the project scope ID so you can see it's host sets and hosts.
 
-    _TODO: echo all the below exports into the environment?_
+    If for some reason you are not logged in, you can use tis simple one-liner to authenticate and set your
+    `BOUNDARY_TOKEN`.
 
-    You should see the values you will be using, log in using those environment variables.
-
-    ```
-    boundary authenticate password \
-      -auth-method-id=$GEN_AUTH_METHOD \
-      -keyring-type="none"\
-      -login-name=$ADMIN_USERNAME \
-      -password=$ADMIN_PASSWORD
-    ```
-
-    You should see output similar to the below.
-
-    ```
-    Authentication information:
-      Account ID:      acctpw_3po3pAsJBp
-      Auth Method ID:  ampw_nqedpwu2Vh
-      Expiration Time: Wed, 07 Jul 2021 00:43:12 UTC
-      User ID:         u_pNPr4pFTTz
-
-    Storing the token in a keyring was disabled. The token is:
-    at_oRx...truncated...j6i
-    ...
-    ```
-
-    You can see a Boundary token returned. You want to store that value in an environment variable.
-
-    ```
-    export BOUNDARY_TOKEN="<TOKEN_FROM_ABOVE>"
-    ```
-
-    For a simple one-liner to to store that value in the environment for later usage, use the below command.
+    TODO:
 
     ```
     export BOUNDARY_TOKEN=$( \
@@ -734,8 +712,7 @@ challenges:
       -password=$ADMIN_PASSWORD | jq -r .item.attributes.token)
     ```
 
-    Now that you are authenticated, you need to get the project scope ID so you can see it's host sets and hosts.  You
-    will use the generated project scope for this challenge. List the scopes currently in Boundary.
+    You will use the project scope you created for this challenge. List the scopes currently in Boundary.
 
     ```
     boundary scopes list
@@ -911,16 +888,16 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-- slug: configure-a-new-host-set-connect-postgres
+- slug: configure-and-connect-to-postgres-with-tcp
   id: 1ut7x9mfbihc
   type: challenge
-  title: Configure a New Host Set and Connect to a Postgres Host
+  title: Configure and Connect to Postgres with TCP
   teaser: TODO
   notes:
   - type: text
     contents: TODO
   assignment: |-
-    # Configure a New Host Set and Connect to a Postgres Host
+    # Configure and Connect to Postgres with TCP
 
     # Create an Org
 
@@ -1371,4 +1348,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "10035816458029047713"
+checksum: "11615831065712855358"

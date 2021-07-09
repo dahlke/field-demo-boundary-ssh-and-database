@@ -1,3 +1,31 @@
 #!/bin/bash -l
 
+# Check that the HashiCups org scope exists
+
+# Check that the HashiCups App project scope exists
+
+# Check that the auth method exists
+
+# Check that the myuser account exists
+
+# Check that the myuser user exists
+
+# Check that the myuser was added to the myuser account
+
+# Check that the global scope anon listing role was created
+
+# Check that the project scope anon listing role was created
+
+# Check that the org scope admin role was created
+
+# Check that the project scope admin role was created
+
+# Check that the global scope anon listing role grants and principals exist
+
+# Check that the project scope anon listing role grants and principals exist
+
+# Check that the project scope admin role grants and principals exist
+
+# Check that the project scope admin role grants and principals exist
+
 exit 0

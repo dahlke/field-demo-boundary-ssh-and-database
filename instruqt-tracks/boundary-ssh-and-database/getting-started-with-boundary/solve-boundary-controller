@@ -4,6 +4,9 @@
 HISTFILE=/root/.bash_history
 set -o history
 
+export MYUSER_USERNAME="myuser"
+export MYUSER_PASSWORD="foofoofoo"
+
 # Create the Org Scope
 export ORG_SCOPE_ID=$( \
 boundary scopes create -name 'HashiCups' -scope-id 'global' \
@@ -39,8 +42,8 @@ echo "Auth Method ID:" $AUTH_METHOD_ID
 # Create an Account for MyUser
 export MYUSER_ACCOUNT_ID=$(boundary accounts create password \
 -recovery-config /root/boundary-controller-recovery.hcl \
--login-name "myuser" \
--password "foofoofoo" \
+-login-name $MYUSER_USERNAME \
+-password $MYUSER_PASSWORD \
 -auth-method-id $AUTH_METHOD_ID \
 -format=json | jq -r .item.id)
 
@@ -50,7 +53,7 @@ echo "MyUser Account ID:" $MYUSER_ACCOUNT_ID
 export MYUSER_ID=$( \
 boundary users create -scope-id $ORG_SCOPE_ID \
 -recovery-config /root/boundary-controller-recovery.hcl \
--name "myuser" \
+-name $MYUSER_USERNAME \
 -description "My user!" \
 -format=json | jq -r .item.id)
 
@@ -132,20 +135,25 @@ boundary roles add-principals -id $PROJECT_ADMIN_ID \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -principal=$MYUSER_ID
 
+BOUNDARY_TOKEN=$(
 boundary authenticate password \
 -auth-method-id $AUTH_METHOD_ID \
--login-name=myuser \
+-login-name=$MYUSER_USERNAME \
 -keyring-type=none \
--password=foofoofoo
+-password=$MYUSER_PASSWORD \
+-format=json | jq -r .item.attributes.token)
+)
 
 echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
 echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc
 echo "export AUTH_METHOD_ID=$AUTH_METHOD_ID" >> ~/.bashrc
 echo "export MYUSER_ACCOUNT_ID=$MYUSER_ACCOUNT_ID" >> ~/.bashrc
-echo "export MYUSER_ACCOUNT_ID=$MYUSER_ACCOUNT_ID" >> ~/.bashrc
 echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
 echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
 echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc
 echo "export PROJECT_ADMIN_ID=$PROJECT_ADMIN_ID" >> ~/.bashrc
+echo "export MYUSER_USERNAME=$MYUSER_USERNAME" >> ~/.bashrc
+echo "export MYUSER_PASSWORD=$MYUSER_PASSWORD" >> ~/.bashrc
+echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
 
 exit 0
