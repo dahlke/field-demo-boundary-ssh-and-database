@@ -33,9 +33,7 @@ challenges:
       In this track, you will learn how to manage all the different principals and resources in Boundary, as well as
       how to leverage those resources to connect to a host via SSH, as well as a Postgres instance via TCP.
   - type: text
-    contents: |-
-      TODO: https://www.boundaryproject.io/docs/installing/no-gen-resources
-      TODO: links
+    contents: |2-
 
       In this challenge, you will learn about the following Boundary resources.
 
@@ -56,6 +54,8 @@ challenges:
       for you. A Boundary Controller and a Boundary Worker are also already running.  If you are not familiar with
       installing Boundary, the reference architecture, or concepts like scopes, auth methods, users, accounts, and
       more - check out the [Install and Configure Boundary Track](TODO).
+
+      TODO: Explain that this happened: https://www.boundaryproject.io/docs/installing/no-gen-resources
   assignment: |-
     # Getting Started
 
@@ -82,7 +82,6 @@ challenges:
 
     TODO: explain auth methods / users / roles
     TODO: explain boundary-controller-recovery.hcl
-    TODO: links to the resource types in the assingment text
 
     ---
 
@@ -100,7 +99,7 @@ challenges:
       -skip-default-role-creation
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     Scope information:
@@ -134,7 +133,7 @@ challenges:
       -skip-default-role-creation
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     Scope information:
@@ -180,7 +179,7 @@ challenges:
       -description 'Password auth method for HashiCups org.'
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Auth Method information:
@@ -217,7 +216,7 @@ challenges:
       -auth-method-id $AUTH_METHOD_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Account information:
@@ -253,7 +252,7 @@ challenges:
       -description "My user!"
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     User information:
@@ -306,7 +305,7 @@ challenges:
       -scope-id 'global'
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Role information:
@@ -345,7 +344,7 @@ challenges:
       -principal 'u_anon'
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Role information:
@@ -387,7 +386,7 @@ challenges:
       -scope-id $ORG_SCOPE_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Role information:
@@ -427,7 +426,7 @@ challenges:
       -principal 'u_anon'
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Role information:
@@ -472,7 +471,7 @@ challenges:
         -grant-scope-id $ORG_SCOPE_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Role information:
@@ -509,7 +508,7 @@ challenges:
       -principal $MYUSER_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Role information:
@@ -552,7 +551,7 @@ challenges:
       -grant-scope-id $PROJECT_SCOPE_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Role information:
@@ -590,7 +589,7 @@ challenges:
       -principal $MYUSER_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Role information:
@@ -629,7 +628,7 @@ challenges:
       -password foofoofoo
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Authentication information:
@@ -649,7 +648,22 @@ challenges:
     export BOUNDARY_TOKEN=<BOUNDARY_TOKEN>
     ```
 
-    TODO: put all these variables in the bashrc so they aren't lost if they refresh the page
+    The last thing you shold do is put all the environment variables you defined into
+    your `~/.bashrc` file for future usage.
+
+    ```
+    echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
+    echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc
+    echo "export AUTH_METHOD_ID=$AUTH_METHOD_ID" >> ~/.bashrc
+    echo "export MYUSER_ACCOUNT_ID=$MYUSER_ACCOUNT_ID" >> ~/.bashrc
+    echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
+    echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
+    echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc
+    echo "export PROJECT_ADMIN_ID=$PROJECT_ADMIN_ID" >> ~/.bashrc
+    echo "export MYUSER_USERNAME=$MYUSER_USERNAME" >> ~/.bashrc
+    echo "export MYUSER_PASSWORD=$MYUSER_PASSWORD" >> ~/.bashrc
+    echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
+    ```
 
     Congratulations! You have setup the initial resources in Boundary, and retrieved your first Boundary token.
   tabs:
@@ -676,7 +690,7 @@ challenges:
   teaser: Use Boundary to SSH into a target host.
   notes:
   - type: text
-    contents: TODO
+    contents: 'TODO: add a diagram of the ref architecture and components to the notes and tell the user they can go view that if they need a refresher.'
   - type: text
     contents: |-
       In this challenge, you will learn about the following Boundary resources.
@@ -686,7 +700,7 @@ challenges:
       - Host set: Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted.
       - Target: Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets.
   assignment: |-
-    *Configure Your First Target and Connect with SSH*
+    # Configure Your First Target and Connect with SSH
 
     [Targets](https://www.boundaryproject.io/docs/concepts/domain-model/targets) are Boundary resources that contain
     one or more [host sets](https://www.boundaryproject.io/docs/concepts/domain-model/host-sets). A target allows
@@ -694,60 +708,41 @@ challenges:
     with a `-host-id` flag, Boundary will choose one
     [Host](https://www.boundaryproject.io/docs/concepts/domain-model/hosts) in the host set to connect to at random.
 
+    In this challenge you are going to create a host catalog, add a host set with a new host to it, define it as a
+    target, and finally - connect to that host via Boundary.
+
+    # TODO: explain the existence of the Boundary worker as that is what they are going to connect to.
+
+    ---
 
     Since you are already authenticated, you need to get the project scope ID so you can see it's host sets and hosts.
 
     If for some reason you are not logged in, you can use tis simple one-liner to authenticate and set your
     `BOUNDARY_TOKEN`.
 
-    TODO:
-
     ```
     export BOUNDARY_TOKEN=$( \
       boundary authenticate password \
       -format=json \
-      -auth-method-id=$GEN_AUTH_METHOD \
+      -auth-method-id=$AUTH_METHOD_ID \
       -keyring-type="none"\
-      -login-name=$ADMIN_USERNAME \
-      -password=$ADMIN_PASSWORD | jq -r .item.attributes.token)
+      -login-name=$MYUSER_USERNAME \
+      -password=$MYUSER_PASSWORD | jq -r .item.attributes.token)
     ```
 
-    You will use the project scope you created for this challenge. List the scopes currently in Boundary.
+    You will use the project scope you created for this challenge. List the scopes you created for the org.
 
     ```
-    boundary scopes list
+    boundary scopes list -scope-id=$ORG_SCOPE_ID
     ```
 
-    You should output similar to the below text. Note that it is an *org scope*.
-
-    ```
-    Scope information:
-      ID:                    o_fCudeW87DE
-        Version:             1
-        Name:                Generated org scope
-        Description:         Provides an initial org scope in Boundary
-        Authorized Actions:
-          no-op
-          read
-          update
-          delete
-    ```
-
-    This returns your *org* scopes. You need the *project* scope, so you will need to run another `scopes list`
-    command, but this time, with the org scope ID passed in as an argument.
-
-    ```
-    boundary scopes list -scope-id=<ORG_SCOPE_ID_FROM_ABOVE>
-    ```
-
-    You should see output like the below. Note this time you are getting a *project scope*, not an org scope.
+    You should output similar to the below text.
 
     ```
     Scope information:
-      ID:                    p_N4JvIZWqZc
+      ID:                    p_E5Hi8BQlJm
         Version:             1
-        Name:                Generated project scope
-        Description:         Provides an initial project scope in Boundary
+        Name:                HashiCups App
         Authorized Actions:
           no-op
           read
@@ -755,67 +750,168 @@ challenges:
           delete
     ```
 
-    An easy one liner to store both the global org scope ID as well as the project scope ID in the environment would
-    look like the below.
+    You should recognize the "HashiCups App" project scope you created in the previous challenge. Currently, there
+    are no targets in the scope. You can confirm that with the following command.
 
     ```
-    export GEN_GLOBAL_SCOPE_ID=$(boundary scopes list -format=json | jq -r '.items[0].id')
-    export GEN_PROJ_SCOPE_ID=$(boundary scopes list -scope-id=$GEN_GLOBAL_SCOPE_ID -format=json | jq -r '.items[0].id')
+    boundary targets list -scope-id=$PROJECT_SCOPE_ID
     ```
 
-    With your project scope ID in hand, you can now look up the targets associated with the scope. You can paste the
-    scope ID from above in the below command.
+    Example output:
 
     ```
-    boundary targets list -scope-id=<PROJECT_SCOPE_ID_FROM_ABOVE>
+    No targets found
     ```
 
-    Or you can use the project scope ID you stored in the environment to make it a little easier.
+    At the end of this challenge, you will have a target that you can connect to, but first, you must configure
+    a few things.
+
+    The first thing you'll need to create is a *host catalog* named "HashiCups App" in the "HashiCups App" project
+    scope.
 
     ```
-    boundary targets list -scope-id=$GEN_PROJ_SCOPE_ID
+    boundary host-catalogs create static \
+      -scope-id=$PROJECT_SCOPE_ID \
+      -name="HashiCups App" \
+      -description="For HashiCups App usage"
     ```
 
-    You should see output like the below, including the target ID. This is the ID of the target that you will connect
-    to.
+    Example output:
 
     ```
-    Target information:
-      ID:                    ttcp_s3ngxT2ofL
-        Version:             1
-        Type:                tcp
-        Name:                Generated target
-        Description:         Provides an initial target in Boundary
-        Authorized Actions:
-          no-op
-          read
-          update
-          delete
-          add-host-sets
-          set-host-sets
-          remove-host-sets
-          authorize-session
+    TODO
+    <...truncated..>
     ```
 
-    Again, a simple one-liner to store the target ID in the environment.
+    Grab the host catalog ID from the output and store it in an environment variable for later usage.
 
     ```
-    export GEN_TARGET_ID=$(boundary targets list -scope-id=$GEN_PROJ_SCOPE_ID -format=json | jq -r '.items[0].id')
+    export HOST_CATALOG_ID=<HOST_CATALOG_ID_FROM_ABOVE>
     ```
 
-    You can view the details of the target using the `targets read` command. An example:
+    Next, create a new *host*.
 
     ```
-    boundary targets read -id=<TARGET_ID_FROM_ABOVE>
+    boundary hosts create static \
+      -name=postgres \
+      -description="Postgres host" \
+      -address="127.0.0.1" \
+      -host-catalog-id=$HOST_CATALOG_ID
+
+    boundary hosts create static \
+      -name=localhost \
+      -description="Local host for testing" \
+      -address="localhost" \
+      -host-catalog-id=$HOST_CATALOG_ID
     ```
 
-    Or, using the value stored in the environment.
+    TODO: get the IP address of the worker host
 
     ```
-    boundary targets read -id=$GEN_TARGET_ID
+    boundary hosts create static \
+      -name=worker-host \
+      -description="Worker host" \
+      -address="127.0.0.1" \
+      -host-catalog-id=$HOST_CATALOG_ID
     ```
 
-    You should see output like the below.
+    Example output:
+
+    ```
+    TODO
+    <...truncated..>
+    ```
+
+    Grab the host ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export HOST_ID=<HOST_ID_FROM_ABOVE>
+    export POSTGRES_HOST_ID=<POSTGRES_HOST_ID_FROM_ABOVE>
+    export LOCAL_HOST_ID=<LOCAL_HOST_ID_FROM_ABOVE>
+    export WORKER_HOST_ID=<WORKER_HOST_ID_FROM_ABOVE>
+    ```
+
+    A *host set* groups together hosts, which provide logically equivalent services. Targets work off of host sets,
+    so even if there is only one hosts, you will still create a host set to contain one host.
+
+    Create a host set named "test-machines".
+
+    ```
+    boundary host-sets create static \
+      -name="test-machines" \
+      -description="Test machine host set" \
+      -host-catalog-id=$HOST_CATALOG_ID
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    <...truncated..>
+    ```
+
+    Grab the host set ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export HOST_SET_ID=<HOST_SET_ID_FROM_ABOVE>
+    ```
+
+    Now you can add the hosts you created above to the host set.
+
+    ```
+    boundary host-sets add-hosts \
+      -id=<host_set_id> \
+      -host=<postgres_host_id> \
+      -host=<localhost_host_id>
+    ```
+
+    With the hosts added to the host set and the host catalog, it's time to define the target that you will ultimately
+    connect to. You'll create a target named "tests", set the default port to `22` for SSH, and set the session
+    connection limit to `-1`, which allows unlimited connections.
+
+    ```
+    boundary targets create tcp \
+      -name="tests" \
+      -description="Test target" \
+      -default-port=22 \
+      -scope-id=$PROJECT_ID \
+      -session-connection-limit="-1"
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    <...truncated..>
+    ```
+
+    Grab the target ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export TARGET_ID=<TARGET_ID_FROM_ABOVE>
+    ```
+
+    ```
+    export TARGET_ID=$(boundary targets list -scope-id=$PROJECT_SCOPE_ID -format=json | jq -r '.items[0].id')
+    ```
+
+    The last bit of configuration you'll need to complete is adding the host set you created above to the target you
+    just created.
+
+    ```
+    boundary targets add-host-sets \
+      -id=<target_id> \
+      -host-set=<host_set_id>
+    ```
+
+    And you're done configuring your target.  You can view the details of the target using the `targets read` command.
+    Run the following command and confirm you see your host set added in the output.
+
+    ```
+    boundary targets read -id=$TARGET_ID
+    ```
+
+    Example output:
 
     ```
     Target information:
@@ -856,21 +952,13 @@ challenges:
     You are ready to connect to the target. You can paste the target ID into the below command to connect.
 
     ```
-    boundary connect ssh -target-id=<TARGET_ID_FROM_ABOVE>
-    ```
-
-    Or, you can use the target ID you stored in the environment.
-
-    ```
-    boundary connect ssh -target-id=$GEN_TARGET_ID
+    boundary connect ssh -target-id=$TARGET_ID
     ```
 
     Be sure to respond `yes` when asked if you are sure you want to continue connecting.
 
-    _TODO: add a diagram of the ref architecture and components to the notes and tell the user they can go view that if they need a refresher._
-
-
-    You have now successfully connected to your first target using Boundary!
+    You have now successfully connected to your first target using via SSH using Boundary! Next, you'll learn
+    how to use Boundary to connect to a Postgres instance using TCP.
   tabs:
   - title: VS Code
     type: service
@@ -908,7 +996,7 @@ challenges:
       -description="HashiCups IT Team"
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Scope information:
@@ -937,7 +1025,7 @@ challenges:
     boundary scopes list
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Scope information:
@@ -983,7 +1071,7 @@ challenges:
       -description="Manage QA machines"
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Scope information:
@@ -1013,7 +1101,7 @@ challenges:
     boundary scopes list -scope-id=$ORG_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Scope information:
@@ -1051,7 +1139,7 @@ challenges:
         -description="For DevOps usage"
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -1072,7 +1160,7 @@ challenges:
     -address="127.0.0.1" -host-catalog-id=$HOST_CATALOG_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -1085,7 +1173,7 @@ challenges:
       -address="localhost" -host-catalog-id=$HOST_CATALOG_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -1096,7 +1184,7 @@ challenges:
     -description="Test machine host set" -host-catalog-id=$HOST_CATALOG_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -1106,7 +1194,7 @@ challenges:
     boundary hosts list -host-catalog-id=$HOST_CATALOG_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -1117,7 +1205,7 @@ challenges:
       -host=<localhost_host_id>
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -1128,7 +1216,7 @@ challenges:
         -default-port=22 -scope-id=$PROJECT_ID -session-connection-limit="-1"
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -1138,7 +1226,7 @@ challenges:
     boundary targets add-host-sets -id=<target_id> -host-set=<host_set_id>
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -1188,7 +1276,7 @@ challenges:
       -description="HashiCups Admin Demo Account"
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -1198,7 +1286,7 @@ challenges:
     boundary users create -name="tester01" -description="A test user" -scope-id=$ORG_ID
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -1208,7 +1296,7 @@ challenges:
     boundary users set-accounts -id=<user_id> -account=<account_id>
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -1219,7 +1307,7 @@ challenges:
     -auth-method-id=<auth_method_id>
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -1230,7 +1318,7 @@ challenges:
     -login-name=admin -password=password
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -1240,7 +1328,7 @@ challenges:
     boundary groups create -name="group01" -description="A test group" -scope-id=$ORG_ID
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -1250,7 +1338,7 @@ challenges:
     boundary groups add-members -id=<group_id> -member=<user_id>
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -1348,4 +1436,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "11615831065712855358"
+checksum: "5427706529508002021"

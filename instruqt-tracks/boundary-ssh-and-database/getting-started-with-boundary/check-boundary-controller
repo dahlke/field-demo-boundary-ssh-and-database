@@ -1,11 +1,15 @@
 #!/bin/bash -l
 
+# TODO: get the env vars from the solve script
+source ~/.bashrc
+cat ~/.bashrc
+
 # Check that the HashiCups org scope exists
 ORG_SCOPE_NAME=$(boundary scopes list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-format=json | jq -r '.items[0].name')
 
-if [ "$ORG_SCOPE_NAME" = "HashiCups" ]; then
+if [ "$ORG_SCOPE_NAME" != "HashiCups" ]; then
     fail-message "You did not create the 'HashiCups' org scope."
     exit 1
 fi
@@ -16,7 +20,7 @@ PROJECT_SCOPE_NAME=$(boundary scopes list \
 	-scope-id=$ORG_SCOPE_ID \
 	-format=json | jq -r '.items[0].name')
 
-if [ "$PROJECT_SCOPE_NAME" = "HashiCups App" ]; then
+if [ "$PROJECT_SCOPE_NAME" != "HashiCups App" ]; then
     fail-message "You did not create the 'HashiCups App' project scope."
     exit 1
 fi
@@ -27,7 +31,7 @@ AUTH_METHOD_NAME=$(boundary auth-methods list \
 	-recovery-config /root/boundary-controller-recovery.hcl  \
 	-format=json | jq -r '.items[0].name')
 
-if [ "$AUTH_METHOD_NAME" = "hashicups_auth_method" ]; then
+if [ "$AUTH_METHOD_NAME" != "hashicups_auth_method" ]; then
     fail-message "You did not create the 'hashicups_auth_method' auth method."
     exit 1
 fi
@@ -38,7 +42,7 @@ MYUSER_ACCOUNT_NAME=$(boundary accounts list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-format=json | jq -r '.items[0].attributes.login_name')
 
-if [ "$MYUSER_ACCOUNT_NAME" = "myuser" ]; then
+if [ "$MYUSER_ACCOUNT_NAME" != "myuser" ]; then
     fail-message "You did not create the 'myuser' account."
     exit 1
 fi
@@ -49,7 +53,7 @@ MYUSER_USER_NAME=$(boundary users list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-format=json | jq -r '.items[0].name')
 
-if [ "$MYUSER_USER_NAME" = "myuser" ]; then
+if [ "$MYUSER_USER_NAME" != "myuser" ]; then
     fail-message "You did not create the 'myuser' user."
     exit 1
 fi
@@ -60,7 +64,7 @@ GLOBAL_ANON_LISTING_NAME=$(boundary roles list \
 	-scope-id 'global' \
 	-format=json | jq -r '.items[0].name')
 
-if [ "$GLOBAL_ANON_LISTING_NAME" = "global_anon_listing" ]; then
+if [ "$GLOBAL_ANON_LISTING_NAME" != "global_anon_listing" ]; then
     fail-message "You did not create the 'global_anon_listing' role."
     exit 1
 fi
@@ -71,7 +75,7 @@ ORG_ANON_LISTING_NAME=$(boundary roles list \
 	-scope-id $ORG_SCOPE_ID \
 	-format=json | jq -r '.items[0].name')
 
-if [ "$ORG_ANON_LISTING_NAME" = "org_anon_listing" ]; then
+if [ "$ORG_ANON_LISTING_NAME" != "org_anon_listing" ]; then
     fail-message "You did not create the 'org_anon_listing' role."
     exit 1
 fi
@@ -82,7 +86,7 @@ ORG_ADMIN_NAME=$(boundary roles list \
 	-scope-id 'global' \
 	-format=json | jq -r '.items[1].name')
 
-if [ "$ORG_ADMIN_NAME" = "org_admin" ]; then
+if [ "$ORG_ADMIN_NAME" != "org_admin" ]; then
     fail-message "You did not create the 'org_admin' role."
     exit 1
 fi
@@ -98,7 +102,7 @@ boundary roles list \
 	-scope-id $ORG_SCOPE_ID \
 	-format=json | jq -r '.items[1].name'
 
-if [ "$PROJECT_ADMIN_NAME" = "project_admin" ]; then
+if [ "$PROJECT_ADMIN_NAME" != "project_admin" ]; then
     fail-message "You did not create the 'project_admin' role."
     exit 1
 fi

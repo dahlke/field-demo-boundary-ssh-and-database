@@ -121,14 +121,6 @@ INIT_OUTPUT=$(boundary database init -skip-initial-login-role-creation -config=/
 touch /root/init-output.txt
 echo $INIT_OUTPUT >> /root/init-output.txt
 
-GEN_AUTH_METHOD=$(echo $INIT_OUTPUT | jq -r .auth_method.auth_method_id)
-ADMIN_USERNAME=$(echo $INIT_OUTPUT | jq -r .auth_method.login_name)
-ADMIN_PASSWORD=$(echo $INIT_OUTPUT | jq -r .auth_method.password)
-
-echo "export GEN_AUTH_METHOD=$GEN_AUTH_METHOD" >> ~/.bashrc
-echo "export ADMIN_USERNAME=$ADMIN_USERNAME" >> ~/.bashrc
-echo "export ADMIN_PASSWORD=$ADMIN_PASSWORD" >> ~/.bashrc
-
 #########
 # Install VS Code Server
 #########
@@ -179,26 +171,5 @@ sudo systemctl start boundary-controller
 systemctl status boundary-controller
 
 # journalctl -u boundary-controller.service
-
-#########
-# Store some useful environment variables before letting the user in
-#########
-
-# TODO: do this in the solve script so it helps the user persist them across terminal sessions for ease of use
-export BOUNDARY_TOKEN=$( \
-  boundary authenticate password \
-  -format=json \
-  -auth-method-id=$GEN_AUTH_METHOD \
-  -keyring-type="none"\
-  -login-name=$GEN_LOGIN_NAME \
-  -password=$GEN_PASSWORD | jq -r .item.attributes.token)
-
-export GEN_GLOBAL_SCOPE_ID=$(boundary scopes list -format=json | jq -r '.items[0].id')
-export GEN_PROJ_SCOPE_ID=$(boundary scopes list -scope-id=$GEN_GLOBAL_SCOPE_ID -format=json | jq -r '.items[0].id')
-export GEN_TARGET_ID=$(boundary targets list -scope-id=$GEN_PROJ_SCOPE_ID -format=json | jq -r '.items[0].id')
-
-echo "export GEN_GLOBAL_SCOPE_ID=$GEN_GLOBAL_SCOPE_ID"
-echo "export GEN_PROJ_SCOPE_ID=$GEN_PROJ_SCOPE_ID"
-echo "export GEN_TARGET_ID=$GEN_TARGET_ID"
 
 exit 0

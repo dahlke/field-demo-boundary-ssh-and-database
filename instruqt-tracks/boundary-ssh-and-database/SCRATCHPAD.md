@@ -90,7 +90,7 @@
     boundary scopes list -scope-id=<ORG_SCOPE_ID_FROM_ABOVE>
     ```
 
-    You should see output like the below. Note this time you are getting a *project scope*, not an org scope.
+    Example output: Note this time you are getting a *project scope*, not an org scope.
 
     ```
     Scope information:
@@ -165,7 +165,7 @@
     boundary targets read -id=$GEN_TARGET_ID
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     Target information:
@@ -234,7 +234,7 @@
       -description="HashiCups IT Team"
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Scope information:
@@ -263,7 +263,7 @@
     boundary scopes list
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Scope information:
@@ -309,7 +309,7 @@
       -description="Manage QA machines"
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Scope information:
@@ -339,7 +339,7 @@
     boundary scopes list -scope-id=$ORG_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     Scope information:
@@ -377,7 +377,7 @@
         -description="For DevOps usage"
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -398,7 +398,7 @@
     -address="127.0.0.1" -host-catalog-id=$HOST_CATALOG_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -411,7 +411,7 @@
       -address="localhost" -host-catalog-id=$HOST_CATALOG_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -422,7 +422,7 @@
     -description="Test machine host set" -host-catalog-id=$HOST_CATALOG_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -432,7 +432,7 @@
     boundary hosts list -host-catalog-id=$HOST_CATALOG_ID
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -443,7 +443,7 @@
       -host=<localhost_host_id>
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -454,7 +454,7 @@
         -default-port=22 -scope-id=$PROJECT_ID -session-connection-limit="-1"
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -464,7 +464,7 @@
     boundary targets add-host-sets -id=<target_id> -host-set=<host_set_id>
     ```
 
-    You should see some output like the below.
+    Example output:
 
     ```
     TODO
@@ -514,7 +514,7 @@
       -description="HashiCups Admin Demo Account"
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -524,7 +524,7 @@
     boundary users create -name="tester01" -description="A test user" -scope-id=$ORG_ID
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -534,7 +534,7 @@
     boundary users set-accounts -id=<user_id> -account=<account_id>
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -545,7 +545,7 @@
     -auth-method-id=<auth_method_id>
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -556,7 +556,7 @@
     -login-name=admin -password=password
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -566,7 +566,7 @@
     boundary groups create -name="group01" -description="A test group" -scope-id=$ORG_ID
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
@@ -576,7 +576,7 @@
     boundary groups add-members -id=<group_id> -member=<user_id>
     ```
 
-    You should see output like the below.
+    Example output:
 
     ```
     TODO
