@@ -1,31 +1,106 @@
 #!/bin/bash -l
 
 # Check that the HashiCups org scope exists
+ORG_SCOPE_NAME=$(boundary scopes list \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-format=json | jq -r '.items[0].name')
+
+if [ "$ORG_SCOPE_NAME" = "HashiCups" ]; then
+    fail-message "You did not create the 'HashiCups' org scope."
+    exit 1
+fi
 
 # Check that the HashiCups App project scope exists
+PROJECT_SCOPE_NAME=$(boundary scopes list \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id=$ORG_SCOPE_ID \
+	-format=json | jq -r '.items[0].name')
+
+if [ "$PROJECT_SCOPE_NAME" = "HashiCups App" ]; then
+    fail-message "You did not create the 'HashiCups App' project scope."
+    exit 1
+fi
 
 # Check that the auth method exists
+AUTH_METHOD_NAME=$(boundary auth-methods list \
+	-scope-id=$ORG_SCOPE_ID \
+	-recovery-config /root/boundary-controller-recovery.hcl  \
+	-format=json | jq -r '.items[0].name')
+
+if [ "$AUTH_METHOD_NAME" = "hashicups_auth_method" ]; then
+    fail-message "You did not create the 'hashicups_auth_method' auth method."
+    exit 1
+fi
 
 # Check that the myuser account exists
+MYUSER_ACCOUNT_NAME=$(boundary accounts list \
+	-auth-method-id=$AUTH_METHOD_ID \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-format=json | jq -r '.items[0].attributes.login_name')
+
+if [ "$MYUSER_ACCOUNT_NAME" = "myuser" ]; then
+    fail-message "You did not create the 'myuser' account."
+    exit 1
+fi
 
 # Check that the myuser user exists
+MYUSER_USER_NAME=$(boundary users list \
+	-scope-id=$ORG_SCOPE_ID \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-format=json | jq -r '.items[0].name')
 
-# Check that the myuser was added to the myuser account
+if [ "$MYUSER_USER_NAME" = "myuser" ]; then
+    fail-message "You did not create the 'myuser' user."
+    exit 1
+fi
 
 # Check that the global scope anon listing role was created
+GLOBAL_ANON_LISTING_NAME=$(boundary roles list \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id 'global' \
+	-format=json | jq -r '.items[0].name')
 
-# Check that the project scope anon listing role was created
+if [ "$GLOBAL_ANON_LISTING_NAME" = "global_anon_listing" ]; then
+    fail-message "You did not create the 'global_anon_listing' role."
+    exit 1
+fi
+
+# Check that the org scope anon listing role was created
+ORG_ANON_LISTING_NAME=$(boundary roles list \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id $ORG_SCOPE_ID \
+	-format=json | jq -r '.items[0].name')
+
+if [ "$ORG_ANON_LISTING_NAME" = "org_anon_listing" ]; then
+    fail-message "You did not create the 'org_anon_listing' role."
+    exit 1
+fi
 
 # Check that the org scope admin role was created
+ORG_ADMIN_NAME=$(boundary roles list \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id 'global' \
+	-format=json | jq -r '.items[1].name')
+
+if [ "$ORG_ADMIN_NAME" = "org_admin" ]; then
+    fail-message "You did not create the 'org_admin' role."
+    exit 1
+fi
 
 # Check that the project scope admin role was created
+PROJECT_ADMIN_NAME=$(boundary roles list \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id $ORG_SCOPE_ID \
+	-format=json | jq -r '.items[1].name')
 
-# Check that the global scope anon listing role grants and principals exist
+boundary roles list \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id $ORG_SCOPE_ID \
+	-format=json | jq -r '.items[1].name'
 
-# Check that the project scope anon listing role grants and principals exist
-
-# Check that the project scope admin role grants and principals exist
-
-# Check that the project scope admin role grants and principals exist
+if [ "$PROJECT_ADMIN_NAME" = "project_admin" ]; then
+    fail-message "You did not create the 'project_admin' role."
+    exit 1
+fi
 
 exit 0
