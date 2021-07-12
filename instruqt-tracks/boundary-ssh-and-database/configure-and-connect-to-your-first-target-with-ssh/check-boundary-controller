@@ -1,9 +1,40 @@
 #!/bin/bash -l
 
-# TODO: check host catalog id
-# TODO: worker host id
-# TODO: host set id
-# TODO: target id
+# Check that the host catalog was created.
+HOST_CATALOG_ID=$(boundary host-catalogs list \
+	-scope-id=$PROJECT_SCOPE_ID -format=json | jq -r '.items[0].id')
+
+if [ "$HOST_CATALOG_ID" = "" ]; then
+    fail-message "You did not create the Host Catalog."
+	exit 1
+fi
+
+# Check that the boundary worker host was created.
+WORKER_HOST_ID=$(boundary hosts list \
+	-host-catalog-id=$HOST_CATALOG_ID -format=json | jq -r '.items[0].id')
+
+if [ "$WORKER_HOST_ID" = "" ]; then
+    fail-message "You did not create the Worker Host."
+	exit 1
+fi
+
+# Check that the host set was created.
+HOST_SET_ID=$(boundary host-sets list \
+	-host-catalog-id=$HOST_CATALOG_ID -format=json | jq -r '.items[0].id')
+
+if [ "$HOST_SET_ID" = "" ]; then
+    fail-message "You did not create the Host Catalog."
+	exit 1
+fi
+
+# Check that the target was created.
+TARGET_ID=$(boundary targets list \
+	-scope-id=$PROJECT_SCOPE_ID -format=json | jq -r '.items[0].id')
+
+if [ "$TARGET_ID" = "" ]; then
+    fail-message "You did not create the Target."
+	exit 1
+fi
 
 # TODO: check that they are in the bashrc
 
