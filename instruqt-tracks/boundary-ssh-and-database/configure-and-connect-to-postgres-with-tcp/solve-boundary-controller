@@ -1,0 +1,19 @@
+#!/bin/bash -l
+
+# Enable bash history
+HISTFILE=/root/.bash_history
+set -o history
+
+boundary hosts create static \
+	-name=postgres \
+	-description="Postgres host" \
+	-address="127.0.0.1" \
+	-host-catalog-id=$HOST_CATALOG_ID
+
+boundary hosts create static \
+	-name=localhost \
+	-description="Local host for testing" \
+	-address="localhost" \
+	-host-catalog-id=$HOST_CATALOG_ID
+
+exit 0

@@ -4,32 +4,43 @@
 HISTFILE=/root/.bash_history
 set -o history
 
-# Log into boundary and store the token
-export BOUNDARY_TOKEN=$( \
-	boundary authenticate password \
-	-format=json \
-	-auth-method-id=$GEN_AUTH_METHOD \
-	-keyring-type="none"\
-	-login-name=$ADMIN_USERNAME \
-	-password=$ADMIN_PASSWORD | jq -r .item.attributes.token)
+export HOST_CATALOG_ID=$(boundary host-catalogs create static \
+	-scope-id=$PROJECT_SCOPE_ID \
+	-name="HashiCups App" \
+	-description="For HashiCups App usage" \
+	-format=json | jq -r .item.id)
 
-# Get the generated org scope
-export GEN_GLOBAL_SCOPE_ID=$(boundary scopes list -format=json | jq -r '.items[0].id')
+echo "Host Catalog ID:" $HOST_CATALOG_ID
 
-# Get the generated project scope
-export GEN_PROJ_SCOPE_ID=$(boundary scopes list -scope-id=$GEN_GLOBAL_SCOPE_ID -format=json | jq -r '.items[0].id')
+export WORKER_HOST_ID=$(boundary hosts create static \
+	-name=worker-host \
+	-description="Boundary Worker host" \
+	-address="boundary-worker" \
+	-host-catalog-id=$HOST_CATALOG_ID \
+	-format=json | jq -r .item.id)
 
-# Get the target from the project scope
-export GEN_TARGET_ID=$(boundary targets list -scope-id=$GEN_PROJ_SCOPE_ID -format=json | jq -r '.items[0].id')
+export HOST_SET_ID=$(boundary host-sets create static \
+	-name="test-host-set" \
+	-description="Test machine host set" \
+	-host-catalog-id=$HOST_CATALOG_ID \
+	-format=json | jq -r .item.id)
 
-# TODO: do I need these?
-boundary targets read -id=$GEN_TARGET_ID
-boundary connect ssh -target-id=$GEN_TARGET_ID
+boundary host-sets add-hosts \
+	-id=$HOST_SET_ID \
+	-host=$WORKER_HOST_ID
 
-# Add those variables to the bashrc
-echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
-echo "export GEN_GLOBAL_SCOPE_ID=$GEN_GLOBAL_SCOPE_ID" >> ~/.bashrc
-echo "export GEN_PROJ_SCOPE_ID=$GEN_PROJ_SCOPE_ID" >> ~/.bashrc
-echo "export GEN_TARGET_ID=$GEN_TARGET_ID" >> ~/.bashrc
+export TARGET_ID=$( boundary targets create tcp \
+	-name="ssh-test-targets" \
+	-description="Test SSH target" \
+	-default-port=22 \
+	-scope-id=$PROJECT_SCOPE_ID \
+	-session-connection-limit="-1" \
+	-format=json | jq -r .item.id)
+)
+
+echo "export HOST_CATALOG_ID=$HOST_CATALOG_ID" >> ~/.bashrc
+echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
+echo "export HOST_SET_ID=$HOST_SET_ID" >> ~/.bashrc
+echo "export TARGET_ID=$TARGET_ID" >> ~/.bashrc
 
 exit 0

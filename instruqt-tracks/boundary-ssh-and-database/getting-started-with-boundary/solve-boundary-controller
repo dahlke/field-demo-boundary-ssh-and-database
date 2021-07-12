@@ -15,7 +15,6 @@ boundary scopes create -name 'HashiCups' -scope-id 'global' \
 -skip-default-role-creation \
 -format=json | jq -r .item.id)
 
-# TODO: place all these in the bashrc
 echo "Org Scope ID:" $ORG_SCOPE_ID
 
 # Create the Project Scope

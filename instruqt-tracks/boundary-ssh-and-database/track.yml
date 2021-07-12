@@ -779,7 +779,15 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Host Catalog information:
+      Created Time:        Mon, 12 Jul 2021 16:48:28 UTC
+      Description:         For HashiCups App usage
+      ID:                  hcst_RVwh1LxNMa
+      Name:                HashiCups App
+      Type:                static
+      Updated Time:        Mon, 12 Jul 2021 16:48:28 UTC
+      Version:             1
+
     <...truncated..>
     ```
 
@@ -791,43 +799,41 @@ challenges:
 
     Next, create a new *host*.
 
-    ```
-    boundary hosts create static \
-      -name=postgres \
-      -description="Postgres host" \
-      -address="127.0.0.1" \
-      -host-catalog-id=$HOST_CATALOG_ID
-
-    boundary hosts create static \
-      -name=localhost \
-      -description="Local host for testing" \
-      -address="localhost" \
-      -host-catalog-id=$HOST_CATALOG_ID
-    ```
-
-    TODO: get the IP address of the worker host
+    TODO: Explain that `boundary-worker` resolves to the extra host.
 
     ```
     boundary hosts create static \
       -name=worker-host \
       -description="Worker host" \
-      -address="127.0.0.1" \
+      -address="boundary-worker" \
       -host-catalog-id=$HOST_CATALOG_ID
     ```
 
     Example output:
 
     ```
-    TODO
+    Host information:
+      Created Time:        Mon, 12 Jul 2021 20:37:34 UTC
+      Description:         Worker host
+      Host Catalog ID:     hcst_cMzXXWNylL
+      ID:                  hst_mnmBqpd9ky
+      Name:                worker-host
+      Type:                static
+      Updated Time:        Mon, 12 Jul 2021 20:37:34 UTC
+      Version:             1
+
+      Scope:
+        ID:                p_RQZZzHuIlK
+        Name:              HashiCups App
+        Parent Scope ID:   o_wqPmdh2gnu
+        Type:              project
+
     <...truncated..>
     ```
 
     Grab the host ID from the output and store it in an environment variable for later usage.
 
     ```
-    export HOST_ID=<HOST_ID_FROM_ABOVE>
-    export POSTGRES_HOST_ID=<POSTGRES_HOST_ID_FROM_ABOVE>
-    export LOCAL_HOST_ID=<LOCAL_HOST_ID_FROM_ABOVE>
     export WORKER_HOST_ID=<WORKER_HOST_ID_FROM_ABOVE>
     ```
 
@@ -860,9 +866,8 @@ challenges:
 
     ```
     boundary host-sets add-hosts \
-      -id=<host_set_id> \
-      -host=<postgres_host_id> \
-      -host=<localhost_host_id>
+      -id=$HOST_SET_ID \
+      -host=$WORKER_HOST_ID
     ```
 
     With the hosts added to the host set and the host catalog, it's time to define the target that you will ultimately
@@ -881,7 +886,17 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Target information:
+      Created Time:               Mon, 12 Jul 2021 20:46:41 UTC
+      Description:                Test SSH target
+      ID:                         ttcp_QWFzLzmVLK
+      Name:                       ssh-test-targets
+      Session Connection Limit:   -1
+      Session Max Seconds:        28800
+      Type:                       tcp
+      Updated Time:               Mon, 12 Jul 2021 20:46:41 UTC
+      Version:                    1
+
     <...truncated..>
     ```
 
@@ -891,17 +906,32 @@ challenges:
     export TARGET_ID=<TARGET_ID_FROM_ABOVE>
     ```
 
-    ```
-    export TARGET_ID=$(boundary targets list -scope-id=$PROJECT_SCOPE_ID -format=json | jq -r '.items[0].id')
-    ```
-
     The last bit of configuration you'll need to complete is adding the host set you created above to the target you
     just created.
 
     ```
     boundary targets add-host-sets \
-      -id=<target_id> \
-      -host-set=<host_set_id>
+      -id=$TARGET_ID \
+      -host-set=$HOST_SET_ID
+    ```
+
+    Example output:
+
+    ```
+    Host Set information:
+      Created Time:        Mon, 12 Jul 2021 20:40:08 UTC
+      Description:         Test machine host set
+      Host Catalog ID:     hcst_cMzXXWNylL
+      ID:                  hsst_pl5Yv1yf7Y
+      Name:                test-machines
+      Type:                static
+      Updated Time:        Mon, 12 Jul 2021 20:46:31 UTC
+      Version:             2
+
+    <...truncated..>
+
+    Host IDs:
+      hst_mnmBqpd9ky
     ```
 
     And you're done configuring your target.  You can view the details of the target using the `targets read` command.
@@ -925,21 +955,7 @@ challenges:
       Updated Time:               Wed, 30 Jun 2021 00:37:51 UTC
       Version:                    1
 
-      Scope:
-        ID:                       p_N4JvIZWqZc
-        Name:                     Generated project scope
-        Parent Scope ID:          o_fCudeW87DE
-        Type:                     project
-
-      Authorized Actions:
-        no-op
-        read
-        update
-        delete
-        add-host-sets
-        set-host-sets
-        remove-host-sets
-        authorize-session
+    <...truncated..>
 
       Host Sets:
         Host Catalog ID:          hcst_jLHX9jl2kL
@@ -986,81 +1002,6 @@ challenges:
     contents: TODO
   assignment: |-
     # Configure and Connect to Postgres with TCP
-
-    # Create an Org
-
-    ```
-    boundary scopes create \
-      -scope-id=global \
-      -name=HashiCups_IT \
-      -description="HashiCups IT Team"
-    ```
-
-    Example output:
-
-    ```
-    Scope information:
-      Created Time:        Fri, 02 Jul 2021 21:22:22 UTC
-      Description:         HashiCups IT Team
-      ID:                  o_tdsUUNNHdn
-      Name:                HashiCups_IT
-      Updated Time:        Fri, 02 Jul 2021 21:22:22 UTC
-      Version:             1
-
-      Scope (parent):
-        ID:                global
-        Name:              global
-        Type:              global
-
-      Authorized Actions:
-        no-op
-        read
-        update
-        delete
-    ```
-
-    List your scopes to confirm it has been created.
-
-    ```
-    boundary scopes list
-    ```
-
-    Example output:
-
-    ```
-    Scope information:
-      ID:                    o_FnOiDQDaT8
-        Version:             1
-        Name:                Generated org scope
-        Description:         Provides an initial org scope in Boundary
-        Authorized Actions:
-          no-op
-          read
-          update
-          delete
-
-      ID:                    o_tdsUUNNHdn
-        Version:             1
-        Name:                HashiCups_IT
-        Description:         HashiCups IT Team
-        Authorized Actions:
-          no-op
-          read
-          update
-          delete
-      ```
-
-    Then put the newly created org ID into the environment.
-
-    ```
-    export ORG_ID=<ORG_ID_FROM_ABOVE>
-    ```
-
-    Or you can use this simple one-liner to set the new `ORG_ID`.
-
-    ```
-    export ORG_ID=$(boundary scopes list -format=json | jq -r '.items[-1].id')
-    ```
 
     # Create a Project
 
@@ -1436,4 +1377,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "5427706529508002021"
+checksum: "2918935714559854786"
