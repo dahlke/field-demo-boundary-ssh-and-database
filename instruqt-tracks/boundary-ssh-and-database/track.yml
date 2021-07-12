@@ -19,7 +19,7 @@ challenges:
   id: ctko5pdbst2d
   type: challenge
   title: Getting Started With Boundary
-  teaser: TODO
+  teaser: Familiarize yourself with Boundary resources, and set up your first scopes and users.
   notes:
   - type: text
     contents: |-
@@ -687,7 +687,7 @@ challenges:
   id: wm0enxxguhie
   type: challenge
   title: Configure Your First Host and Connect with SSH
-  teaser: Use Boundary to SSH into a target host.
+  teaser: Use Boundary as a TCP proxy to SSH to a remote host.
   notes:
   - type: text
     contents: 'TODO: add a diagram of the ref architecture and components to the notes and tell the user they can go view that if they need a refresher.'
@@ -985,7 +985,7 @@ challenges:
   id: 1ut7x9mfbihc
   type: challenge
   title: Configure and Connect to Postgres with TCP
-  teaser: TODO
+  teaser: Use Boundary as a TCP proxy to connect to a Postgres instance.
   notes:
   - type: text
     contents: TODO
@@ -1279,7 +1279,7 @@ challenges:
   id: wyaxsa25ysd1
   type: challenge
   title: Explore the Admin UI
-  teaser: Get familiar with Boundary's concepts and admin UI before jumping into accessing targets.
+  teaser: Get familiar with the Boundary Admin UI and explore what you created.
   notes:
   - type: text
     contents: |-
@@ -1366,4 +1366,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "17646063323351579624"
+checksum: "9627930874823360126"
