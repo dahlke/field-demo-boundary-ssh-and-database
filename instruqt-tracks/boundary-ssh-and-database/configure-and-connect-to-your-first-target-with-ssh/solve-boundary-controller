@@ -50,6 +50,7 @@ boundary targets add-host-sets \
 
 # TODO: boundary connect ssh -target-id=$TARGET_ID # select yes
 
+# TODO: do I want to store these ones like the last one?
 echo "export HOST_CATALOG_ID=$HOST_CATALOG_ID" >> ~/.bashrc
 echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
 echo "export HOST_SET_ID=$HOST_SET_ID" >> ~/.bashrc

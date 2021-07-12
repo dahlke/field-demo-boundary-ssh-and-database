@@ -1,6 +1,10 @@
 #!/bin/bash -l
 
-# TODO: check that the commands were run and the tokens are present
-# TODO: check that I can log in w/ the token and read the target, host, etc.
+# TODO: check host catalog id
+# TODO: worker host id
+# TODO: host set id
+# TODO: target id
+
+# TODO: check that they are in the bashrc
 
 exit 0
