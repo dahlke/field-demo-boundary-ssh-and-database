@@ -715,21 +715,6 @@ challenges:
 
     ---
 
-    Since you are already authenticated, you need to get the project scope ID so you can see it's host sets and hosts.
-
-    If for some reason you are not logged in, you can use tis simple one-liner to authenticate and set your
-    `BOUNDARY_TOKEN`.
-
-    ```
-    export BOUNDARY_TOKEN=$( \
-      boundary authenticate password \
-      -format=json \
-      -auth-method-id=$AUTH_METHOD_ID \
-      -keyring-type="none"\
-      -login-name=$MYUSER_USERNAME \
-      -password=$MYUSER_PASSWORD | jq -r .item.attributes.token)
-    ```
-
     You will use the project scope you created for this challenge. List the scopes you created for the org.
 
     ```
@@ -822,12 +807,6 @@ challenges:
       Updated Time:        Mon, 12 Jul 2021 20:37:34 UTC
       Version:             1
 
-      Scope:
-        ID:                p_RQZZzHuIlK
-        Name:              HashiCups App
-        Parent Scope ID:   o_wqPmdh2gnu
-        Type:              project
-
     <...truncated..>
     ```
 
@@ -852,7 +831,16 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Host Set information:
+      Created Time:        Mon, 12 Jul 2021 21:19:47 UTC
+      Description:         Test machine host set
+      Host Catalog ID:     hcst_nsnTh5hZsc
+      ID:                  hsst_mr3TQkIVdd
+      Name:                test-machines
+      Type:                static
+      Updated Time:        Mon, 12 Jul 2021 21:19:47 UTC
+      Version:             1
+
     <...truncated..>
     ```
 
@@ -879,7 +867,7 @@ challenges:
       -name="tests" \
       -description="Test target" \
       -default-port=22 \
-      -scope-id=$PROJECT_ID \
+      -scope-id=$PROJECT_SCOPE_ID \
       -session-connection-limit="-1"
     ```
 
@@ -971,15 +959,12 @@ challenges:
     boundary connect ssh -target-id=$TARGET_ID
     ```
 
-    Be sure to respond `yes` when asked if you are sure you want to continue connecting.
+    Be sure to respond `yes` when asked if you are sure you want to continue connecting. You will then be dropped
+    into the shell for the `boundary-worker`, connecting your SSH session via Boundary.
 
     You have now successfully connected to your first target using via SSH using Boundary! Next, you'll learn
     how to use Boundary to connect to a Postgres instance using TCP.
   tabs:
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   - title: Controller
     type: terminal
     hostname: boundary-controller
@@ -990,6 +975,10 @@ challenges:
     type: service
     hostname: boundary-controller
     port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
   difficulty: advanced
   timelimit: 3600
 - slug: configure-and-connect-to-postgres-with-tcp
@@ -1377,4 +1366,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 3600
-checksum: "2918935714559854786"
+checksum: "17646063323351579624"

@@ -16,7 +16,7 @@ boundary config autocomplete install
 cat <<-EOF > /root/boundary-worker.hcl
 listener "tcp" {
   purpose = "proxy"
-  address = "0.0.0.0"
+  address = "boundary-worker"
   tls_disable = "true"
 }
 

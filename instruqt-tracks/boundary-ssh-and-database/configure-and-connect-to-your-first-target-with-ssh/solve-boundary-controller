@@ -19,11 +19,15 @@ export WORKER_HOST_ID=$(boundary hosts create static \
 	-host-catalog-id=$HOST_CATALOG_ID \
 	-format=json | jq -r .item.id)
 
+echo "Worker Host ID:" $WORKER_HOST_ID
+
 export HOST_SET_ID=$(boundary host-sets create static \
 	-name="test-host-set" \
 	-description="Test machine host set" \
 	-host-catalog-id=$HOST_CATALOG_ID \
 	-format=json | jq -r .item.id)
+
+echo "Host Set ID:" $HOST_CATALOG_ID
 
 boundary host-sets add-hosts \
 	-id=$HOST_SET_ID \
@@ -37,6 +41,14 @@ export TARGET_ID=$( boundary targets create tcp \
 	-session-connection-limit="-1" \
 	-format=json | jq -r .item.id)
 )
+
+echo "Target ID:" $TARGET_ID
+
+boundary targets add-host-sets \
+	-id=$TARGET_ID \
+	-host-set=$HOST_SET_ID
+
+# TODO: boundary connect ssh -target-id=$TARGET_ID # select yes
 
 echo "export HOST_CATALOG_ID=$HOST_CATALOG_ID" >> ~/.bashrc
 echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
