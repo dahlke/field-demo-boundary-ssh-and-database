@@ -12,7 +12,7 @@ export ORG_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -login-name $ADMIN_USER_USERNAME \
 -password $ADMIN_USER_PASSWORD \
--auth-method-id $ORG_AUTH_METHOD_ID \
+-auth-method-id $GLOBAL_AUTH_METHOD_ID \
 -format=json | jq -r .item.id)
 
 echo "Org Admin User Account ID:" $ORG_ADMIN_USER_ACCOUNT_ID
@@ -40,7 +40,7 @@ echo "Org Admin User ID:" $ORG_ADMIN_USER_ID
 boundary users add-accounts \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -id $ORG_ADMIN_USER_ID \
--account $ORG_ADMIN_USER_ACCOUNT_ID
+-account $GLOBAL_ADMIN_USER_ACCOUNT_ID
 
 # Create the User Principal for Project Admin User
 export PROJECT_ADMIN_USER_ID=$( \
@@ -52,7 +52,7 @@ boundary users create -scope-id $ORG_SCOPE_ID \
 
 echo "Project Admin User ID:" $PROJECT_ADMIN_USER_ID
 
-# Add Admin User Principal to the Project Admin Account
+# Add Project User Principal to the Project Admin Account
 boundary users add-accounts \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -id $PROJECT_ADMIN_USER_ID \
@@ -137,7 +137,7 @@ boundary authenticate password \
 -format=json | jq -r .item.attributes.token
 )
 
-echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
+echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
 echo "export PROJECT_ADMIN_USER_ACCOUNT_ID=$PROJECT_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
 echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
 echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc

@@ -6,7 +6,7 @@ cat ~/.bashrc
 
 # Check that the adminuser account exists
 ADMIN_USER_ACCOUNT_NAME=$(boundary accounts list \
-	-auth-method-id=$PROJECT_AUTH_METHOD_ID \
+	-auth-method-id=$ORG_AUTH_METHOD_ID \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-format=json | jq -r '.items[0].attributes.login_name')
 

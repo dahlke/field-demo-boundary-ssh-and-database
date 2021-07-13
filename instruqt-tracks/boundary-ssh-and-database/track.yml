@@ -62,9 +62,7 @@ challenges:
 
       You will learn that in this track.
   assignment: |-
-    # Getting Started
-
-    This first challenge will focus on scopes.
+    This first challenge will focus on *scopes*.
 
     What are scopes, you ask? Scopes are a foundational part of Boundary. They allow users to partition resources
     and assign ownership of resources to principals. There are three types of scopes within Boundary:
@@ -190,9 +188,10 @@ challenges:
   teaser: Learn to configure auth methods in Boundary for user authentication.
   notes:
   - type: text
-    contents: '- Auth Methods: TODO'
+    contents: |-
+      - Auth Methods: a resource that provides a mechanism for users to authenticate to Boundary.
   assignment: |-
-    This challenge will focus on the creation of auth methods.
+    This challenge will focus on the creation of *auth methods*.
 
     Now that you have your org scope and project scope created, it's time to add an auth method. Auth methods are
     resources that provide a mechanism for users to authenticate to Boundary. An auth method contains accounts which
@@ -205,8 +204,8 @@ challenges:
     boundary auth-methods create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -scope-id global \
-      -name 'hashicups_auth_method' \
-      -description 'Password auth method for HashiCups Engineering org.'
+      -name 'global_auth_method' \
+      -description 'Password auth method for global scope.'
     ```
 
     Example output:
@@ -214,9 +213,9 @@ challenges:
     ```
     Auth Method information:
       Created Time:                Tue, 13 Jul 2021 00:16:01 UTC
-      Description:                 Password auth method for HashiCups Engineering org.
+      Description:                 Password auth method for global org.
       ID:                          ampw_kHH1Cb4vmy
-      Name:                        hashicups_auth_method
+      Name:                        global_auth_method
       Type:                        password
       Updated Time:                Tue, 13 Jul 2021 00:16:01 UTC
       Version:                     1
@@ -227,7 +226,7 @@ challenges:
     Grab the org auth method ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ORG_AUTH_METHOD_ID=<ORG_AUTH_METHOD_ID_FROM_ABOVE>
+    export GLOBAL_AUTH_METHOD_ID=<GLOBAL_AUTH_METHOD_ID_FROM_ABOVE>
     ```
 
     Then, create an auth method in the org scope you created in the first challenge.
@@ -236,8 +235,8 @@ challenges:
     boundary auth-methods create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -scope-id $ORG_SCOPE_ID \
-      -name 'hashicups_app_auth_method' \
-      -description 'Password auth method for HashiCups Web App project.'
+      -name 'hashicups_eng_auth_method' \
+      -description 'Password auth method for HashiCups Engineering org scope.'
     ```
 
     Example output:
@@ -245,26 +244,26 @@ challenges:
     ```
     Auth Method information:
       Created Time:                Thu, 08 Jul 2021 18:08:10 UTC
-      Description:                 Password auth method for HashiCups Web App project.
+      Description:                 Password auth method for HashiCups Engineering org scope.
       ID:                          ampw_YXiGz3OWHI
-      Name:                        hashicups_app_auth_method
+      Name:                        hashicups_eng_auth_method
       Type:                        password
       Updated Time:                Thu, 08 Jul 2021 18:08:10 UTC
       Version:                     1
 
       Scope:
-        ID:                        o_tc3qudleXh
-        Name:                      HashiCups
+        ID:                        o_fBAIPOJhtH
+        Name:                      HashiCups Engineering
         Parent Scope ID:           global
         Type:                      org
 
     <...truncated...>
     ```
 
-    Grab the project auth method ID from the output and store it in an environment variable for later usage.
+    Grab the org auth method ID from the output and store it in an environment variable for later usage.
 
     ```
-    export PROJECT_AUTH_METHOD_ID=<PROJECT_AUTH_METHOD_ID_FROM_ABOVE>
+    export ORG_AUTH_METHOD_ID=<ORG_AUTH_METHOD_ID_FROM_ABOVE>
     ```
 
     Before continuing to the next challenge, be sure to add the environment variables you set above to the `~/.bashrc`
@@ -301,7 +300,7 @@ challenges:
   notes:
   - type: text
     contents: |-
-      - Account: TODO
+      - Account: Represents a unique set of credentials issued from a configured auth method which can be used to establish the identity of a user.
       - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
       - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
   assignment: |-
@@ -314,14 +313,15 @@ challenges:
 
     ---
 
-    Create a login account for the admin user for the org auth method.
+    Create a login account for the admin user for the global auth method. You'll use the username `adminuser` and the
+    password `foofoofoo`.
 
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -login-name "adminuser" \
       -password "foofoofoo" \
-      -auth-method-id $ORG_AUTH_METHOD_ID
+      -auth-method-id $GLOBAL_AUTH_METHOD_ID
     ```
 
     Example output:
@@ -350,14 +350,14 @@ challenges:
     export ORG_ADMIN_USER_ACCOUNT_ID=<ORG_ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
     ```
 
-    Then, create a login account for the admin user for the project auth method.
+    Then, create a login account for the admin user for the org auth method.
 
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -login-name "adminuser" \
       -password "foofoofoo" \
-      -auth-method-id $PROJECT_AUTH_METHOD_ID
+      -auth-method-id $ORG_AUTH_METHOD_ID
     ```
 
     Example output:
@@ -822,7 +822,7 @@ challenges:
 
     ```
     boundary authenticate password \
-      -auth-method-id $PROJECT_AUTH_METHOD_ID \
+      -auth-method-id $ORG_AUTH_METHOD_ID \
       -login-name adminuser \
       -password foofoofoo
     ```
@@ -851,8 +851,8 @@ challenges:
     your `~/.bashrc` file for future usage.
 
     ```
-    echo "export ORG_AUTH_METHOD_ID=<ORG_AUTH_METHOD_ID_FROM_ABOVE>" >> ~/.bashrc
-    echo "export PROJECT_AUTH_METHOD_ID=$PROJECT_AUTH_METHOD_ID" >> ~/.bashrc
+    echo "export GLOBAL_AUTH_METHOD_ID=<GLOBAL_AUTH_METHOD_ID_FROM_ABOVE>" >> ~/.bashrc
+    echo "export ORG_AUTH_METHOD_ID=$ORG_AUTH_METHOD_ID" >> ~/.bashrc
     echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     echo "export PROJECT_ADMIN_USER_ACCOUNT_ID=$PROJECT_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
@@ -1339,7 +1339,7 @@ challenges:
 
     ```
     boundary accounts create password \
-      -auth-method-id=<PROJECT_AUTH_METHOD_ID_FROM_ABOVE> \
+      -auth-method-id=<ORG_AUTH_METHOD_ID_FROM_ABOVE> \
       -login-name="hashicups_admin" \
       -password="password" \
       -name=hashicups_admin \
@@ -1374,7 +1374,7 @@ challenges:
 
     ```
     boundary authenicate password -login-name="tester01" -password="supersecure" \
-    -auth-method-id=<PROJECT_AUTH_METHOD_ID>
+    -auth-method-id=<ORG_AUTH_METHOD_ID>
     ```
 
     Example output:

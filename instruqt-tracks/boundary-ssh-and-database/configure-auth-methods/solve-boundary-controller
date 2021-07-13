@@ -5,28 +5,28 @@ HISTFILE=/root/.bash_history
 set -o history
 
 # Create the org auth method
-export ORG_AUTH_METHOD_ID=$(
+export GLOBAL_AUTH_METHOD_ID=$(
 boundary auth-methods create password \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -scope-id global \
--name 'hashicups_auth_method' \
--description 'Password auth method for HashiCups Engineering.'  \
+-name 'global_auth_method' \
+-description 'Password auth method for global scope.'  \
+-format=json | jq -r .item.id)
+
+echo "Global Auth Method ID:" $GLOBAL_AUTH_METHOD_ID
+
+# Create the project auth method
+export ORG_AUTH_METHOD_ID=$(
+boundary auth-methods create password \
+-recovery-config /root/boundary-controller-recovery.hcl \
+-scope-id $ORG_SCOPE_ID \
+-name 'hashicups_eng_auth_method' \
+-description 'Password auth method for HashiCups Engineering org scope.'  \
 -format=json | jq -r .item.id)
 
 echo "Org Auth Method ID:" $ORG_AUTH_METHOD_ID
 
-# Create the project auth method
-export PROJECT_AUTH_METHOD_ID=$(
-boundary auth-methods create password \
--recovery-config /root/boundary-controller-recovery.hcl \
--scope-id $ORG_SCOPE_ID \
--name 'hashicups_app_auth_method' \
--description 'Password auth method for HashiCups Web App.'  \
--format=json | jq -r .item.id)
-
-echo "Project Auth Method ID:" $PROJECT_AUTH_METHOD_ID
-
+echo "export GLOBAL_AUTH_METHOD_ID=$GLOBAL_AUTH_METHOD_ID" >> ~/.bashrc
 echo "export ORG_AUTH_METHOD_ID=$ORG_AUTH_METHOD_ID" >> ~/.bashrc
-echo "export PROJECT_AUTH_METHOD_ID=$PROJECT_AUTH_METHOD_ID" >> ~/.bashrc
 
 exit 0
