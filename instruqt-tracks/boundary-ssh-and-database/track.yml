@@ -192,8 +192,6 @@ challenges:
   - type: text
     contents: '- Auth Methods: TODO'
   assignment: |-
-    # Configure Auth Methods
-
     This challenge will focus on the creation of auth methods.
 
     Now that you have your org scope and project scope created, it's time to add an auth method. Auth methods are
@@ -307,8 +305,6 @@ challenges:
       - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
       - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
   assignment: |-
-    # Configure Admin Users and Roles
-
     In the last challenge, you learned how to create auth methods in Boundary. After you set up your auth methods in
     Boundary, you need to create some accounts, users and roles. You'll start with admin users, and will configure other
     types of users in later challenges.
@@ -323,7 +319,7 @@ challenges:
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -login-name "admin_user" \
+      -login-name "adminuser" \
       -password "foofoofoo" \
       -auth-method-id $ORG_AUTH_METHOD_ID
     ```
@@ -359,7 +355,7 @@ challenges:
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -login-name "admin_user" \
+      -login-name "adminuser" \
       -password "foofoofoo" \
       -auth-method-id $PROJECT_AUTH_METHOD_ID
     ```
@@ -392,14 +388,14 @@ challenges:
 
     TODO: explain users / roles
 
-    Now create a user and associate that user with the login account you just created. This user will also be
+    Now create a user and associate that user with both login accounts you just created. This user will also be
     the principal in the role you create in the following step.
 
     ```
-    boundary users create -scope-id $ORG_SCOPE_ID \
+    boundary users create -scope-id global \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -name "admin_user" \
-      -description "My user!"
+      -name "adminuser" \
+      -description "Admin User for HashiCups Engineering"
     ```
 
     Example output:
@@ -407,15 +403,15 @@ challenges:
     ```
     User information:
       Created Time:        Thu, 08 Jul 2021 18:11:17 UTC
-      Description:         My user!
+      Description:         Admin User for HashiCups Engineering
       ID:                  u_7QXZs7ldt3
-      Name:                admin_user
+      Name:                adminuser
       Updated Time:        Thu, 08 Jul 2021 18:11:17 UTC
       Version:             1
 
       Scope:
         ID:                o_tc3qudleXh
-        Name:              HashiCups
+        Name:              HashiCups Engineering
         Parent Scope ID:   global
         Type:              org
 
@@ -425,34 +421,67 @@ challenges:
     Grab the user ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ADMIN_USER_ID=<ADMIN_USER_ID_FROM_ABOVE>
+    export ORG_ADMIN_USER_ID=<ORG_ADMIN_USER_ID_FROM_ABOVE>
     ```
 
-    TODO: then you need to add the user principal to the admin accounts
+    Then, add the newly created org user to the org account.
 
-    # Add Admin User Principal to the Org Admin Account
     ```
     boundary users add-accounts \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -id $ADMIN_USER_ID \
+      -id $ORG_ADMIN_USER_ID \
       -account $ORG_ADMIN_USER_ACCOUNT_ID
     ```
 
+    You'll do the same now for the project scope. Create the user for the org scope.
+
     ```
-    # Add Admin User Principal to the Project Admin Account
+    boundary users create -scope-id $ORG_SCOPE_ID \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -name "adminuser" \
+      -description "Admin User for HashiCups Web App"
+    ```
+
+    Example output:
+
+    ```
+    User information:
+      Created Time:        Thu, 08 Jul 2021 18:11:17 UTC
+      Description:         Admin User for HashiCups Web App
+      ID:                  u_7QXZs7ldt3
+      Name:                adminuser
+      Updated Time:        Thu, 08 Jul 2021 18:11:17 UTC
+      Version:             1
+
+      Scope:
+        ID:                o_tc3qudleXh
+        Name:              HashiCups Engineering
+        Parent Scope ID:   global
+        Type:              org
+
+    <...truncated...>
+    ```
+
+    Grab the user ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export PROJECT_ADMIN_USER_ID=<PROJECT_ADMIN_USER_ID_FROM_ABOVE>
+    ```
+
+    You'll now add the user to the account for the org scope similarly to how you did before.
+
+    ```
     boundary users add-accounts \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -id $ADMIN_USER_ID \
+      -id $PROJECT_ADMIN_USER_ID \
       -account $PROJECT_ADMIN_USER_ACCOUNT_ID
     ```
 
-
-
-    You have now created your login account and user. It's time to associate those with some baseline roles.
+    You have now created your login accounts and users. It's time to associate those with some baseline roles.
 
     ---
 
-    # Create Roles to Manage Scopes
+    ## Create Roles to Manage Scopes
 
     The following describes the four baseline roles you'll need to create to manage resources within the org and
     project scopes created above. These roles are similar to the roles created for you if generation had not been
@@ -464,8 +493,8 @@ challenges:
 
     - To allow anonymous (unauthenticated) users the ability to list scopes and auth methods in the `global` scope.
     - To allow anonymous (unauthenticated) users the ability to list scopes and auth methods in the org scope.
-    - To allow `admin_user` user administration grants at the org scope.
-    - To allow `admin_user` user administration grants at the project scope.
+    - To allow `adminuser` user administration grants at the org scope.
+    - To allow `adminuser` user administration grants at the project scope.
 
     First, create global anonymous listing roles.
 
@@ -632,7 +661,7 @@ challenges:
     <...truncated...>
     ```
 
-    Create the org admin role for `admin_user`.
+    Create the org admin role for `adminuser`.
 
     ```
     boundary roles create -name 'org_admin' \
@@ -712,7 +741,7 @@ challenges:
     <...truncated...>
     ```
 
-    Create the project admin for `admin_user`.
+    Create the project admin for `adminuser`.
 
     ```
     boundary roles create -name 'project_admin' \
@@ -794,7 +823,7 @@ challenges:
     ```
     boundary authenticate password \
       -auth-method-id $PROJECT_AUTH_METHOD_ID \
-      -login-name admin_user \
+      -login-name adminuser \
       -password foofoofoo
     ```
 
@@ -1160,8 +1189,6 @@ challenges:
   - type: text
     contents: TODO
   assignment: |-
-    # Configure and Connect to Postgres with TCP
-
     TODO: only once the users are configured above.
 
     ---
@@ -1300,8 +1327,6 @@ challenges:
       - Group: Collection of users used for access control. A group is owned by one and only one scope.
       - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
   assignment: |-
-    '*Configure Users and Groups*'
-
     # TODO: create a DevOps group that has the SSH Access
     # TODO: create a DBAs group that has the database Access
 
@@ -1488,4 +1513,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 3600
-checksum: "16466595611463582611"
+checksum: "15501767856412990764"

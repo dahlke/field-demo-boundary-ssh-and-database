@@ -4,7 +4,7 @@
 HISTFILE=/root/.bash_history
 set -o history
 
-export ADMIN_USER_USERNAME="admin_user"
+export ADMIN_USER_USERNAME="adminuser"
 export ADMIN_USER_PASSWORD="foofoofoo"
 
 # Create an Account for Admin User
@@ -12,10 +12,10 @@ export ORG_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -login-name $ADMIN_USER_USERNAME \
 -password $ADMIN_USER_PASSWORD \
--auth-method-id $PROJECT_AUTH_METHOD_ID \
+-auth-method-id $ORG_AUTH_METHOD_ID \
 -format=json | jq -r .item.id)
 
-echo "Org Admin User Account ID:" $ADMIN_USER_ACCOUNT_ID
+echo "Org Admin User Account ID:" $ORG_ADMIN_USER_ACCOUNT_ID
 
 export PROJECT_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
 -recovery-config /root/boundary-controller-recovery.hcl \
@@ -24,28 +24,38 @@ export PROJECT_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
 -auth-method-id $PROJECT_AUTH_METHOD_ID \
 -format=json | jq -r .item.id)
 
-echo "Project Admin User Account ID:" $PROJECT_USER_ACCOUNT_ID
+echo "Project Admin User Account ID:" $PROJECT_ADMIN_USER_ACCOUNT_ID
 
-# Create the User Principal for Admin User
-export ADMIN_USER_ID=$( \
-boundary users create -scope-id $ORG_SCOPE_ID \
+# Create the User Principal for Org Admin User
+export ORG_ADMIN_USER_ID=$( \
+boundary users create -scope-id global \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -name $ADMIN_USER_USERNAME \
--description "My user!" \
+-description "Admin User for HashiCups Engineering" \
 -format=json | jq -r .item.id)
 
-echo "Admin User ID:" $ADMIN_USER_ID
+echo "Org Admin User ID:" $ORG_ADMIN_USER_ID
 
 # Add Admin User Principal to the Org Admin Account
 boundary users add-accounts \
 -recovery-config /root/boundary-controller-recovery.hcl \
--id $ADMIN_USER_ID \
+-id $ORG_ADMIN_USER_ID \
 -account $ORG_ADMIN_USER_ACCOUNT_ID
+
+# Create the User Principal for Project Admin User
+export PROJECT_ADMIN_USER_ID=$( \
+boundary users create -scope-id $ORG_SCOPE_ID \
+-recovery-config /root/boundary-controller-recovery.hcl \
+-name $ADMIN_USER_USERNAME \
+-description "Admin User for HashiCups Web App" \
+-format=json | jq -r .item.id)
+
+echo "Project Admin User ID:" $PROJECT_ADMIN_USER_ID
 
 # Add Admin User Principal to the Project Admin Account
 boundary users add-accounts \
 -recovery-config /root/boundary-controller-recovery.hcl \
--id $ADMIN_USER_ID \
+-id $PROJECT_ADMIN_USER_ID \
 -account $PROJECT_ADMIN_USER_ACCOUNT_ID
 
 export GLOBAL_ANON_LISTING_ID=$( \
