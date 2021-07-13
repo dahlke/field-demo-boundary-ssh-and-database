@@ -23,8 +23,6 @@ challenges:
   notes:
   - type: text
     contents: |-
-      TODO: why boundary?
-
       Boundary is a tool for managing identity-based access for modern, dynamic infrastructure. Just as infrastructure
       itself can be complex, at first glance Boundary can seem complex as well. As a result, it's helpful to understand
       how Boundary organizes security principals and resources, as well as how it allows you define granular
@@ -33,20 +31,12 @@ challenges:
       In this track, you will learn how to manage all the different principals and resources in Boundary, as well as
       how to leverage those resources to connect to a host via SSH, as well as a Postgres instance via TCP.
   - type: text
-    contents: |2-
-
+    contents: |-
       In this challenge, you will learn about the following Boundary resources.
 
       - Scope: Abstract permission boundary modeled as a container. A scope can contain scopes forming a tree.
       - Organization: Top-level container (scope) which owns zero to many projects and zero to many authentication methods. An organization inherits from scope allowing it to own zero to many groups, roles, policies, targets, host catalogs or credential stores.
       - Project: Child scope of an organization.
-      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
-      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
-
-      TODO: remove this once the info is in other places
-      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
-      - Group: Collection of users used for access control. A group is owned by one and only one scope.
-      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
   - type: text
     contents: |-
       Boundary has already been
@@ -59,16 +49,7 @@ challenges:
   assignment: |-
     # Getting Started
 
-    In this track, you will learn how to manage all the different resources in Boundary, as well as how to leverage
-    those resources to connect to a host via SSH, as well as a Postgres instance via TCP.
-
-    Boundary has already been
-    [installed](https://learn.hashicorp.com/tutorials/boundary/getting-started-install?in=boundary/getting-started)
-    for you. A Boundary Controller and a Boundary Worker are also already running.  If you are not familiar with
-    installing Boundary, the reference architecture, or concepts like scopes, auth methods, users, accounts, and
-    more - check out the [Install and Configure Boundary Track](TODO).
-
-    This first challenge will focus on scopes, as well as initial creation of auth methods, users, and roles.
+    This first challenge will focus on scopes.
 
     What are scopes, you ask? Scopes are a foundational part of Boundary. They allow users to partition resources
     and assign ownership of resources to principals. There are three types of scopes within Boundary:
@@ -77,10 +58,9 @@ challenges:
     - *Org:* Under the `global` scope, you can create multiple org scopes. Orgs are used to hold IAM-related resources and project scopes.
     - *Project:* Under each org scope, you can create multiple project scopes. Projects are used to hold infrastructure-related resources.
 
-    In this challenge, you're going to create an org and project scope and skip creating an administrator and admin role
-    for each scope.  You're going to specify a role for managing these scopes by selected users in a later challenge.
+    In this challenge, you're going to create an org scope and project scope, without admin or default role creation.
+    You're going to specify a role for managing these scopes by selected users in a later challenge.
 
-    TODO: explain auth methods / users / roles
     TODO: explain boundary-controller-recovery.hcl
 
     ---
@@ -92,8 +72,11 @@ challenges:
     inside the `global` scope. Notice that you are skipping the creation of the admin and default roles for the scope.
     This allows you to more explitly control access to Boundary, rather than use generated resources.
 
+    Create a new org under the `global` scope named "HashiCups".
+
     ```
-    boundary scopes create -name 'HashiCups' -scope-id 'global' \
+    boundary scopes create -name 'HashiCups Engineering' \
+      -scope-id 'global' \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -skip-admin-role-creation \
       -skip-default-role-creation
@@ -105,7 +88,7 @@ challenges:
     Scope information:
       Created Time:        Thu, 08 Jul 2021 16:54:24 UTC
       ID:                  o_Sxjf9392Zv
-      Name:                HashiCups
+      Name:                HashiCups Engineering
       Updated Time:        Thu, 08 Jul 2021 16:54:24 UTC
       Version:             1
 
@@ -123,11 +106,12 @@ challenges:
     export ORG_SCOPE_ID=<ORG_SCOPE_ID_FROM_ABOVE>
     ```
 
-    Create a new org under the `global` scope named, "HashiCups" with description, "HashiCups, Inc.", using the
-    org `ID` from above.
+    Create a new org under the new org scope named, "HashiCups Web App" using the org scope ID from above, again,
+    without the admin or default roles being created.
 
     ```
-    boundary scopes create -name 'HashiCups App' -scope-id $ORG_SCOPE_ID \
+    boundary scopes create -name 'HashiCups Web App' \
+      -scope-id $ORG_SCOPE_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -skip-admin-role-creation \
       -skip-default-role-creation
@@ -158,25 +142,91 @@ challenges:
     export PROJECT_SCOPE_ID=<PROJECT_SCOPE_ID_FROM_ABOVE>
     ```
 
-    You now have your two scopes ready to go.
+    Before continuing to the next challenge, be sure to add the environment variables you set above to the `~/.bashrc`
+    file so they can be used across sessions.
 
-    ---
+    ```
+    echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
+    echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc
+    ```
 
+    You now have your two scopes ready to go and are ready to configure your initial users and roles.
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
+  difficulty: advanced
+  timelimit: 600
+- slug: managing-initial-users-and-roles
+  id: j986bk9afoar
+  type: challenge
+  title: Managing Initial Users and Roles
+  teaser: TODO
+  notes:
+  - type: text
+    contents: |-
+      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
+      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
+  assignment: |-
     # Managing Initial Users and Roles
+
+    This first challenge will focus on initial creation of auth methods, users, and roles.
 
     Now that you have your org scope and project scope created, it's time to add an auth method. Auth methods are
     resources that provide a mechanism for users to authenticate to Boundary. An auth method contains accounts which
     link an individual user to a set of credentials and managed groups which groups accounts that satisfy criteria
     and can be used as principals in roles. Auth methods can be defined at either a `global` or org scope.
 
-    First, create an auth method in the org scope.
+    First, create an auth method in the `global` scope.
+
+    ```
+    boundary auth-methods create password \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -scope-id global \
+      -name 'hashicups_auth_method' \
+      -description 'Password auth method for HashiCups Engineering org.'
+    ```
+
+    Example output:
+
+    ```
+    Auth Method information:
+      Created Time:                Tue, 13 Jul 2021 00:16:01 UTC
+      Description:                 Password auth method for HashiCups Engineering org.
+      ID:                          ampw_kHH1Cb4vmy
+      Name:                        hashicups_auth_method
+      Type:                        password
+      Updated Time:                Tue, 13 Jul 2021 00:16:01 UTC
+      Version:                     1
+
+    <...truncated...>
+    ```
+
+    Grab the org auth method ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export ORG_AUTH_METHOD_ID=<ORG_AUTH_METHOD_ID_FROM_ABOVE>
+    ```
+
+    Then, create an auth method in the org scope you created in the first challenge.
 
     ```
     boundary auth-methods create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -scope-id $ORG_SCOPE_ID \
-      -name 'hashicups_auth_method' \
-      -description 'Password auth method for HashiCups org.'
+      -name 'hashicups_app_auth_method' \
+      -description 'Password auth method for HashiCups Web App project.'
     ```
 
     Example output:
@@ -184,9 +234,9 @@ challenges:
     ```
     Auth Method information:
       Created Time:                Thu, 08 Jul 2021 18:08:10 UTC
-      Description:                 Password auth method for HashiCups org.
+      Description:                 Password auth method for HashiCups Web App project..
       ID:                          ampw_YXiGz3OWHI
-      Name:                        hashicups_auth_method
+      Name:                        hashicups_app_auth_method
       Type:                        password
       Updated Time:                Thu, 08 Jul 2021 18:08:10 UTC
       Version:                     1
@@ -200,20 +250,22 @@ challenges:
     <...truncated...>
     ```
 
-    Grab the auth method ID from the output and store it in an environment variable for later usage.
+    Grab the project auth method ID from the output and store it in an environment variable for later usage.
 
     ```
-    export AUTH_METHOD_ID=<AUTH_METHOD_ID_FROM_ABOVE>
+    export PROJECT_AUTH_METHOD_ID=<PROJECT_AUTH_METHOD_ID_FROM_ABOVE>
     ```
+
+    TODO: accounts / users / roles
 
     Then, you'll need to create an a login account for the auth method.
 
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -login-name "myuser" \
+      -login-name "admin_user" \
       -password "foofoofoo" \
-      -auth-method-id $AUTH_METHOD_ID
+      -auth-method-id $PROJECT_AUTH_METHOD_ID
     ```
 
     Example output:
@@ -239,7 +291,7 @@ challenges:
     Grab the account ID from the output and store it in an environment variable for later usage.
 
     ```
-    export MYUSER_ACCOUNT_ID=<MYUSER_ACCOUNT_ID_FROM_ABOVE>
+    export ADMIN_USER_ACCOUNT_ID=<ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
     ```
 
     Now create a user and associate that user with the login account you just created. This user will also be
@@ -248,7 +300,7 @@ challenges:
     ```
     boundary users create -scope-id $ORG_SCOPE_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -name "myuser" \
+      -name "admin_user" \
       -description "My user!"
     ```
 
@@ -259,7 +311,7 @@ challenges:
       Created Time:        Thu, 08 Jul 2021 18:11:17 UTC
       Description:         My user!
       ID:                  u_7QXZs7ldt3
-      Name:                myuser
+      Name:                admin_user
       Updated Time:        Thu, 08 Jul 2021 18:11:17 UTC
       Version:             1
 
@@ -275,7 +327,7 @@ challenges:
     Grab the user ID from the output and store it in an environment variable for later usage.
 
     ```
-    export MYUSER_ID=<MYUSER_ID_FROM_ABOVE>
+    export ADMIN_USER_ID=<ADMIN_USER_ID_FROM_ABOVE>
     ```
 
     You have now created your login account and user. It's time to associate those with some baseline roles.
@@ -294,8 +346,8 @@ challenges:
 
     - To allow anonymous (unauthenticated) users the ability to list scopes and auth methods in the `global` scope.
     - To allow anonymous (unauthenticated) users the ability to list scopes and auth methods in the org scope.
-    - To allow `myuser` user administration grants at the org scope.
-    - To allow `myuser` user administration grants at the project scope.
+    - To allow `admin_user` user administration grants at the org scope.
+    - To allow `admin_user` user administration grants at the project scope.
 
     First, create global anonymous listing roles.
 
@@ -462,7 +514,7 @@ challenges:
     <...truncated...>
     ```
 
-    Create the org admin role for `myuser`.
+    Create the org admin role for `admin_user`.
 
     ```
     boundary roles create -name 'org_admin' \
@@ -505,7 +557,7 @@ challenges:
 
     boundary roles add-principals -id $ORG_ADMIN_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -principal $MYUSER_ID
+      -principal $ADMIN_USER_ID
     ```
 
     Example output:
@@ -542,7 +594,7 @@ challenges:
     <...truncated...>
     ```
 
-    Create the project admin for `myuser`.
+    Create the project admin for `admin_user`.
 
     ```
     boundary roles create -name 'project_admin' \
@@ -586,7 +638,7 @@ challenges:
 
     boundary roles add-principals -id $PROJECT_ADMIN_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -principal $MYUSER_ID
+      -principal $ADMIN_USER_ID
     ```
 
     Example output:
@@ -623,8 +675,8 @@ challenges:
 
     ```
     boundary authenticate password \
-      -auth-method-id $AUTH_METHOD_ID \
-      -login-name myuser \
+      -auth-method-id $PROJECT_AUTH_METHOD_ID \
+      -login-name admin_user \
       -password foofoofoo
     ```
 
@@ -652,16 +704,15 @@ challenges:
     your `~/.bashrc` file for future usage.
 
     ```
-    echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
-    echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc
-    echo "export AUTH_METHOD_ID=$AUTH_METHOD_ID" >> ~/.bashrc
-    echo "export MYUSER_ACCOUNT_ID=$MYUSER_ACCOUNT_ID" >> ~/.bashrc
+    echo "export ORG_AUTH_METHOD_ID=<ORG_AUTH_METHOD_ID_FROM_ABOVE>" >> ~/.bashrc
+    echo "export PROJECT_AUTH_METHOD_ID=$PROJECT_AUTH_METHOD_ID" >> ~/.bashrc
+    echo "export ADMIN_USER_ACCOUNT_ID=$ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
     echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
     echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc
     echo "export PROJECT_ADMIN_ID=$PROJECT_ADMIN_ID" >> ~/.bashrc
-    echo "export MYUSER_USERNAME=$MYUSER_USERNAME" >> ~/.bashrc
-    echo "export MYUSER_PASSWORD=$MYUSER_PASSWORD" >> ~/.bashrc
+    echo "export ADMIN_USER_USERNAME=$ADMIN_USER_USERNAME" >> ~/.bashrc
+    echo "export ADMIN_USER_PASSWORD=$ADMIN_USER_PASSWORD" >> ~/.bashrc
     echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
     ```
 
@@ -682,7 +733,7 @@ challenges:
     hostname: boundary-controller
     port: 8443
   difficulty: advanced
-  timelimit: 600
+  timelimit: 3600
 - slug: configure-and-connect-to-your-first-target-with-ssh
   id: wm0enxxguhie
   type: challenge
@@ -992,71 +1043,6 @@ challenges:
   assignment: |-
     # Configure and Connect to Postgres with TCP
 
-    # Create a Project
-
-    ```
-    boundary scopes create \
-      -scope-id=$ORG_ID \
-      -name=HashiCups_QA_Tests \
-      -description="Manage QA machines"
-    ```
-
-    Example output:
-
-    ```
-    Scope information:
-      Created Time:        Fri, 02 Jul 2021 21:26:08 UTC
-      Description:         Manage QA machines
-      ID:                  p_FzsymjnX3r
-      Name:                HashiCups_QA_Tests
-      Updated Time:        Fri, 02 Jul 2021 21:26:08 UTC
-      Version:             1
-
-      Scope (parent):
-        ID:                o_tdsUUNNHdn
-        Name:              HashiCups_IT
-        Parent Scope ID:   global
-        Type:              org
-
-      Authorized Actions:
-        no-op
-        read
-        update
-        delete
-    ```
-
-    List the project under the HashiCups_IT org to verify it was created correctly.
-
-    ```
-    boundary scopes list -scope-id=$ORG_ID
-    ```
-
-    Example output:
-
-    ```
-    Scope information:
-      ID:                    p_FzsymjnX3r
-        Version:             1
-        Name:                HashiCups_QA_Tests
-        Description:         Manage QA machines
-        Authorized Actions:
-          no-op
-          read
-          update
-          delete
-    ```
-
-    Then put the newly created project ID into the environment.
-
-    ```
-    export PROJECT_ID=<PROJECT_ID_FROM_ABOVE>
-    ```
-
-    Or you can use this simple one-liner to set the new `PROJECT_ID`.
-
-    ```
-    export PROJECT_ID=$(boundary scopes list -scope-id=$ORG_ID -format=json | jq -r '.items[0].id')
-    ```
 
     ---
 
@@ -1065,7 +1051,9 @@ challenges:
     first.
 
     ```
-    boundary host-catalogs create static -scope-id=$PROJECT_ID -name=DevOps \
+    boundary host-catalogs create static \
+        -scope-id=$PROJECT_ID \
+        -name=DevOps \
         -description="For DevOps usage"
     ```
 
@@ -1164,10 +1152,6 @@ challenges:
 
     Connect to it...
   tabs:
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   - title: Controller
     type: terminal
     hostname: boundary-controller
@@ -1178,28 +1162,39 @@ challenges:
     type: service
     hostname: boundary-controller
     port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
   difficulty: advanced
   timelimit: 3600
-- slug: configure-users-and-groups
+- slug: configure-users-roles-and-groups
   id: niaptwmxppym
   type: challenge
-  title: Configure Users and Groups
+  title: Configure Users, Roles, and Groups
   teaser: TODO
   notes:
   - type: text
-    contents: TODO
+    contents: |-
+      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
+      - Group: Collection of users used for access control. A group is owned by one and only one scope.
+      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
   assignment: |-
     '*Configure Users and Groups*'
 
+    # TODO: create a DevOps group that has the SSH Access
+    # TODO: create a DBAs group that has the database Access
+
     ```
-    boundary auth-methods create password -scope-id=$ORG_ID \
+    boundary auth-methods create password \
+      -scope-id=$ORG_ID \
       -name="hashicups_auth_method" \
       -description="HashiCups auth method"
     ```
 
     ```
     boundary accounts create password \
-      -auth-method-id=<AUTH_METHOD_ID_FROM_ABOVE> \
+      -auth-method-id=<PROJECT_AUTH_METHOD_ID_FROM_ABOVE> \
       -login-name="hashicups_admin" \
       -password="password" \
       -name=hashicups_admin \
@@ -1234,7 +1229,7 @@ challenges:
 
     ```
     boundary authenicate password -login-name="tester01" -password="supersecure" \
-    -auth-method-id=<auth_method_id>
+    -auth-method-id=<PROJECT_AUTH_METHOD_ID>
     ```
 
     Example output:
@@ -1360,10 +1355,17 @@ challenges:
   - title: Controller
     type: terminal
     hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
   - title: Boundary UI
     type: service
     hostname: boundary-controller
     port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
   difficulty: advanced
   timelimit: 3600
-checksum: "9627930874823360126"
+checksum: "9609960274696922276"
