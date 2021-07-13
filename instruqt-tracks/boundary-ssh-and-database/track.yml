@@ -183,16 +183,16 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: managing-auth-methods
+- slug: configuring-auth-methods
   id: pqy8xx0haupd
   type: challenge
-  title: Managing Auth Methods
-  teaser: Learn to setup auth methods in Boundary for user authentication.
+  title: Configuring Auth Methods
+  teaser: Learn to configure auth methods in Boundary for user authentication.
   notes:
   - type: text
     contents: '- Auth Methods: TODO'
   assignment: |-
-    # Managing Auth Methods
+    # Configuring Auth Methods
 
     This challenge will focus on the creation of auth methods.
 
@@ -295,11 +295,11 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: managing-initial-users-and-roles
+- slug: configuring-initial-users-and-roles
   id: j986bk9afoar
   type: challenge
-  title: Managing Initial Users and Roles
-  teaser: Learn to setup the initial users and roles in Boundary to seed your production deployment.
+  title: Configuring Admin Users and Roles
+  teaser: Learn to setup the admin users and roles in Boundary to seed your production deployment.
   notes:
   - type: text
     contents: |-
@@ -307,6 +307,8 @@ challenges:
       - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
       - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
   assignment: |-
+    # Configuring Admin Users and Roles
+
     In the last challenge, you learned how to create auth methods in Boundary. After you set up your auth methods in
     Boundary, you need to create some accounts, users and roles.
 
@@ -1427,4 +1429,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 3600
-checksum: "4964376769503468068"
+checksum: "13419409840307745673"
