@@ -325,7 +325,7 @@ challenges:
       -recovery-config /root/boundary-controller-recovery.hcl \
       -login-name "admin_user" \
       -password "foofoofoo" \
-      -auth-method-id $PROJECT_AUTH_METHOD_ID
+      -auth-method-id $ORG_AUTH_METHOD_ID
     ```
 
     Example output:
@@ -351,12 +351,46 @@ challenges:
     Grab the account ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ADMIN_USER_ACCOUNT_ID=<ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
+    export ORG_ADMIN_USER_ACCOUNT_ID=<ORG_ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
     ```
 
-    TODO: Then create a login account for the admin user for the project auth method.
+    Then, create a login account for the admin user for the project auth method.
 
-    TODO: accounts / users / roles
+    ```
+    boundary accounts create password \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -login-name "admin_user" \
+      -password "foofoofoo" \
+      -auth-method-id $PROJECT_AUTH_METHOD_ID
+    ```
+
+    Example output:
+
+    ```
+    Account information:
+      Auth Method ID:      ampw_YXiGz3OWHI
+      Created Time:        Thu, 08 Jul 2021 18:09:35 UTC
+      ID:                  acctpw_nTGqpEt4OK
+      Type:                password
+      Updated Time:        Thu, 08 Jul 2021 18:09:35 UTC
+      Version:             1
+
+      Scope:
+        ID:                o_tc3qudleXh
+        Name:              HashiCups Web App
+        Parent Scope ID:   TODO global
+        Type:              org
+
+    <...truncated...>
+    ```
+
+    Grab the account ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export PROJECT_ADMIN_USER_ACCOUNT_ID=<PROJECT_ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
+    ```
+
+    TODO: explain users / roles
 
     Now create a user and associate that user with the login account you just created. This user will also be
     the principal in the role you create in the following step.
@@ -393,6 +427,26 @@ challenges:
     ```
     export ADMIN_USER_ID=<ADMIN_USER_ID_FROM_ABOVE>
     ```
+
+    TODO: then you need to add the user principal to the admin accounts
+
+    # Add Admin User Principal to the Org Admin Account
+    ```
+    boundary users add-accounts \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $ADMIN_USER_ID \
+      -account $ORG_ADMIN_USER_ACCOUNT_ID
+    ```
+
+    ```
+    # Add Admin User Principal to the Project Admin Account
+    boundary users add-accounts \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $ADMIN_USER_ID \
+      -account $PROJECT_ADMIN_USER_ACCOUNT_ID
+    ```
+
+
 
     You have now created your login account and user. It's time to associate those with some baseline roles.
 
@@ -770,7 +824,8 @@ challenges:
     ```
     echo "export ORG_AUTH_METHOD_ID=<ORG_AUTH_METHOD_ID_FROM_ABOVE>" >> ~/.bashrc
     echo "export PROJECT_AUTH_METHOD_ID=$PROJECT_AUTH_METHOD_ID" >> ~/.bashrc
-    echo "export ADMIN_USER_ACCOUNT_ID=$ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
+    echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
+    echo "export PROJECT_ADMIN_USER_ACCOUNT_ID=$PROJECT_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
     echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
     echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc
@@ -780,7 +835,7 @@ challenges:
     echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
     ```
 
-    Congratulations! You have setup the initial resources in Boundary, and retrieved your first Boundary token.
+    TODO: Congratulations! You have setup the initial resources in Boundary, and retrieved your first Boundary token.
   tabs:
   - title: Controller
     type: terminal
@@ -1107,6 +1162,7 @@ challenges:
   assignment: |-
     # Configure and Connect to Postgres with TCP
 
+    TODO: only once the users are configured above.
 
     ---
 
@@ -1432,4 +1488,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 3600
-checksum: "10792721242361152161"
+checksum: "16466595611463582611"
