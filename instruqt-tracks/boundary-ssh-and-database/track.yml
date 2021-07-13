@@ -188,8 +188,7 @@ challenges:
   teaser: Learn to configure auth methods in Boundary for user authentication.
   notes:
   - type: text
-    contents: |-
-      - Auth Methods: a resource that provides a mechanism for users to authenticate to Boundary.
+    contents: '- Auth Methods: a resource that provides a mechanism for users to authenticate to Boundary.'
   assignment: |-
     This challenge will focus on the creation of *auth methods*.
 
@@ -223,7 +222,7 @@ challenges:
     <...truncated...>
     ```
 
-    Grab the org auth method ID from the output and store it in an environment variable for later usage.
+    Grab the global auth method ID from the output and store it in an environment variable for later usage.
 
     ```
     export GLOBAL_AUTH_METHOD_ID=<GLOBAL_AUTH_METHOD_ID_FROM_ABOVE>
@@ -270,11 +269,11 @@ challenges:
     file so they can be used across sessions.
 
     ```
-    echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
-    echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc
+    echo "export GLOBAL_AUTH_METHOD_ID=$GLOBAL_AUTH_METHOD_ID" >> ~/.bashrc
+    echo "export ORG_AUTH_METHOD_ID=$ORG_AUTH_METHOD_ID" >> ~/.bashrc
     ```
 
-    Congratulations! You've created your first auth methods. Next, you'll need to create an account.
+    Congratulations! You've created your first auth methods. Next, you'll need to create your first accounts.
   tabs:
   - title: Controller
     type: terminal
@@ -292,20 +291,19 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: configure-admin-users-and-roles
-  id: j986bk9afoar
+- slug: configure-admin-accounts
+  id: vdpbl5d060bx
   type: challenge
-  title: Configure Admin Users and Roles
-  teaser: Learn to setup the admin users and roles in Boundary to seed your production deployment.
+  title: Configure Admin Accounts
+  teaser: Learn to configure accounts in Boundary for identity management.
   notes:
   - type: text
-    contents: |-
-      - Account: Represents a unique set of credentials issued from a configured auth method which can be used to establish the identity of a user.
-      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
-      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
+    contents: '- Account: Represents a unique set of credentials issued from a configured auth method which can be used to establish the identity of a user.'
   assignment: |-
+    This challenge will focus on the creation of *accounts*.
+
     In the last challenge, you learned how to create auth methods in Boundary. After you set up your auth methods in
-    Boundary, you need to create some accounts, users and roles. You'll start with admin users, and will configure other
+    Boundary, you need to create some accounts. You'll start with admin accounts, and will configure other
     types of users in later challenges.
 
     Accounts represent external notions of a particular entity. Among other use-cases, this mechanism allows for an
@@ -386,7 +384,54 @@ challenges:
     export ORG_ADMIN_USER_ACCOUNT_ID=<ORG_ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
     ```
 
-    TODO: explain users / roles
+    Before continuing to the next challenge, be sure to add the environment variables you set above to the `~/.bashrc`
+    file so they can be used across sessions.
+
+    ```
+    echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
+    echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
+    ```
+
+    You've created your first accounts. Next, you'll need to create your first users and roles.
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
+  difficulty: advanced
+  timelimit: 600
+- slug: configure-admin-users-and-roles
+  id: j986bk9afoar
+  type: challenge
+  title: Configure Admin Users and Roles
+  teaser: Learn to setup the admin users and roles in Boundary to seed your production deployment.
+  notes:
+  - type: text
+    contents: |-
+      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
+      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
+  assignment: |-
+    This challenge will focus on the creation of *users* and *roles*.
+
+    Users and groups in Boundary are collectively known as *principals*. Assigning *grants* on *roles* is performed
+    through principal IDs; that is, the unique IDs of users, groups, or both.
+
+    Users in Boundary represent an internal notion of a particular entity (human, machine, etc.). Users can be
+    correlated with one or more account resources via auth methods.
+
+    Roles in Boundary manage the permissions given to principals (*users* and *groups*).
+
+    ---
 
     Now create a user and associate that user with both login accounts you just created. This user will also be
     the principal in the role you create in the following step.
@@ -395,25 +440,45 @@ challenges:
     boundary users create -scope-id global \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -name "adminuser" \
-      -description "Admin User for HashiCups Engineering"
+      -description "Admin user for global scope."
     ```
 
     Example output:
 
     ```
-    User information:
-      Created Time:        Thu, 08 Jul 2021 18:11:17 UTC
-      Description:         Admin User for HashiCups Engineering
-      ID:                  u_7QXZs7ldt3
-      Name:                adminuser
-      Updated Time:        Thu, 08 Jul 2021 18:11:17 UTC
-      Version:             1
+    TODO
 
-      Scope:
-        ID:                o_tc3qudleXh
-        Name:              HashiCups Engineering
-        Parent Scope ID:   global
-        Type:              org
+    <...truncated...>
+    ```
+
+    Grab the global admin user ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export GLOBAL_ADMIN_USER_ID=<GLOBAL_ADMIN_USER_ID_FROM_ABOVE>
+    ```
+
+    Then, add the newly created global user to the global account.
+
+    ```
+    boundary users add-accounts \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $GLOBAL_ADMIN_USER_ID \
+      -account $GLOBAL_ADMIN_USER_ACCOUNT_ID
+    ```
+
+    You'll do the same now for the org scope. Create the user for the org scope.
+
+    ```
+    boundary users create -scope-id $ORG_SCOPE_ID \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -name "adminuser" \
+      -description "Admin user for HashiCups Engineering org scope."
+    ```
+
+    Example output:
+
+    ```
+    TODO
 
     <...truncated...>
     ```
@@ -424,56 +489,12 @@ challenges:
     export ORG_ADMIN_USER_ID=<ORG_ADMIN_USER_ID_FROM_ABOVE>
     ```
 
-    Then, add the newly created org user to the org account.
-
-    ```
-    boundary users add-accounts \
-      -recovery-config /root/boundary-controller-recovery.hcl \
-      -id $ORG_ADMIN_USER_ID \
-      -account $GLOBAL_ADMIN_USER_ACCOUNT_ID
-    ```
-
-    You'll do the same now for the project scope. Create the user for the org scope.
-
-    ```
-    boundary users create -scope-id $ORG_SCOPE_ID \
-      -recovery-config /root/boundary-controller-recovery.hcl \
-      -name "adminuser" \
-      -description "Admin User for HashiCups Web App"
-    ```
-
-    Example output:
-
-    ```
-    User information:
-      Created Time:        Thu, 08 Jul 2021 18:11:17 UTC
-      Description:         Admin User for HashiCups Web App
-      ID:                  u_7QXZs7ldt3
-      Name:                adminuser
-      Updated Time:        Thu, 08 Jul 2021 18:11:17 UTC
-      Version:             1
-
-      Scope:
-        ID:                o_tc3qudleXh
-        Name:              HashiCups Engineering
-        Parent Scope ID:   global
-        Type:              org
-
-    <...truncated...>
-    ```
-
-    Grab the user ID from the output and store it in an environment variable for later usage.
-
-    ```
-    export PROJECT_ADMIN_USER_ID=<PROJECT_ADMIN_USER_ID_FROM_ABOVE>
-    ```
-
     You'll now add the user to the account for the org scope similarly to how you did before.
 
     ```
     boundary users add-accounts \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -id $PROJECT_ADMIN_USER_ID \
+      -id $ORG_ADMIN_USER_ID \
       -account $ORG_ADMIN_USER_ACCOUNT_ID
     ```
 
@@ -851,10 +872,6 @@ challenges:
     your `~/.bashrc` file for future usage.
 
     ```
-    echo "export GLOBAL_AUTH_METHOD_ID=<GLOBAL_AUTH_METHOD_ID_FROM_ABOVE>" >> ~/.bashrc
-    echo "export ORG_AUTH_METHOD_ID=$ORG_AUTH_METHOD_ID" >> ~/.bashrc
-    echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
-    echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
     echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
     echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc
@@ -1513,4 +1530,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 3600
-checksum: "15501767856412990764"
+checksum: "7370332596688196320"

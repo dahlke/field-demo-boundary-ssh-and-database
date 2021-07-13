@@ -1,0 +1,31 @@
+#!/bin/bash -l
+
+# TODO: get the env vars from the solve script
+source ~/.bashrc
+cat ~/.bashrc
+
+# Check that the adminuser account exists
+GLOBAL_ADMIN_USER_ACCOUNT_NAME=$(boundary accounts list \
+	-auth-method-id=$GLOBAL_AUTH_METHOD_ID \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-format=json | jq -r '.items[0].attributes.login_name')
+
+if [ "$GLOBAL_ADMIN_USER_ACCOUNT_NAME" != "adminuser" ]; then
+    fail-message "You did not create the 'adminuser' account in the global scope."
+    exit 1
+fi
+
+# Check that the adminuser account exists
+ORG_ADMIN_USER_ACCOUNT_NAME=$(boundary accounts list \
+	-auth-method-id=$ORG_AUTH_METHOD_ID \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-format=json | jq -r '.items[0].attributes.login_name')
+
+if [ "$ORG_ADMIN_USER_ACCOUNT_NAME" != "adminuser" ]; then
+    fail-message "You did not create the 'adminuser' account for the org auth method."
+    exit 1
+fi
+
+# TODO: check they are in the bashrc
+
+exit 0
