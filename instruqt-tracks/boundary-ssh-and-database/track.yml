@@ -183,16 +183,16 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: configuring-auth-methods
+- slug: configure-auth-methods
   id: pqy8xx0haupd
   type: challenge
-  title: Configuring Auth Methods
+  title: Configure Auth Methods
   teaser: Learn to configure auth methods in Boundary for user authentication.
   notes:
   - type: text
     contents: '- Auth Methods: TODO'
   assignment: |-
-    # Configuring Auth Methods
+    # Configure Auth Methods
 
     This challenge will focus on the creation of auth methods.
 
@@ -295,10 +295,10 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: configuring-initial-users-and-roles
+- slug: configure-admin-users-and-roles
   id: j986bk9afoar
   type: challenge
-  title: Configuring Admin Users and Roles
+  title: Configure Admin Users and Roles
   teaser: Learn to setup the admin users and roles in Boundary to seed your production deployment.
   notes:
   - type: text
@@ -307,13 +307,16 @@ challenges:
       - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
       - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
   assignment: |-
-    # Configuring Admin Users and Roles
+    # Configure Admin Users and Roles
 
     In the last challenge, you learned how to create auth methods in Boundary. After you set up your auth methods in
-    Boundary, you need to create some accounts, users and roles.
+    Boundary, you need to create some accounts, users and roles. You'll start with admin users, and will configure other
+    types of users in later challenges.
 
     Accounts represent external notions of a particular entity. Among other use-cases, this mechanism allows for an
     easy way to switch users to new IdPs within the organization deploying Boundary.
+
+    ---
 
     Create a login account for the admin user for the org auth method.
 
@@ -1429,4 +1432,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 3600
-checksum: "13419409840307745673"
+checksum: "10792721242361152161"

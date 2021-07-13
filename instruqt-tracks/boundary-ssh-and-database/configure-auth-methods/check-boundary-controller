@@ -26,4 +26,6 @@ if [ "$PROJECT_AUTH_METHOD_NAME" != "hashicups_auth_method" ]; then
     exit 1
 fi
 
+# TODO: check they are in the bashrc
+
 exit 0

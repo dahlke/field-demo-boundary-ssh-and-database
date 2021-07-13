@@ -75,4 +75,6 @@ if [ "$PROJECT_ADMIN_NAME" != "project_admin" ]; then
     exit 1
 fi
 
+# TODO: check they are in the bashrc
+
 exit 0

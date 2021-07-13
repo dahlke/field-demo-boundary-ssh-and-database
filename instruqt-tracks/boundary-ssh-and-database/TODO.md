@@ -8,7 +8,7 @@
 - Create slides for the workshop
 - Add links all over
 - Packer images
-- Update all the example outputs once the content settles
+- Review and update all the example outputs once the content settles
 
 # Flow:
 
