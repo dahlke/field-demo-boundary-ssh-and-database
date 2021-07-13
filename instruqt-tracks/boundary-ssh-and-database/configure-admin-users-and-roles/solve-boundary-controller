@@ -8,23 +8,23 @@ export ADMIN_USER_USERNAME="adminuser"
 export ADMIN_USER_PASSWORD="foofoofoo"
 
 # Create an Account for Admin User
-export ORG_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
+export GLOBAL_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -login-name $ADMIN_USER_USERNAME \
 -password $ADMIN_USER_PASSWORD \
 -auth-method-id $GLOBAL_AUTH_METHOD_ID \
 -format=json | jq -r .item.id)
 
-echo "Org Admin User Account ID:" $ORG_ADMIN_USER_ACCOUNT_ID
+echo "Org Admin User Account ID:" $GLOBAL_ADMIN_USER_ACCOUNT_ID
 
-export PROJECT_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
+export ORG_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -login-name $ADMIN_USER_USERNAME \
 -password $ADMIN_USER_PASSWORD \
 -auth-method-id $PROJECT_AUTH_METHOD_ID \
 -format=json | jq -r .item.id)
 
-echo "Project Admin User Account ID:" $PROJECT_ADMIN_USER_ACCOUNT_ID
+echo "Project Admin User Account ID:" $ORG_ADMIN_USER_ACCOUNT_ID
 
 # Create the User Principal for Org Admin User
 export ORG_ADMIN_USER_ID=$( \
@@ -56,7 +56,7 @@ echo "Project Admin User ID:" $PROJECT_ADMIN_USER_ID
 boundary users add-accounts \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -id $PROJECT_ADMIN_USER_ID \
--account $PROJECT_ADMIN_USER_ACCOUNT_ID
+-account $ORG_ADMIN_USER_ACCOUNT_ID
 
 export GLOBAL_ANON_LISTING_ID=$( \
 boundary roles create -name 'global_anon_listing' \
@@ -138,7 +138,7 @@ boundary authenticate password \
 )
 
 echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
-echo "export PROJECT_ADMIN_USER_ACCOUNT_ID=$PROJECT_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
+echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
 echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
 echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
 echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc

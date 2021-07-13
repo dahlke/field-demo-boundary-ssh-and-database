@@ -347,7 +347,7 @@ challenges:
     Grab the account ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ORG_ADMIN_USER_ACCOUNT_ID=<ORG_ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
+    export GLOBAL_ADMIN_USER_ACCOUNT_ID=<GLOBAL_ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
     ```
 
     Then, create a login account for the admin user for the org auth method.
@@ -383,7 +383,7 @@ challenges:
     Grab the account ID from the output and store it in an environment variable for later usage.
 
     ```
-    export PROJECT_ADMIN_USER_ACCOUNT_ID=<PROJECT_ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
+    export ORG_ADMIN_USER_ACCOUNT_ID=<ORG_ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
     ```
 
     TODO: explain users / roles
@@ -430,7 +430,7 @@ challenges:
     boundary users add-accounts \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $ORG_ADMIN_USER_ID \
-      -account $ORG_ADMIN_USER_ACCOUNT_ID
+      -account $GLOBAL_ADMIN_USER_ACCOUNT_ID
     ```
 
     You'll do the same now for the project scope. Create the user for the org scope.
@@ -474,7 +474,7 @@ challenges:
     boundary users add-accounts \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $PROJECT_ADMIN_USER_ID \
-      -account $PROJECT_ADMIN_USER_ACCOUNT_ID
+      -account $ORG_ADMIN_USER_ACCOUNT_ID
     ```
 
     You have now created your login accounts and users. It's time to associate those with some baseline roles.
@@ -853,8 +853,8 @@ challenges:
     ```
     echo "export GLOBAL_AUTH_METHOD_ID=<GLOBAL_AUTH_METHOD_ID_FROM_ABOVE>" >> ~/.bashrc
     echo "export ORG_AUTH_METHOD_ID=$ORG_AUTH_METHOD_ID" >> ~/.bashrc
+    echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
-    echo "export PROJECT_ADMIN_USER_ACCOUNT_ID=$PROJECT_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
     echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
     echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc
