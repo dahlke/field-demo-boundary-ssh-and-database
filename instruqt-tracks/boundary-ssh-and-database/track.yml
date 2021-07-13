@@ -44,8 +44,23 @@ challenges:
       for you. A Boundary Controller and a Boundary Worker are also already running.  If you are not familiar with
       installing Boundary, the reference architecture, or concepts like scopes, auth methods, users, accounts, and
       more - check out the [Install and Configure Boundary Track](TODO).
+  - type: text
+    contents: The Boundary cluster was initialized *without generated resources*...
+  - type: text
+    contents: |-
+      What are generated resources? When you run `boundary dev` or boundary `database init`, Boundary automatically
+      generates a number of resources to make getting started easier. Default scopes, auth methods, user, account, and
+      targets are just some of the resources Boundary will generate unless you tell it not to.
+  - type: text
+    contents: |-
+      In a production or long-running environment, these resources are not necessary, but without them, managing
+      Boundary from scratch isn't straightforward...
+  - type: text
+    contents: |-
+      How do you create your first user and login to administer a Boundary deployment that has no authentication
+      methods, users, accounts, etc.?
 
-      TODO: Explain that this happened: https://www.boundaryproject.io/docs/installing/no-gen-resources
+      You will learn that in this track.
   assignment: |-
     # Getting Started
 
@@ -68,11 +83,11 @@ challenges:
     # Setting Up Your Scopes
 
     While Boundary has been [initiialized](https://www.boundaryproject.io/docs/installing/no-gen-resources) for you,
-    this instance is currently a blank slate. The first thing you'll need to do is create the `HashiCups` scope
-    inside the `global` scope. Notice that you are skipping the creation of the admin and default roles for the scope.
-    This allows you to more explitly control access to Boundary, rather than use generated resources.
+    this instance is currently a blank slate. The first thing you'll need to do is create the `HashiCups Engineering`
+    org scope inside the `global` scope. Notice that you are skipping the creation of the admin and default roles for
+    the scope.  This allows you to more explitly control access to Boundary, rather than use generated resources.
 
-    Create a new org under the `global` scope named "HashiCups".
+    Create a new org under the `global` scope named "HashiCups Engineering".
 
     ```
     boundary scopes create -name 'HashiCups Engineering' \
@@ -168,20 +183,18 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: managing-initial-users-and-roles
-  id: j986bk9afoar
+- slug: managing-auth-methods
+  id: pqy8xx0haupd
   type: challenge
-  title: Managing Initial Users and Roles
-  teaser: TODO
+  title: Managing Auth Methods
+  teaser: Learn to setup auth methods in Boundary for user authentication.
   notes:
   - type: text
-    contents: |-
-      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
-      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
+    contents: '- Auth Methods: TODO'
   assignment: |-
-    # Managing Initial Users and Roles
+    # Managing Auth Methods
 
-    This first challenge will focus on initial creation of auth methods, users, and roles.
+    This challenge will focus on the creation of auth methods.
 
     Now that you have your org scope and project scope created, it's time to add an auth method. Auth methods are
     resources that provide a mechanism for users to authenticate to Boundary. An auth method contains accounts which
@@ -234,7 +247,7 @@ challenges:
     ```
     Auth Method information:
       Created Time:                Thu, 08 Jul 2021 18:08:10 UTC
-      Description:                 Password auth method for HashiCups Web App project..
+      Description:                 Password auth method for HashiCups Web App project.
       ID:                          ampw_YXiGz3OWHI
       Name:                        hashicups_app_auth_method
       Type:                        password
@@ -256,9 +269,51 @@ challenges:
     export PROJECT_AUTH_METHOD_ID=<PROJECT_AUTH_METHOD_ID_FROM_ABOVE>
     ```
 
-    TODO: accounts / users / roles
+    Before continuing to the next challenge, be sure to add the environment variables you set above to the `~/.bashrc`
+    file so they can be used across sessions.
 
-    Then, you'll need to create an a login account for the auth method.
+    ```
+    echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
+    echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc
+    ```
+
+    Congratulations! You've created your first auth methods. Next, you'll need to create an account.
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
+  difficulty: advanced
+  timelimit: 600
+- slug: managing-initial-users-and-roles
+  id: j986bk9afoar
+  type: challenge
+  title: Managing Initial Users and Roles
+  teaser: Learn to setup the initial users and roles in Boundary to seed your production deployment.
+  notes:
+  - type: text
+    contents: |-
+      - Account: TODO
+      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
+      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
+  assignment: |-
+    In the last challenge, you learned how to create auth methods in Boundary. After you set up your auth methods in
+    Boundary, you need to create some accounts, users and roles.
+
+    Accounts represent external notions of a particular entity. Among other use-cases, this mechanism allows for an
+    easy way to switch users to new IdPs within the organization deploying Boundary.
+
+    Create a login account for the admin user for the org auth method.
 
     ```
     boundary accounts create password \
@@ -281,7 +336,7 @@ challenges:
 
       Scope:
         ID:                o_tc3qudleXh
-        Name:              HashiCups
+        Name:              HashiCups Engineering
         Parent Scope ID:   global
         Type:              org
 
@@ -293,6 +348,10 @@ challenges:
     ```
     export ADMIN_USER_ACCOUNT_ID=<ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
     ```
+
+    TODO: Then create a login account for the admin user for the project auth method.
+
+    TODO: accounts / users / roles
 
     Now create a user and associate that user with the login account you just created. This user will also be
     the principal in the role you create in the following step.
@@ -1368,4 +1427,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 3600
-checksum: "9609960274696922276"
+checksum: "4964376769503468068"

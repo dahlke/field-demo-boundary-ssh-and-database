@@ -7,27 +7,7 @@ set -o history
 export ADMIN_USER_USERNAME="admin_user"
 export ADMIN_USER_PASSWORD="foofoofoo"
 
-# Create the Auth Method
-export ORG_AUTH_METHOD_ID=$(
-boundary auth-methods create password \
--recovery-config /root/boundary-controller-recovery.hcl \
--scope-id global \
--name 'hashicups_auth_method' \
--description 'Password auth method for HashiCups Engineering.'  \
--format=json | jq -r .item.id)
-
-# Create the Auth Method
-export PROJECT_AUTH_METHOD_ID=$(
-boundary auth-methods create password \
--recovery-config /root/boundary-controller-recovery.hcl \
--scope-id $ORG_SCOPE_ID \
--name 'hashicups_app_auth_method' \
--description 'Password auth method for HashiCups Web App.'  \
--format=json | jq -r .item.id)
-
-echo "Project Auth Method ID:" $PROJECT_AUTH_METHOD_ID
-
-# Create an Account for MyUser
+# Create an Account for Admin User
 export ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -login-name $ADMIN_USER_USERNAME \
@@ -35,9 +15,9 @@ export ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
 -auth-method-id $PROJECT_AUTH_METHOD_ID \
 -format=json | jq -r .item.id)
 
-echo "MyUser Account ID:" $ADMIN_USER_ACCOUNT_ID
+echo "Admin User Account ID:" $ADMIN_USER_ACCOUNT_ID
 
-# Create the User Principal for MyUser
+# Create the User Principal for Admin User
 export ADMIN_USER_ID=$( \
 boundary users create -scope-id $ORG_SCOPE_ID \
 -recovery-config /root/boundary-controller-recovery.hcl \
@@ -45,9 +25,9 @@ boundary users create -scope-id $ORG_SCOPE_ID \
 -description "My user!" \
 -format=json | jq -r .item.id)
 
-echo "MyUser ID:" $ADMIN_USER_ACCOUNT_ID
+echo "Admin User ID:" $ADMIN_USER_ACCOUNT_ID
 
-# Add MyUser Principal to the Account
+# Add Admin User Principal to the Account
 boundary users add-accounts \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -id $ADMIN_USER_ID \
@@ -132,8 +112,6 @@ boundary authenticate password \
 -format=json | jq -r .item.attributes.token
 )
 
-echo "export ORG_AUTH_METHOD_ID=$ORG_AUTH_METHOD_ID" >> ~/.bashrc
-echo "export PROJECT_AUTH_METHOD_ID=$PROJECT_AUTH_METHOD_ID" >> ~/.bashrc
 echo "export ADMIN_USER_ACCOUNT_ID=$ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
 echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
 echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
