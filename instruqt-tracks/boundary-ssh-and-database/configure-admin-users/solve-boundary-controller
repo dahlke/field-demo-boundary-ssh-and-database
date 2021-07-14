@@ -5,7 +5,7 @@ HISTFILE=/root/.bash_history
 set -o history
 
 export ADMIN_USER_USERNAME="adminuser"
-export ADMIN_USER_PASSWORD="foofoofoo"
+export ADMIN_USER_PASSWORD="adminuser"
 
 # Create the User Principal for Org Admin User
 export GLOBAL_ADMIN_USER_ID=$( \

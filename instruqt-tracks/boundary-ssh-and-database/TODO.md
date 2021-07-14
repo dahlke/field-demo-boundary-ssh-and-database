@@ -1,25 +1,84 @@
 # TODO
 
-## TODO: General
+## General
 
 - Why Boundary?
-- Vault Integration
-- Multiple boxes for workers and controllers
+- Vault Integration?
+- Tie this into LDAP?
+- Multiple boxes for workers and controllers?
+- get rid of `-description` since it doesn't really add a ton of value? or add it everywhere so people know about it?
 - Create slides for the workshop
-- Add links all over
+- Review the copy in assignments / notes / teasers / descriptions / add links all over
 - Packer images
 - Review and update all the example outputs once the content settles
+- admin username / password env vars and dba username / password vars to make it easier
+- separate the global / org admin setup stuff and put the admin UI exploration earlier in the track?
 
-- Story around how only admins have SSH access, and DBAs can have postgres access.
 
-# Flow:
+# Challenge Scripts (fully reviewed)
 
-- Create the Scopes
-- Create the Admin Users / Anon Users
-- Create the First DevOps User
-- Connect via SSH to Host
-- Create the First DBA User
-- Connect via TCP to database
-- Review the Admin UI
-
-# Challenge Scripts (reviewed)
+- getting-started-with-boundary
+  - [x] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- configure-auth-methods
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- configure-admin-accounts
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- configure-admin-users
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- configure-admin-roles
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- configure-and-connect-to-your-first-target-with-ssh
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- configure-dba-accounts
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- configure-dba-users
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- configure-dba-group
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [ ] cleanup
+- configure-dba-roles
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- configure-and-connect-to-postgres-with-tcp
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- manage-sessions
+  - [-] setup
+  - [ ] solve
+  - [ ] check
+  - [-] cleanup
+- explore-the-admin-ui
+  - [-] setup
+  - [ ] check
+  - [ ] solve
+  - [-] cleanup

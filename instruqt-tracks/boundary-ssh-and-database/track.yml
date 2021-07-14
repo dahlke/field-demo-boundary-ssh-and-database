@@ -1307,8 +1307,13 @@ challenges:
 
       - Group: Collection of users used for access control. A group is owned by one and only one scope.
   assignment: |-
-    Only admins in HashiCups Engineering have SSH access. However, the admins want to delegate Postgres access to
-    DBAs...
+    Now you have learned how to setup the initial resources in Boundary, how to log in, and how to connect to your
+    target, it's time to learn how to break up access for different groups and roles at HashiCups.
+
+    It is a policy in HashiCups Engineering that only admins are allowed SSH access to any hosts. However, there is
+    an exception which allows any DBAs in the HashiCups Engineering org to access any Postgres database.
+
+    In this challenge, we'll create one account for one DBA.
 
     # TODO: create a DBAs group that has the database Access
 
@@ -1730,4 +1735,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "15807767822957566220"
+checksum: "9976802617999144858"
