@@ -2,8 +2,12 @@ slug: boundary-ssh-and-database
 id: adnyt8negprv
 type: track
 title: Managing Boundary for SSH and Database Access
-teaser: TODO
-description: TODO
+teaser: Learn how to take a blank canvas Boundary deployment and configure it for production usage.
+description: |-
+  In this track, you will take a blank canvas Boundary cluster, and learn how to get it ready for production. That
+  includes configuring auth methods, accounts, users, groups, and roles. You will also learn how to manage targets,
+  access to those targets, and how to log in and connect to them. At the end, you will learn how to manage sessions
+  with Boundary, and take a tour of the Boundary Admin UI.
 icon: https://storage.googleapis.com/instruqt-frontend/assets/hashicorp/tracks/boundary.png
 tags:
 - boundary
@@ -116,7 +120,7 @@ challenges:
     Grab the org scope ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ORG_SCOPE_ID=<ORG_SCOPE_ID_FROM_ABOVE>
+    export ORG_SCOPE_ID=<ORG_SCOPE_ID>
     ```
 
     Create a new org under the new org scope named, "HashiCups Web App" using the org scope ID from above, again,
@@ -152,7 +156,7 @@ challenges:
     Grab the project scope ID from the output and store it in an environment variable for later usage.
 
     ```
-    export PROJECT_SCOPE_ID=<PROJECT_SCOPE_ID_FROM_ABOVE>
+    export PROJECT_SCOPE_ID=<PROJECT_SCOPE_ID>
     ```
 
     Before continuing to the next challenge, be sure to add the environment variables you set above to the `~/.bashrc`
@@ -225,7 +229,7 @@ challenges:
     Grab the global auth method ID from the output and store it in an environment variable for later usage.
 
     ```
-    export GLOBAL_AUTH_METHOD_ID=<GLOBAL_AUTH_METHOD_ID_FROM_ABOVE>
+    export GLOBAL_AUTH_METHOD_ID=<GLOBAL_AUTH_METHOD_ID>
     ```
 
     Then, create an auth method in the org scope you created in the first challenge.
@@ -262,7 +266,7 @@ challenges:
     Grab the org auth method ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ORG_AUTH_METHOD_ID=<ORG_AUTH_METHOD_ID_FROM_ABOVE>
+    export ORG_AUTH_METHOD_ID=<ORG_AUTH_METHOD_ID>
     ```
 
     Before continuing to the next challenge, be sure to add the environment variables you set above to the `~/.bashrc`
@@ -312,13 +316,13 @@ challenges:
     ---
 
     You'll need login accounts for an admin user for both of your auth methods. You'll use the username `adminuser`
-    and the password `foofoofoo` for both.
+    and the password `adminuser` for both.
 
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -login-name "adminuser" \
-      -password "foofoofoo" \
+      -password "adminuser" \
       -auth-method-id $GLOBAL_AUTH_METHOD_ID
     ```
 
@@ -344,7 +348,7 @@ challenges:
     Grab the account ID from the output and store it in an environment variable for later usage.
 
     ```
-    export GLOBAL_ADMIN_USER_ACCOUNT_ID=<GLOBAL_ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
+    export GLOBAL_ADMIN_USER_ACCOUNT_ID=<GLOBAL_ADMIN_USER_ACCOUNT_ID>
     ```
 
     Then, create a login account for the admin user for the org auth method.
@@ -353,7 +357,7 @@ challenges:
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -login-name "adminuser" \
-      -password "foofoofoo" \
+      -password "adminuser" \
       -auth-method-id $ORG_AUTH_METHOD_ID
     ```
 
@@ -380,7 +384,7 @@ challenges:
     Grab the account ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ORG_ADMIN_USER_ACCOUNT_ID=<ORG_ADMIN_USER_ACCOUNT_ID_FROM_ABOVE>
+    export ORG_ADMIN_USER_ACCOUNT_ID=<ORG_ADMIN_USER_ACCOUNT_ID>
     ```
 
     Before continuing to the next challenge, be sure to add the environment variables you set above to the `~/.bashrc`
@@ -462,7 +466,7 @@ challenges:
     Grab the global admin user ID from the output and store it in an environment variable for later usage.
 
     ```
-    export GLOBAL_ADMIN_USER_ID=<GLOBAL_ADMIN_USER_ID_FROM_ABOVE>
+    export GLOBAL_ADMIN_USER_ID=<GLOBAL_ADMIN_USER_ID>
     ```
 
     Then, add the newly created global user to the global account.
@@ -525,7 +529,7 @@ challenges:
     Grab the user ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ORG_ADMIN_USER_ID=<ORG_ADMIN_USER_ID_FROM_ABOVE>
+    export ORG_ADMIN_USER_ID=<ORG_ADMIN_USER_ID>
     ```
 
     You'll now add the user to the account for the org scope similarly to how you did before.
@@ -642,7 +646,7 @@ challenges:
     Grab the global anon listing ID from the output and store it in an environment variable for later usage.
 
     ```
-    export GLOBAL_ANON_LISTING_ID=<GLOBAL_ANON_LISTING_ID_FROM_ABOVE>
+    export GLOBAL_ANON_LISTING_ID=<GLOBAL_ANON_LISTING_ID>
     ```
 
     Then, add the required grants and principals to the global anonymous listing ID.
@@ -724,7 +728,7 @@ challenges:
     Grab the org anon listing ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ORG_ANON_LISTING_ID=<ORG_ANON_LISTING_ID_FROM_ABOVE>
+    export ORG_ANON_LISTING_ID=<ORG_ANON_LISTING_ID>
     ```
 
     Then, add the required grants and principals to the org anonymous listing ID.
@@ -808,7 +812,7 @@ challenges:
     Grab the global admin role ID from the output and store it in an environment variable for later usage.
 
     ```
-    export GLOBAL_ADMIN_ROLE_ID=<GLOBAL_ADMIN_ROLE_ID_FROM_ABOVE>
+    export GLOBAL_ADMIN_ROLE_ID=<GLOBAL_ADMIN_ROLE_ID>
     ```
 
     Then, add the the newly created role to the global admin user.
@@ -889,7 +893,7 @@ challenges:
     Grab the org admin role ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ORG_ADMIN_ROLE_ID=<ORG_ADMIN_ROLE_ID_FROM_ABOVE>
+    export ORG_ADMIN_ROLE_ID=<ORG_ADMIN_ROLE_ID>
     ```
 
     Then, add the the newly created role to the org admin user.
@@ -940,7 +944,7 @@ challenges:
     boundary authenticate password \
       -auth-method-id $ORG_AUTH_METHOD_ID \
       -login-name adminuser \
-      -password foofoofoo
+      -password adminuser
     ```
 
     Example output:
@@ -972,7 +976,7 @@ challenges:
     echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
     echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
     echo "export ADMIN_USER_USERNAME=adminuser" >> ~/.bashrc
-    echo "export ADMIN_USER_PASSWORD=foofoofoo" >> ~/.bashrc
+    echo "export ADMIN_USER_PASSWORD=adminuser" >> ~/.bashrc
     echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
     ```
 
@@ -1092,7 +1096,7 @@ challenges:
     Grab the host catalog ID from the output and store it in an environment variable for later usage.
 
     ```
-    export HOST_CATALOG_ID=<HOST_CATALOG_ID_FROM_ABOVE>
+    export HOST_CATALOG_ID=<HOST_CATALOG_ID>
     ```
 
     Next, create a new *host*.
@@ -1126,7 +1130,7 @@ challenges:
     Grab the host ID from the output and store it in an environment variable for later usage.
 
     ```
-    export WORKER_HOST_ID=<WORKER_HOST_ID_FROM_ABOVE>
+    export WORKER_HOST_ID=<WORKER_HOST_ID>
     ```
 
     A *host set* groups together hosts, which provide logically equivalent services. Targets work off of host sets,
@@ -1160,7 +1164,7 @@ challenges:
     Grab the host set ID from the output and store it in an environment variable for later usage.
 
     ```
-    export HOST_SET_ID=<HOST_SET_ID_FROM_ABOVE>
+    export HOST_SET_ID=<HOST_SET_ID>
     ```
 
     Now you can add the hosts you created above to the host set.
@@ -1204,7 +1208,7 @@ challenges:
     Grab the target ID from the output and store it in an environment variable for later usage.
 
     ```
-    export TARGET_ID=<TARGET_ID_FROM_ABOVE>
+    export TARGET_ID=<TARGET_ID>
     ```
 
     The last bit of configuration you'll need to complete is adding the host set you created above to the target you
@@ -1313,17 +1317,62 @@ challenges:
     It is a policy in HashiCups Engineering that only admins are allowed SSH access to any hosts. However, there is
     an exception which allows any DBAs in the HashiCups Engineering org to access any Postgres database.
 
-    In this challenge, we'll create one account for one DBA.
+    TODO: Since you already have learned how to do all these individual steps, this challenge will be compressed and
+    cover the creation of accounts, users, roles and groups all in one.
 
-    # TODO: create a DBAs group that has the database Access
+    In this challenge, we'll create one account for one for a single DBA as an example. You must be logged in as the
+    admin user for this challenge. TODO: does it matter which admin user?
+
+    ---
+
+    You'll need a login account for any DBA user, and this time you'll only want to tie it to the org. You'll use the
+    username `dbauser` and the password `dbauser` for both.
+
+    Creat the login account.
 
     ```
     boundary accounts create password \
-      -auth-method-id=<ORG_AUTH_METHOD_ID_FROM_ABOVE> \
-      -login-name="hashicups_admin" \
-      -password="password" \
-      -name=hashicups_admin \
-      -description="HashiCups Admin Demo Account"
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -login-name "dbauser" \
+      -password "dbauser" \
+      -auth-method-id $ORG_AUTH_METHOD_ID
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    ```
+
+    Grab the DBA account ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export DBA_USER_ACCOUNT_ID=<DBA_USER_ACCOUNT_ID>
+    ```
+
+    ```
+    boundary users create \
+      -name="dba1" \
+      -description="An example DBA user." \
+      -scope-id=$ORG_SCOPE_ID
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    ```
+
+    Grab the DBA user ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export DBA_USER_ID=<DBA_USER_ID>
+    ```
+
+    ```
+    boundary users set-accounts \
+      -id=$DBA_USER_ID \
+      -account=$DBA_USER_ACCOUNT_ID
     ```
 
     Example output:
@@ -1333,7 +1382,10 @@ challenges:
     ```
 
     ```
-    boundary users create -name="tester01" -description="A test user" -scope-id=$ORG_ID
+    boundary authenticate password \
+      -login-name="dbauser" \
+      -password="dbauser" \
+      -auth-method-id=$ORG_AUTH_METHOD_ID
     ```
 
     Example output:
@@ -1343,7 +1395,10 @@ challenges:
     ```
 
     ```
-    boundary users set-accounts -id=<user_id> -account=<account_id>
+    boundary groups create \
+      -name="dba" \
+      -description="HashiCups Engineering DBAs" \
+      -scope-id=$ORG_SCOPE_ID
     ```
 
     Example output:
@@ -1352,40 +1407,18 @@ challenges:
     TODO
     ```
 
-    ```
-    boundary authenicate password -login-name="tester01" -password="supersecure" \
-    -auth-method-id=<ORG_AUTH_METHOD_ID>
-    ```
-
-    Example output:
+    Grab the DBA group ID from the output and store it in an environment variable for later usage.
 
     ```
-    TODO
+    export DBA_GROUP_ID=<DBA_GROUP_ID>
     ```
 
-    ```
-    boundary authenticate password -auth-method-id=ampw_1234567890 \
-    -login-name=admin -password=password
-    ```
-
-    Example output:
+    Add the user to the group.
 
     ```
-    TODO
-    ```
-
-    ```
-    boundary groups create -name="group01" -description="A test group" -scope-id=$ORG_ID
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-
-    ```
-    boundary groups add-members -id=<group_id> -member=<user_id>
+    boundary groups add-members \
+      -id=$DBA_GROUP_ID \
+      -member=$DBA_USER_ID
     ```
 
     Example output:
@@ -1506,7 +1539,7 @@ challenges:
     Then put the newly created host catalog ID into the environment.
 
     ```
-    export HOST_CATALOG_ID=<HOST_CATALOG_ID_FROM_ABOVE>
+    export HOST_CATALOG_ID=<HOST_CATALOG_ID>
     ```
 
     TODO: one-liner
@@ -1735,4 +1768,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "9976802617999144858"
+checksum: "13988227967328730658"
