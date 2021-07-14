@@ -1600,6 +1600,35 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
+- slug: manage-sessions
+  id: 6n8fgeuzipfy
+  type: challenge
+  title: Manage Sessions
+  teaser: Learn how you can use Boundary for session management.
+  notes:
+  - type: text
+    contents: TODO
+  assignment: |-
+    ```
+    TODO
+    ```
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
+  difficulty: advanced
+  timelimit: 600
 - slug: explore-the-admin-ui
   id: wyaxsa25ysd1
   type: challenge
@@ -1698,4 +1727,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "2087765394453766522"
+checksum: "2642056957715258052"
