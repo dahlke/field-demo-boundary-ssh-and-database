@@ -311,8 +311,8 @@ challenges:
 
     ---
 
-    Create a login account for the admin user for the global auth method. You'll use the username `adminuser` and the
-    password `foofoofoo`.
+    You'll need login accounts for an admin user for both of your auth methods. You'll use the username `adminuser`
+    and the password `foofoofoo` for both.
 
     ```
     boundary accounts create password \
@@ -326,18 +326,17 @@ challenges:
 
     ```
     Account information:
-      Auth Method ID:      ampw_YXiGz3OWHI
-      Created Time:        Thu, 08 Jul 2021 18:09:35 UTC
-      ID:                  acctpw_nTGqpEt4OK
+      Auth Method ID:      ampw_UgALwVLX8T
+      Created Time:        Wed, 14 Jul 2021 01:11:21 UTC
+      ID:                  acctpw_Zfl1eBkplk
       Type:                password
-      Updated Time:        Thu, 08 Jul 2021 18:09:35 UTC
+      Updated Time:        Wed, 14 Jul 2021 01:11:21 UTC
       Version:             1
 
       Scope:
-        ID:                o_tc3qudleXh
-        Name:              HashiCups Engineering
-        Parent Scope ID:   global
-        Type:              org
+        ID:                global
+        Name:              global
+        Type:              global
 
     <...truncated...>
     ```
@@ -372,7 +371,7 @@ challenges:
       Scope:
         ID:                o_tc3qudleXh
         Name:              HashiCups Web App
-        Parent Scope ID:   TODO global
+        Parent Scope ID:   global
         Type:              org
 
     <...truncated...>
@@ -410,11 +409,11 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: configure-admin-users-and-roles
+- slug: configure-admin-users
   id: j986bk9afoar
   type: challenge
-  title: Configure Admin Users and Roles
-  teaser: Learn to setup the admin users and roles in Boundary to seed your production deployment.
+  title: Configure Admin Users
+  teaser: Learn to setup the admin users in Boundary to seed your production deployment.
   notes:
   - type: text
     contents: |-
@@ -446,7 +445,18 @@ challenges:
     Example output:
 
     ```
-    TODO
+    User information:
+      Created Time:        Wed, 14 Jul 2021 01:19:02 UTC
+      Description:         Admin user for global scope.
+      ID:                  u_8ZbkJa5Zkq
+      Name:                adminuser
+      Updated Time:        Wed, 14 Jul 2021 01:19:02 UTC
+      Version:             1
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
 
     <...truncated...>
     ```
@@ -466,6 +476,25 @@ challenges:
       -account $GLOBAL_ADMIN_USER_ACCOUNT_ID
     ```
 
+    Example output:
+
+    ```
+    User information:
+      Created Time:        Wed, 14 Jul 2021 01:19:02 UTC
+      Description:         Admin user for global scope.
+      ID:                  u_8ZbkJa5Zkq
+      Name:                adminuser
+      Updated Time:        Wed, 14 Jul 2021 01:19:39 UTC
+      Version:             2
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
+    <...truncated...>
+    ```
+
     You'll do the same now for the org scope. Create the user for the org scope.
 
     ```
@@ -478,7 +507,19 @@ challenges:
     Example output:
 
     ```
-    TODO
+    User information:
+      Created Time:        Wed, 14 Jul 2021 01:20:24 UTC
+      Description:         Admin user for HashiCups Engineering org scope.
+      ID:                  u_GujSZDvIKR
+      Name:                adminuser
+      Updated Time:        Wed, 14 Jul 2021 01:20:24 UTC
+      Version:             1
+
+      Scope:
+        ID:                o_0tn1qel2vw
+        Name:              HashiCups Engineering
+        Parent Scope ID:   global
+        Type:              org
 
     <...truncated...>
     ```
@@ -498,12 +539,62 @@ challenges:
       -account $ORG_ADMIN_USER_ACCOUNT_ID
     ```
 
-    You have now created your login accounts and users. It's time to associate those with some baseline roles.
+    Example output:
 
-    ---
+    ```
+    User information:
+      Created Time:        Wed, 14 Jul 2021 01:20:24 UTC
+      Description:         Admin user for HashiCups Engineering org scope.
+      ID:                  u_GujSZDvIKR
+      Name:                adminuser
+      Updated Time:        Wed, 14 Jul 2021 01:21:00 UTC
+      Version:             2
 
-    ## Create Roles to Manage Scopes
+      Scope:
+        ID:                o_0tn1qel2vw
+        Name:              HashiCups Engineering
+        Parent Scope ID:   global
+        Type:              org
 
+    <...truncated...>
+    ```
+
+    The last thing you shold do is put all the environment variables you defined into
+    your `~/.bashrc` file for future usage.
+
+    ```
+    echo "export GLOBAL_ADMIN_USER_ID=$GLOBAL_ADMIN_USER_ID" >> ~/.bashrc
+    echo "export ORG_ADMIN_USER_ID=$ORG_ADMIN_USER_ID" >> ~/.bashrc
+    ```
+
+    You have now created your users, and attached them to their respective accounts. It's time to associate those with
+    some baseline roles.
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
+  difficulty: advanced
+  timelimit: 600
+- slug: configure-admin-roles
+  id: vojdkujfd7of
+  type: challenge
+  title: Configure Admin Roles
+  teaser: Learn to setup the admin roles in Boundary to manage scopes in your production deployment.
+  notes:
+  - type: text
+    contents: '- Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.'
+  assignment: |-
     The following describes the four baseline roles you'll need to create to manage resources within the org and
     project scopes created above. These roles are similar to the roles created for you if generation had not been
     skipped during `boundary database init` when executed with the `-skip-initial-login-role-creation` flag, Declaring
@@ -876,8 +967,8 @@ challenges:
     echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
     echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc
     echo "export PROJECT_ADMIN_ID=$PROJECT_ADMIN_ID" >> ~/.bashrc
-    echo "export ADMIN_USER_USERNAME=$ADMIN_USER_USERNAME" >> ~/.bashrc
-    echo "export ADMIN_USER_PASSWORD=$ADMIN_USER_PASSWORD" >> ~/.bashrc
+    echo "export ADMIN_USER_USERNAME=adminuser" >> ~/.bashrc
+    echo "export ADMIN_USER_PASSWORD=foofoofoo" >> ~/.bashrc
     echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
     ```
 
@@ -898,7 +989,7 @@ challenges:
     hostname: boundary-controller
     port: 8443
   difficulty: advanced
-  timelimit: 3600
+  timelimit: 600
 - slug: configure-and-connect-to-your-first-target-with-ssh
   id: wm0enxxguhie
   type: challenge
@@ -1196,7 +1287,7 @@ challenges:
     hostname: boundary-controller
     port: 8443
   difficulty: advanced
-  timelimit: 3600
+  timelimit: 600
 - slug: configure-and-connect-to-postgres-with-tcp
   id: 1ut7x9mfbihc
   type: challenge
@@ -1331,7 +1422,7 @@ challenges:
     hostname: boundary-controller
     port: 8443
   difficulty: advanced
-  timelimit: 3600
+  timelimit: 600
 - slug: configure-users-roles-and-groups
   id: niaptwmxppym
   type: challenge
@@ -1346,13 +1437,6 @@ challenges:
   assignment: |-
     # TODO: create a DevOps group that has the SSH Access
     # TODO: create a DBAs group that has the database Access
-
-    ```
-    boundary auth-methods create password \
-      -scope-id=$ORG_ID \
-      -name="hashicups_auth_method" \
-      -description="HashiCups auth method"
-    ```
 
     ```
     boundary accounts create password \
@@ -1529,5 +1613,5 @@ challenges:
     hostname: boundary-controller
     port: 8443
   difficulty: advanced
-  timelimit: 3600
-checksum: "7370332596688196320"
+  timelimit: 600
+checksum: "12385289308041170136"

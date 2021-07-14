@@ -1,0 +1,31 @@
+#!/bin/bash -l
+
+# TODO: get the env vars from the solve script
+source ~/.bashrc
+cat ~/.bashrc
+
+# Check that the adminuser user exists in the global scope
+GLOBAL_ADMIN_USERNAME=$(boundary users list \
+	-scope-id=global \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-format=json | jq -r '.items[0].name')
+
+if [ "$GLOBAL_ADMIN_USERNAME" != "adminuser" ]; then
+    fail-message "You did not create the 'adminuser' user."
+    exit 1
+fi
+
+# Check that the adminuser user exists in the org scope
+ORG_ADMIN_USERNAME=$(boundary users list \
+	-scope-id=$ORG_SCOPE_ID \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-format=json | jq -r '.items[0].name')
+
+if [ "$ORG_ADMIN_USERNAME" != "adminuser" ]; then
+    fail-message "You did not create the 'adminuser' user."
+    exit 1
+fi
+
+# TODO: check they are in the bashrc
+
+exit 0

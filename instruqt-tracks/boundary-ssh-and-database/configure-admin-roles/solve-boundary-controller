@@ -7,32 +7,6 @@ set -o history
 export ADMIN_USER_USERNAME="adminuser"
 export ADMIN_USER_PASSWORD="foofoofoo"
 
-# Create the User Principal for Org Admin User
-export GLOBAL_ADMIN_USER_ID=$( \
-boundary users create -scope-id global \
--recovery-config /root/boundary-controller-recovery.hcl \
--name $ADMIN_USER_USERNAME \
--description "Admin User for global scope." \
--format=json | jq -r .item.id)
-
-echo "Global Admin User ID:" $GLOBAL_ADMIN_USER_ID
-
-# Add Admin User Principal to the Org Admin Account
-boundary users add-accounts \
--recovery-config /root/boundary-controller-recovery.hcl \
--id $ORG_ADMIN_USER_ID \
--account $GLOBAL_ADMIN_USER_ACCOUNT_ID
-
-# Create the User Principal for Project Admin User
-export ORG_ADMIN_USER_ID=$( \
-boundary users create -scope-id $ORG_SCOPE_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--name $ADMIN_USER_USERNAME \
--description "Admin User for HashiCups Engineering org scope." \
--format=json | jq -r .item.id)
-
-echo "Project Admin User ID:" $ORG_ADMIN_USER_ID
-
 # Add Project User Principal to the Project Admin Account
 boundary users add-accounts \
 -recovery-config /root/boundary-controller-recovery.hcl \
@@ -118,8 +92,6 @@ boundary authenticate password \
 -format=json | jq -r .item.attributes.token
 )
 
-echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
-echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
 echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
 echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
 echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc
