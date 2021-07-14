@@ -49,37 +49,37 @@ boundary roles add-principals -id $ORG_ANON_LISTING_ID \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -principal 'u_anon'
 
-export ORG_ADMIN_ID=$( \
+export GLOBAL_ADMIN_ROLE_ID=$( \
 boundary roles create -name 'org_admin' \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -scope-id 'global' \
 -grant-scope-id $ORG_SCOPE_ID \
 -format=json | jq -r .item.id)
 
-echo "Org Admin ID:" $ORG_ADMIN_ID
+echo "Global Admin Role ID:" $GLOBAL_ADMIN_ROLE_ID
 
-boundary roles add-grants -id $ORG_ADMIN_ID \
+boundary roles add-grants -id $GLOBAL_ADMIN_ROLE_ID \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -grant 'id=*;type=*;actions=*'
 
-boundary roles add-principals -id $ORG_ADMIN_ID \
+boundary roles add-principals -id $GLOBAL_ADMIN_ROLE_ID \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -principal $ADMIN_USER_ID
 
-export PROJECT_ADMIN_ID=$(
+export ORG_ADMIN_ROLE_ID=$(
 boundary roles create -name 'project_admin' \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -scope-id $ORG_SCOPE_ID \
 -grant-scope-id $PROJECT_SCOPE_ID \
 -format=json | jq -r .item.id)
 
-echo "Project Admin ID:" $PROJECT_ADMIN_ID
+echo "Org Admin Role ID:" $ORG_ADMIN_ROLE_ID
 
-boundary roles add-grants -id $PROJECT_ADMIN_ID \
+boundary roles add-grants -id $ORG_ADMIN_ROLE_ID \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -grant 'id=*;type=*;actions=*'
 
-boundary roles add-principals -id $PROJECT_ADMIN_ID \
+boundary roles add-principals -id $ORG_ADMIN_ROLE_ID \
 -recovery-config /root/boundary-controller-recovery.hcl \
 -principal=$ADMIN_USER_ID
 
@@ -94,8 +94,8 @@ boundary authenticate password \
 
 echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
 echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
-echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc
-echo "export PROJECT_ADMIN_ID=$PROJECT_ADMIN_ID" >> ~/.bashrc
+echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
+echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
 echo "export ADMIN_USER_USERNAME=$ADMIN_USER_USERNAME" >> ~/.bashrc
 echo "export ADMIN_USER_PASSWORD=$ADMIN_USER_PASSWORD" >> ~/.bashrc
 echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc

@@ -420,15 +420,13 @@ challenges:
       - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
       - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
   assignment: |-
-    This challenge will focus on the creation of *users* and *roles*.
+    This challenge will focus on the creation of *users*.
 
     Users and groups in Boundary are collectively known as *principals*. Assigning *grants* on *roles* is performed
     through principal IDs; that is, the unique IDs of users, groups, or both.
 
     Users in Boundary represent an internal notion of a particular entity (human, machine, etc.). Users can be
     correlated with one or more account resources via auth methods.
-
-    Roles in Boundary manage the permissions given to principals (*users* and *groups*).
 
     ---
 
@@ -595,6 +593,10 @@ challenges:
   - type: text
     contents: '- Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.'
   assignment: |-
+    This challenge will focus on the creation of *roles*.
+
+    Roles in Boundary manage the permissions given to principals (*users* and *groups*).
+
     The following describes the four baseline roles you'll need to create to manage resources within the org and
     project scopes created above. These roles are similar to the roles created for you if generation had not been
     skipped during `boundary database init` when executed with the `-skip-initial-login-role-creation` flag, Declaring
@@ -607,6 +609,8 @@ challenges:
     - To allow anonymous (unauthenticated) users the ability to list scopes and auth methods in the org scope.
     - To allow `adminuser` user administration grants at the org scope.
     - To allow `adminuser` user administration grants at the project scope.
+
+    ---
 
     First, create global anonymous listing roles.
 
@@ -773,10 +777,10 @@ challenges:
     <...truncated...>
     ```
 
-    Create the org admin role for `adminuser`.
+    Create the global admin role for `adminuser`.
 
     ```
-    boundary roles create -name 'org_admin' \
+    boundary roles create -name 'global_admin' \
         -recovery-config /root/boundary-controller-recovery.hcl \
         -scope-id 'global' \
         -grant-scope-id $ORG_SCOPE_ID
@@ -801,22 +805,22 @@ challenges:
     <...truncated...>
     ```
 
-    Grab the org admin ID from the output and store it in an environment variable for later usage.
+    Grab the global admin role ID from the output and store it in an environment variable for later usage.
 
     ```
-    export ORG_ADMIN_ID=<ORG_ADMIN_ID_FROM_ABOVE>
+    export GLOBAL_ADMIN_ROLE_ID=<GLOBAL_ADMIN_ROLE_ID_FROM_ABOVE>
     ```
 
-    Then, add the required grants and principals to the org admin ID.
+    Then, add the the newly created role to the global admin user.
 
     ```
-    boundary roles add-grants -id $ORG_ADMIN_ID \
+    boundary roles add-grants -id $GLOBAL_ADMIN_ROLE_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -grant 'id=*;type=*;actions=*'
 
-    boundary roles add-principals -id $ORG_ADMIN_ID \
+    boundary roles add-principals -id $GLOBAL_ADMIN_ROLE_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -principal $ADMIN_USER_ID
+      -principal $GLOBAL_ADMIN_USER_ID
     ```
 
     Example output:
@@ -853,7 +857,7 @@ challenges:
     <...truncated...>
     ```
 
-    Create the project admin for `adminuser`.
+    Create the org admin role.
 
     ```
     boundary roles create -name 'project_admin' \
@@ -882,22 +886,22 @@ challenges:
     <...truncated...>
     ```
 
-    Grab the project user ID from the output and store it in an environment variable for later usage.
+    Grab the org admin role ID from the output and store it in an environment variable for later usage.
 
     ```
-    export PROJECT_ADMIN_ID=<PROJECT_ADMIN_ID_FROM_ABOVE>
+    export ORG_ADMIN_ROLE_ID=<ORG_ADMIN_ROLE_ID_FROM_ABOVE>
     ```
 
-    Then, add the required grants and principals to the project admin ID.
+    Then, add the the newly created role to the org admin user.
 
     ```
-    boundary roles add-grants -id $PROJECT_ADMIN_ID \
+    boundary roles add-grants -id $ORG_ADMIN_ROLE_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -grant 'id=*;type=*;actions=*'
 
-    boundary roles add-principals -id $PROJECT_ADMIN_ID \
+    boundary roles add-principals -id $ORG_ADMIN_ROLE_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -principal $ADMIN_USER_ID
+      -principal $ORG_ADMIN_USER_ID
     ```
 
     Example output:
@@ -965,14 +969,16 @@ challenges:
     ```
     echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
     echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
-    echo "export ORG_ADMIN_ID=$ORG_ADMIN_ID" >> ~/.bashrc
-    echo "export PROJECT_ADMIN_ID=$PROJECT_ADMIN_ID" >> ~/.bashrc
+    echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
+    echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
     echo "export ADMIN_USER_USERNAME=adminuser" >> ~/.bashrc
     echo "export ADMIN_USER_PASSWORD=foofoofoo" >> ~/.bashrc
     echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
     ```
 
-    TODO: Congratulations! You have setup the initial resources in Boundary, and retrieved your first Boundary token.
+    Congratulations! You have setup the initial resources in Boundary, and retrieved your first Boundary token. Next,
+    you will learn to connect to your first target, before learning about defining different types of users, roles, and
+    groups.
   tabs:
   - title: Controller
     type: terminal
@@ -1614,4 +1620,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "12385289308041170136"
+checksum: "2660046785498750083"
