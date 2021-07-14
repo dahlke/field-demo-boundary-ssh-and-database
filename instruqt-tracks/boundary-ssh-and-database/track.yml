@@ -1294,6 +1294,177 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
+- slug: configure-devops-and-dba-accounts
+  id: niaptwmxppym
+  type: challenge
+  title: Configure DevOps and DBA Accounts
+  teaser: TODO
+  notes:
+  - type: text
+    contents: |-
+      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
+      - Group: Collection of users used for access control. A group is owned by one and only one scope.
+      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
+  assignment: |-
+    # TODO: create a DevOps group that has the SSH Access
+    # TODO: create a DBAs group that has the database Access
+
+    ```
+    boundary accounts create password \
+      -auth-method-id=<ORG_AUTH_METHOD_ID_FROM_ABOVE> \
+      -login-name="hashicups_admin" \
+      -password="password" \
+      -name=hashicups_admin \
+      -description="HashiCups Admin Demo Account"
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    ```
+
+    ```
+    boundary users create -name="tester01" -description="A test user" -scope-id=$ORG_ID
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    ```
+
+    ```
+    boundary users set-accounts -id=<user_id> -account=<account_id>
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    ```
+
+    ```
+    boundary authenicate password -login-name="tester01" -password="supersecure" \
+    -auth-method-id=<ORG_AUTH_METHOD_ID>
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    ```
+
+    ```
+    boundary authenticate password -auth-method-id=ampw_1234567890 \
+    -login-name=admin -password=password
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    ```
+
+    ```
+    boundary groups create -name="group01" -description="A test group" -scope-id=$ORG_ID
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    ```
+
+    ```
+    boundary groups add-members -id=<group_id> -member=<user_id>
+    ```
+
+    Example output:
+
+    ```
+    TODO
+    ```
+  difficulty: advanced
+  timelimit: 600
+- slug: configure-devops-and-dba-users
+  id: tqoaybgkqdqu
+  type: challenge
+  title: Configure DevOps and DBA Users
+  teaser: TODO
+  notes:
+  - type: text
+    contents: TODO
+  assignment: '# TODO'
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
+  difficulty: advanced
+  timelimit: 600
+- slug: configure-devops-and-dba-groups
+  id: cb7pgukngpxf
+  type: challenge
+  title: Configure DevOps and DBA Groups
+  teaser: TODO
+  notes:
+  - type: text
+    contents: TODO
+  assignment: '# TODO'
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
+  difficulty: advanced
+  timelimit: 600
+- slug: configure-devops-and-dba-roles
+  id: p69pk9cvtgi9
+  type: challenge
+  title: Configure DevOps and DBA Roles
+  teaser: TODO
+  notes:
+  - type: text
+    contents: TODO
+  assignment: '# TODO'
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
+  difficulty: advanced
+  timelimit: 600
 - slug: configure-and-connect-to-postgres-with-tcp
   id: 1ut7x9mfbihc
   type: challenge
@@ -1429,99 +1600,6 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: configure-users-roles-and-groups
-  id: niaptwmxppym
-  type: challenge
-  title: Configure Users, Roles, and Groups
-  teaser: TODO
-  notes:
-  - type: text
-    contents: |-
-      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
-      - Group: Collection of users used for access control. A group is owned by one and only one scope.
-      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
-  assignment: |-
-    # TODO: create a DevOps group that has the SSH Access
-    # TODO: create a DBAs group that has the database Access
-
-    ```
-    boundary accounts create password \
-      -auth-method-id=<ORG_AUTH_METHOD_ID_FROM_ABOVE> \
-      -login-name="hashicups_admin" \
-      -password="password" \
-      -name=hashicups_admin \
-      -description="HashiCups Admin Demo Account"
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-
-    ```
-    boundary users create -name="tester01" -description="A test user" -scope-id=$ORG_ID
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-
-    ```
-    boundary users set-accounts -id=<user_id> -account=<account_id>
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-
-    ```
-    boundary authenicate password -login-name="tester01" -password="supersecure" \
-    -auth-method-id=<ORG_AUTH_METHOD_ID>
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-
-    ```
-    boundary authenticate password -auth-method-id=ampw_1234567890 \
-    -login-name=admin -password=password
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-
-    ```
-    boundary groups create -name="group01" -description="A test group" -scope-id=$ORG_ID
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-
-    ```
-    boundary groups add-members -id=<group_id> -member=<user_id>
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-  difficulty: advanced
-  timelimit: 600
 - slug: explore-the-admin-ui
   id: wyaxsa25ysd1
   type: challenge
@@ -1620,4 +1698,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "2660046785498750083"
+checksum: "5191268135813638128"
