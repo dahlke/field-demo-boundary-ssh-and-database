@@ -1294,19 +1294,22 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: configure-devops-and-dba-accounts
+- slug: configure-dba-accounts
   id: niaptwmxppym
   type: challenge
-  title: Configure DevOps and DBA Accounts
+  title: Configure DBA Accounts
   teaser: TODO
   notes:
   - type: text
     contents: |-
-      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
+      Only admins in HashiCups Engineering have SSH access. However, the admins want to delegate Postgres access to
+      DBAs...
+
       - Group: Collection of users used for access control. A group is owned by one and only one scope.
-      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
   assignment: |-
-    # TODO: create a DevOps group that has the SSH Access
+    Only admins in HashiCups Engineering have SSH access. However, the admins want to delegate Postgres access to
+    DBAs...
+
     # TODO: create a DBAs group that has the database Access
 
     ```
@@ -1387,10 +1390,10 @@ challenges:
     ```
   difficulty: advanced
   timelimit: 600
-- slug: configure-devops-and-dba-users
+- slug: configure-dba-users
   id: tqoaybgkqdqu
   type: challenge
-  title: Configure DevOps and DBA Users
+  title: Configure DBA Users
   teaser: TODO
   notes:
   - type: text
@@ -1413,10 +1416,10 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: configure-devops-and-dba-groups
+- slug: configure-dba-group
   id: cb7pgukngpxf
   type: challenge
-  title: Configure DevOps and DBA Groups
+  title: Configure a DBA Group
   teaser: TODO
   notes:
   - type: text
@@ -1439,7 +1442,7 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-- slug: configure-devops-and-dba-roles
+- slug: configure-dba-roles
   id: p69pk9cvtgi9
   type: challenge
   title: Configure DevOps and DBA Roles
@@ -1727,4 +1730,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "2642056957715258052"
+checksum: "15807767822957566220"

@@ -10,6 +10,8 @@
 - Packer images
 - Review and update all the example outputs once the content settles
 
+- Story around how only admins have SSH access, and DBAs can have postgres access.
+
 # Flow:
 
 - Create the Scopes
