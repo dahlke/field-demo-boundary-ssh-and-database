@@ -33,7 +33,7 @@ GLOBAL_ADMIN_ROLE_ID=$(boundary roles list \
 	-format=json | jq -r '.items[1].name')
 
 if [ "$GLOBAL_ADMIN_ROLE_ID" != "global_admin" ]; then
-    fail-message "You did not create the 'org_admin' role."
+    fail-message "You did not create the 'global_admin' role."
     exit 1
 fi
 
@@ -48,8 +48,8 @@ boundary roles list \
 	-scope-id $ORG_SCOPE_ID \
 	-format=json | jq -r '.items[1].name'
 
-if [ "$PROJECT_ADMIN_NAME" != "project_admin" ]; then
-    fail-message "You did not create the 'project_admin' role."
+if [ "$PROJECT_ADMIN_NAME" != "org_admin" ]; then
+    fail-message "You did not create the 'org_admin' role."
     exit 1
 fi
 

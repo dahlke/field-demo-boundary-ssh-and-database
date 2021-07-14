@@ -864,7 +864,7 @@ challenges:
     Create the org admin role.
 
     ```
-    boundary roles create -name 'project_admin' \
+    boundary roles create -name 'org_admin' \
       -recovery-config /tmp/recovery.hcl \
       -scope-id $ORG_SCOPE_ID \
       -grant-scope-id $PROJECT_SCOPE_ID
@@ -877,7 +877,7 @@ challenges:
       Created Time:        Thu, 08 Jul 2021 20:46:20 UTC
       Grant Scope ID:      p_4Z5uFpAkBZ
       ID:                  r_Uh8SiJtFpg
-      Name:                project_admin
+      Name:
       Updated Time:        Thu, 08 Jul 2021 20:46:20 UTC
       Version:             1
 
@@ -915,7 +915,7 @@ challenges:
       Created Time:        Thu, 08 Jul 2021 20:45:52 UTC
       Grant Scope ID:      p_4Z5uFpAkBZ
       ID:                  r_x6Yv15DBLy
-      Name:                project_admin
+      Name:                org_admin
       Updated Time:        Thu, 08 Jul 2021 20:46:52 UTC
       Version:             2
 
@@ -925,7 +925,7 @@ challenges:
       Created Time:        Thu, 08 Jul 2021 20:45:52 UTC
       Grant Scope ID:      p_4Z5uFpAkBZ
       ID:                  r_x6Yv15DBLy
-      Name:                project_admin
+      Name:                org_admin
       Updated Time:        Thu, 08 Jul 2021 20:46:52 UTC
       Version:             3
 
@@ -962,6 +962,8 @@ challenges:
     ```
 
     Grab the token from the output and store it in an environment variable for later usage.
+
+    TODO: this is broken
 
     ```
     export BOUNDARY_TOKEN=<BOUNDARY_TOKEN>
@@ -1017,8 +1019,6 @@ challenges:
       - Host set: Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted.
       - Target: Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets.
   assignment: |-
-    # Configure Your First Target and Connect with SSH
-
     [Targets](https://www.boundaryproject.io/docs/concepts/domain-model/targets) are Boundary resources that contain
     one or more [host sets](https://www.boundaryproject.io/docs/concepts/domain-model/host-sets). A target allows
     Boundary users to define an endpoint with a default port and a protocol to establish a session. Unless specified
@@ -1768,4 +1768,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "13988227967328730658"
+checksum: "11033271516570038297"
