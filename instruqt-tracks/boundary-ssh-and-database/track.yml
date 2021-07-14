@@ -999,7 +999,7 @@ challenges:
 - slug: configure-and-connect-to-your-first-target-with-ssh
   id: wm0enxxguhie
   type: challenge
-  title: Configure Your First Host and Connect with SSH
+  title: Configure and Connect to Your First Target with SSH
   teaser: Use Boundary as a TCP proxy to SSH to a remote host.
   notes:
   - type: text
@@ -1698,4 +1698,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "5191268135813638128"
+checksum: "2087765394453766522"
