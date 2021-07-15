@@ -138,15 +138,15 @@ challenges:
 
     ```
     Scope information:
-      Created Time:        Thu, 08 Jul 2021 16:59:25 UTC
-      ID:                  p_9cvnExOh1E
-      Name:                HashiCups App
-      Updated Time:        Thu, 08 Jul 2021 16:59:25 UTC
+      Created Time:        Thu, 15 Jul 2021 23:28:36 UTC
+      ID:                  p_GmTM7HDptN
+      Name:                HashiCups Web App
+      Updated Time:        Thu, 15 Jul 2021 23:28:36 UTC
       Version:             1
 
       Scope (parent):
-        ID:                o_Sxjf9392Zv
-        Name:              HashiCups
+        ID:                o_QFjcosOF2O
+        Name:              HashiCups Engineering
         Parent Scope ID:   global
         Type:              org
 
@@ -172,17 +172,6 @@ challenges:
   - title: Controller
     type: terminal
     hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
-  - title: Boundary UI
-    type: service
-    hostname: boundary-controller
-    port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   difficulty: advanced
   timelimit: 600
 - slug: configure-auth-methods
@@ -282,17 +271,6 @@ challenges:
   - title: Controller
     type: terminal
     hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
-  - title: Boundary UI
-    type: service
-    hostname: boundary-controller
-    port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   difficulty: advanced
   timelimit: 600
 - slug: configure-admin-accounts
@@ -351,6 +329,8 @@ challenges:
     export GLOBAL_ADMIN_USER_ACCOUNT_ID=<GLOBAL_ADMIN_USER_ACCOUNT_ID>
     ```
 
+    TODO: try to log in here and see if it works?
+
     Then, create a login account for the admin user for the org auth method.
 
     ```
@@ -400,17 +380,6 @@ challenges:
   - title: Controller
     type: terminal
     hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
-  - title: Boundary UI
-    type: service
-    hostname: boundary-controller
-    port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   difficulty: advanced
   timelimit: 600
 - slug: configure-admin-users
@@ -575,17 +544,6 @@ challenges:
   - title: Controller
     type: terminal
     hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
-  - title: Boundary UI
-    type: service
-    hostname: boundary-controller
-    port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   difficulty: advanced
   timelimit: 600
 - slug: configure-admin-roles
@@ -963,7 +921,7 @@ challenges:
 
     Grab the token from the output and store it in an environment variable for later usage.
 
-    TODO: this is broken
+    TODO: do this in the following challenge?
 
     ```
     export BOUNDARY_TOKEN=<BOUNDARY_TOKEN>
@@ -977,8 +935,8 @@ challenges:
     echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
     echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
     echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
-    echo "export ADMIN_USER_USERNAME=adminuser" >> ~/.bashrc
-    echo "export ADMIN_USER_PASSWORD=adminuser" >> ~/.bashrc
+    echo "export ADMIN_USERNAME=adminuser" >> ~/.bashrc
+    echo "export ADMIN_PASSWORD=adminuser" >> ~/.bashrc
     echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
     ```
 
@@ -989,17 +947,10 @@ challenges:
   - title: Controller
     type: terminal
     hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
   - title: Boundary UI
     type: service
     hostname: boundary-controller
     port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   difficulty: advanced
   timelimit: 600
 - slug: configure-and-connect-to-your-first-target-with-ssh
@@ -1074,8 +1025,8 @@ challenges:
     ```
     boundary host-catalogs create static \
       -scope-id=$PROJECT_SCOPE_ID \
-      -name="HashiCups App" \
-      -description="For HashiCups App usage"
+      -name="HashiCups Web App" \
+      -description="For HashiCups Web App usage"
     ```
 
     Example output:
@@ -1083,9 +1034,9 @@ challenges:
     ```
     Host Catalog information:
       Created Time:        Mon, 12 Jul 2021 16:48:28 UTC
-      Description:         For HashiCups App usage
+      Description:         For HashiCups Web App usage
       ID:                  hcst_RVwh1LxNMa
-      Name:                HashiCups App
+      Name:                HashiCups Web App
       Type:                static
       Updated Time:        Mon, 12 Jul 2021 16:48:28 UTC
       Version:             1
@@ -1106,7 +1057,7 @@ challenges:
     ```
     boundary hosts create static \
       -name=worker-host \
-      -description="Worker host" \
+      -description="Boundary Worker host" \
       -address="boundary-worker" \
       -host-catalog-id=$HOST_CATALOG_ID
     ```
@@ -1116,7 +1067,7 @@ challenges:
     ```
     Host information:
       Created Time:        Mon, 12 Jul 2021 20:37:34 UTC
-      Description:         Worker host
+      Description:         Boundary Worker host
       Host Catalog ID:     hcst_cMzXXWNylL
       ID:                  hst_mnmBqpd9ky
       Name:                worker-host
@@ -1175,6 +1126,22 @@ challenges:
       -host=$WORKER_HOST_ID
     ```
 
+    Example output:
+
+    ```
+    Host Set information:
+      Created Time:        Thu, 15 Jul 2021 19:59:29 UTC
+      Description:         Test machine host set
+      Host Catalog ID:     hcst_1ZjlMIfOyd
+      ID:                  hsst_PKHzKx6sQu
+      Name:                test-machines
+      Type:                static
+      Updated Time:        Thu, 15 Jul 2021 19:59:46 UTC
+      Version:             2
+
+    <...truncated..>
+    ```
+
     With the hosts added to the host set and the host catalog, it's time to define the target that you will ultimately
     connect to. You'll create a target named "tests", set the default port to `22` for SSH, and set the session
     connection limit to `-1`, which allows unlimited connections.
@@ -1182,7 +1149,7 @@ challenges:
     ```
     boundary targets create tcp \
       -name="tests" \
-      -description="Test target" \
+      -description="Test SSH target" \
       -default-port=22 \
       -scope-id=$PROJECT_SCOPE_ID \
       -session-connection-limit="-1"
@@ -1292,10 +1259,6 @@ challenges:
     type: service
     hostname: boundary-controller
     port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   difficulty: advanced
   timelimit: 600
 - slug: configure-dba-accounts
@@ -1328,20 +1291,25 @@ challenges:
     You'll need a login account for any DBA user, and this time you'll only want to tie it to the org. You'll use the
     username `dbauser` and the password `dbauser` for both.
 
-    Creat the login account.
+    Create the login account.
+
+    # TODO: admin users don't seem to have all the power they should
 
     ```
     boundary accounts create password \
-      -recovery-config /root/boundary-controller-recovery.hcl \
       -login-name "dbauser" \
       -password "dbauser" \
       -auth-method-id $ORG_AUTH_METHOD_ID
+
+    <...truncated..>
     ```
 
     Example output:
 
     ```
     TODO
+
+    <...truncated..>
     ```
 
     Grab the DBA account ID from the output and store it in an environment variable for later usage.
@@ -1361,6 +1329,8 @@ challenges:
 
     ```
     TODO
+
+    <...truncated..>
     ```
 
     Grab the DBA user ID from the output and store it in an environment variable for later usage.
@@ -1426,6 +1396,21 @@ challenges:
     ```
     TODO
     ```
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Worker
+    type: terminal
+    hostname: boundary-worker
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
+  - title: VS Code
+    type: service
+    hostname: boundary-controller
+    port: 8443
   difficulty: advanced
   timelimit: 600
 - slug: configure-dba-users
@@ -1525,9 +1510,9 @@ challenges:
 
     ```
     boundary host-catalogs create static \
-        -scope-id=$PROJECT_ID \
-        -name=DevOps \
-        -description="For DevOps usage"
+        -scope-id=$PROJECT_SCOPE_ID \
+        -name=DBA \
+        -description="For HashiCups Engineering DBA usage"
     ```
 
     Example output:
@@ -1768,4 +1753,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "11033271516570038297"
+checksum: "3518918615985741458"

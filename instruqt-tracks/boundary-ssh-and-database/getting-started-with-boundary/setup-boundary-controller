@@ -2,6 +2,7 @@
 
 # https://www.boundaryproject.io/docs/getting-started#what-is-dev-mode
 
+
 #########
 # Install Boundary
 #########
@@ -25,6 +26,20 @@ apt-get install -y pass
 export DISPLAY=:0
 echo "export DISPLAY=:0" >> ~/.bashrc
 export $(dbus-launch)
+
+#########
+# Put the username / password env vars in the bashrc for solve scripts
+#########
+export ADMIN_USERNAME="adminuser"
+export ADMIN_PASSWORD="adminuser"
+export DBA_USERNAME="dbauser"
+export DBA_PASSWORD="dbauser"
+
+# Add the user name and passwords to the bashrc to make the solve scripts simpler
+echo "export ADMIN_USERNAME=$ADMIN_USERNAME" >> ~/.bashrc
+echo "export ADMIN_PASSWORD=$ADMIN_PASSWORD" >> ~/.bashrc
+echo "export DBA_USERNAME=$DBA_USERNAME" >> ~/.bashrc
+echo "export DBA_PASSWORD=$DBA_PASSWORD" >> ~/.bashrc
 
 # TODO: this has to be run in the terminal
 eval "$(printf 'foobar\n' | gnome-keyring-daemon --unlock)"

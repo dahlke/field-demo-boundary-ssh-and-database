@@ -4,9 +4,11 @@
 HISTFILE=/root/.bash_history
 set -o history
 
+# TODO: change the name of these to represent the SSH nature of them compared to the Postgres one
+
 export HOST_CATALOG_ID=$(boundary host-catalogs create static \
 	-scope-id=$PROJECT_SCOPE_ID \
-	-name="HashiCups App" \
+	-name="HashiCups Web App" \
 	-description="For HashiCups App usage" \
 	-format=json | jq -r .item.id)
 
@@ -33,14 +35,13 @@ boundary host-sets add-hosts \
 	-id=$HOST_SET_ID \
 	-host=$WORKER_HOST_ID
 
-export TARGET_ID=$( boundary targets create tcp \
+export TARGET_ID=$(boundary targets create tcp \
 	-name="ssh-test-targets" \
 	-description="Test SSH target" \
 	-default-port=22 \
 	-scope-id=$PROJECT_SCOPE_ID \
 	-session-connection-limit="-1" \
 	-format=json | jq -r .item.id)
-)
 
 echo "Target ID:" $TARGET_ID
 
@@ -48,7 +49,7 @@ boundary targets add-host-sets \
 	-id=$TARGET_ID \
 	-host-set=$HOST_SET_ID
 
-# TODO: boundary connect ssh -target-id=$TARGET_ID # select yes
+# TODO: boundary connect ssh -target-id=$TARGET_ID
 
 # TODO: do I want to store these ones like the last one?
 echo "export HOST_CATALOG_ID=$HOST_CATALOG_ID" >> ~/.bashrc

@@ -7,11 +7,12 @@ cat ~/.bashrc
 # Check that the HashiCups org scope exists
 ORG_SCOPE_NAME=$(boundary scopes list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id=global \
 	-format=json | jq -r '.items[0].name')
 
-if [ "$ORG_SCOPE_NAME" != "HashiCups Engineering." ]; then
+if [ "$ORG_SCOPE_NAME" != "HashiCups Engineering" ]; then
     fail-message "You did not create the 'HashiCups Engineering' org scope."
-    exit 1
+	exit 1
 fi
 
 # Check that the HashiCups App project scope exists
