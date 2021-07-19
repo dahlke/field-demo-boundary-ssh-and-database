@@ -6,93 +6,92 @@ set -o history
 
 # Add Project User Principal to the Project Admin Account
 boundary users add-accounts \
--recovery-config /root/boundary-controller-recovery.hcl \
--id $ORG_ADMIN_USER_ID \
--account $ORG_ADMIN_USER_ACCOUNT_ID
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id $ORG_ADMIN_USER_ID \
+	-account $ORG_ADMIN_USER_ACCOUNT_ID
 
 export GLOBAL_ANON_LISTING_ID=$( \
-boundary roles create -name 'global_anon_listing' \
--recovery-config /root/boundary-controller-recovery.hcl \
--scope-id 'global' \
--format=json | jq -r .item.id)
+	boundary roles create -name 'global_anon_listing' \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id 'global' \
+	-format=json | jq -r .item.id)
 
 echo "Global Anon Listing ID:" $GLOBAL_ANON_LISTING_ID
+echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
 
 boundary roles add-grants -id $GLOBAL_ANON_LISTING_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--grant 'id=*;type=auth-method;actions=list,authenticate' \
--grant 'id=*;type=scope;actions=list,no-op' \
--grant 'id={{account.id}};actions=read,change-password'
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-grant 'id=*;type=auth-method;actions=list,authenticate' \
+	-grant 'id=*;type=scope;actions=list,no-op' \
+	-grant 'id={{account.id}};actions=read,change-password'
 
 boundary roles add-principals -id $GLOBAL_ANON_LISTING_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--principal 'u_anon'
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-principal 'u_anon'
 
 export ORG_ANON_LISTING_ID=$( \
-boundary roles create -name 'org_anon_listing' \
--recovery-config /root/boundary-controller-recovery.hcl \
--scope-id $ORG_SCOPE_ID \
--format=json | jq -r .item.id)
+	boundary roles create -name 'org_anon_listing' \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id $ORG_SCOPE_ID \
+	-format=json | jq -r .item.id)
 
 echo "Org Anon Listing ID:" $ORG_ANON_LISTING_ID
+echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
 
 boundary roles add-grants -id $ORG_ANON_LISTING_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--grant 'id=*;type=auth-method;actions=list,authenticate' \
--grant 'type=scope;actions=list' \
--grant 'id={{account.id}};actions=read,change-password'
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-grant 'id=*;type=auth-method;actions=list,authenticate' \
+	-grant 'type=scope;actions=list' \
+	-grant 'id={{account.id}};actions=read,change-password'
 
 boundary roles add-principals -id $ORG_ANON_LISTING_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--principal 'u_anon'
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-principal 'u_anon'
 
 export GLOBAL_ADMIN_ROLE_ID=$( \
-boundary roles create -name 'global_admin' \
--recovery-config /root/boundary-controller-recovery.hcl \
--scope-id 'global' \
--grant-scope-id $ORG_SCOPE_ID \
--format=json | jq -r .item.id)
+	boundary roles create -name 'global_admin' \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id 'global' \
+	-grant-scope-id $ORG_SCOPE_ID \
+	-format=json | jq -r .item.id)
 
 echo "Global Admin Role ID:" $GLOBAL_ADMIN_ROLE_ID
+echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
 
 boundary roles add-grants -id $GLOBAL_ADMIN_ROLE_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--grant 'id=*;type=*;actions=*'
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-grant 'id=*;type=*;actions=*'
 
 boundary roles add-principals -id $GLOBAL_ADMIN_ROLE_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--principal $GLOBAL_ADMIN_USER_ID
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-principal $GLOBAL_ADMIN_USER_ID
 
 export ORG_ADMIN_ROLE_ID=$(
 boundary roles create -name 'org_admin' \
--recovery-config /root/boundary-controller-recovery.hcl \
--scope-id $ORG_SCOPE_ID \
--grant-scope-id $PROJECT_SCOPE_ID \
--format=json | jq -r .item.id)
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id $ORG_SCOPE_ID \
+	-grant-scope-id $PROJECT_SCOPE_ID \
+	-format=json | jq -r .item.id)
 
 echo "Org Admin Role ID:" $ORG_ADMIN_ROLE_ID
+echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
 
 boundary roles add-grants -id $ORG_ADMIN_ROLE_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--grant 'id=*;type=*;actions=*'
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-grant 'id=*;type=*;actions=*'
 
 boundary roles add-principals -id $ORG_ADMIN_ROLE_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--principal=$ORG_ADMIN_USER_ID
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-principal=$ORG_ADMIN_USER_ID
 
-export BOUNDARY_TOKEN=$(
-boundary authenticate password \
--auth-method-id $ORG_AUTH_METHOD_ID \
--login-name=$ADMIN_USERNAME \
--keyring-type=none \
--password=$ADMIN_PASSWORD \
--format=json | jq -r .item.attributes.token
-)
+export BOUNDARY_TOKEN=$(boundary authenticate password \
+	-auth-method-id $ORG_AUTH_METHOD_ID \
+	-login-name=$ADMIN_USERNAME \
+	-keyring-type=none \
+	-password=$ADMIN_PASSWORD \
+	-format=json | jq -r .item.attributes.token)
 
-echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
-echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
-echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
-echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
+echo "Boundary Token:" $BOUNDARY_TOKEN
 echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
 
 exit 0

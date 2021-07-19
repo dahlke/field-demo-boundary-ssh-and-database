@@ -15,6 +15,7 @@ boundary scopes create -name 'HashiCups Engineering' -scope-id 'global' \
 -format=json | jq -r .item.id)
 
 echo "Org Scope ID:" $ORG_SCOPE_ID
+echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
 
 # Create the Project Scope
 export PROJECT_SCOPE_ID=$( \
@@ -25,9 +26,6 @@ boundary scopes create -name 'HashiCups Web App' -scope-id $ORG_SCOPE_ID \
 -format=json | jq -r .item.id)
 
 echo "Project Scope ID:" $PROJECT_SCOPE_ID
-
-# Add the environment variables to the .bashrc for future sessions
-echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
 echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc
 
 exit 0

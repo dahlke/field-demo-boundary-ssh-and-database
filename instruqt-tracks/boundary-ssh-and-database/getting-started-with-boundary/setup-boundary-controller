@@ -32,8 +32,8 @@ export $(dbus-launch)
 #########
 export ADMIN_USERNAME="adminuser"
 export ADMIN_PASSWORD="adminuser"
-export DBA_USERNAME="dbauser"
-export DBA_PASSWORD="dbauser"
+export DBA_USERNAME="dbauser1"
+export DBA_PASSWORD="dbauser1"
 
 # Add the user name and passwords to the bashrc to make the solve scripts simpler
 echo "export ADMIN_USERNAME=$ADMIN_USERNAME" >> ~/.bashrc

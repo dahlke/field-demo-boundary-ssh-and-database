@@ -5,36 +5,34 @@ HISTFILE=/root/.bash_history
 set -o history
 
 # Create the User Principal for Org Admin User
-export GLOBAL_ADMIN_USER_ID=$( \
-boundary users create -scope-id global \
--recovery-config /root/boundary-controller-recovery.hcl \
--name $ADMIN_USERNAME \
--description "Admin User for global scope." \
--format=json | jq -r .item.id)
+export GLOBAL_ADMIN_USER_ID=$(boundary users create -scope-id global \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-name $ADMIN_USERNAME \
+	-description "Admin User for global scope." \
+	-format=json | jq -r .item.id)
 
 echo "Global Admin User ID:" $GLOBAL_ADMIN_USER_ID
 
 # Add Global Admin User Principal to the Global Admin Account
 boundary users add-accounts \
--recovery-config /root/boundary-controller-recovery.hcl \
--id $GLOBAL_ADMIN_USER_ID \
--account $GLOBAL_ADMIN_USER_ACCOUNT_ID
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id $GLOBAL_ADMIN_USER_ID \
+	-account $GLOBAL_ADMIN_USER_ACCOUNT_ID
 
 # Create the User Principal for Project Admin User
-export ORG_ADMIN_USER_ID=$( \
-boundary users create -scope-id $ORG_SCOPE_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--name $ADMIN_USERNAME \
--description "Admin User for HashiCups Engineering org scope." \
--format=json | jq -r .item.id)
+export ORG_ADMIN_USER_ID=$(boundary users create -scope-id $ORG_SCOPE_ID \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-name $ADMIN_USERNAME \
+	-description "Admin User for HashiCups Engineering org scope." \
+	-format=json | jq -r .item.id)
 
 echo "Org Admin User ID:" $ORG_ADMIN_USER_ID
 
 # Add Project User Principal to the Project Admin Account
 boundary users add-accounts \
--recovery-config /root/boundary-controller-recovery.hcl \
--id $ORG_ADMIN_USER_ID \
--account $ORG_ADMIN_USER_ACCOUNT_ID
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id $ORG_ADMIN_USER_ID \
+	-account $ORG_ADMIN_USER_ACCOUNT_ID
 
 echo "export GLOBAL_ADMIN_USER_ID=$GLOBAL_ADMIN_USER_ID" >> ~/.bashrc
 echo "export ORG_ADMIN_USER_ID=$ORG_ADMIN_USER_ID" >> ~/.bashrc

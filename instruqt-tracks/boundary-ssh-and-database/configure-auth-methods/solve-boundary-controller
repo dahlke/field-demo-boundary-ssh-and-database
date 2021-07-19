@@ -14,6 +14,7 @@ boundary auth-methods create password \
 -format=json | jq -r .item.id)
 
 echo "Global Auth Method ID:" $GLOBAL_AUTH_METHOD_ID
+echo "export GLOBAL_AUTH_METHOD_ID=$GLOBAL_AUTH_METHOD_ID" >> ~/.bashrc
 
 # Create the project auth method
 export ORG_AUTH_METHOD_ID=$(
@@ -25,8 +26,6 @@ boundary auth-methods create password \
 -format=json | jq -r .item.id)
 
 echo "Org Auth Method ID:" $ORG_AUTH_METHOD_ID
-
-echo "export GLOBAL_AUTH_METHOD_ID=$GLOBAL_AUTH_METHOD_ID" >> ~/.bashrc
 echo "export ORG_AUTH_METHOD_ID=$ORG_AUTH_METHOD_ID" >> ~/.bashrc
 
 exit 0

@@ -13,6 +13,7 @@ export HOST_CATALOG_ID=$(boundary host-catalogs create static \
 	-format=json | jq -r .item.id)
 
 echo "Host Catalog ID:" $HOST_CATALOG_ID
+echo "export HOST_CATALOG_ID=$HOST_CATALOG_ID" >> ~/.bashrc
 
 export WORKER_HOST_ID=$(boundary hosts create static \
 	-name=worker-host \
@@ -22,6 +23,7 @@ export WORKER_HOST_ID=$(boundary hosts create static \
 	-format=json | jq -r .item.id)
 
 echo "Worker Host ID:" $WORKER_HOST_ID
+echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
 
 export HOST_SET_ID=$(boundary host-sets create static \
 	-name="test-host-set" \
@@ -30,11 +32,13 @@ export HOST_SET_ID=$(boundary host-sets create static \
 	-format=json | jq -r .item.id)
 
 echo "Host Set ID:" $HOST_CATALOG_ID
+echo "export HOST_SET_ID=$HOST_SET_ID" >> ~/.bashrc
 
 boundary host-sets add-hosts \
 	-id=$HOST_SET_ID \
 	-host=$WORKER_HOST_ID
 
+# TODO update this env var name?
 export TARGET_ID=$(boundary targets create tcp \
 	-name="ssh-test-targets" \
 	-description="Test SSH target" \
@@ -44,17 +48,12 @@ export TARGET_ID=$(boundary targets create tcp \
 	-format=json | jq -r .item.id)
 
 echo "Target ID:" $TARGET_ID
+echo "export TARGET_ID=$TARGET_ID" >> ~/.bashrc
 
 boundary targets add-host-sets \
 	-id=$TARGET_ID \
 	-host-set=$HOST_SET_ID
 
 # TODO: boundary connect ssh -target-id=$TARGET_ID
-
-# TODO: do I want to store these ones like the last one?
-echo "export HOST_CATALOG_ID=$HOST_CATALOG_ID" >> ~/.bashrc
-echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
-echo "export HOST_SET_ID=$HOST_SET_ID" >> ~/.bashrc
-echo "export TARGET_ID=$TARGET_ID" >> ~/.bashrc
 
 exit 0

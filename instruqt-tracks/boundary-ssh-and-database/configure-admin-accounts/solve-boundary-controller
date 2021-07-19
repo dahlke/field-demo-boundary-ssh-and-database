@@ -6,24 +6,23 @@ set -o history
 
 # Create an Account for Admin User
 export GLOBAL_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
--recovery-config /root/boundary-controller-recovery.hcl \
--login-name $ADMIN_USERNAME \
--password $ADMIN_PASSWORD \
--auth-method-id $GLOBAL_AUTH_METHOD_ID \
--format=json | jq -r .item.id)
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-login-name $ADMIN_USERNAME \
+	-password $ADMIN_PASSWORD \
+	-auth-method-id $GLOBAL_AUTH_METHOD_ID \
+	-format=json | jq -r .item.id)
 
-echo "Org Admin User Account ID:" $GLOBAL_ADMIN_USER_ACCOUNT_ID
+echo "Global Admin User Account ID:" $GLOBAL_ADMIN_USER_ACCOUNT_ID
+echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
 
 export ORG_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
--recovery-config /root/boundary-controller-recovery.hcl \
--login-name $ADMIN_USERNAME \
--password $ADMIN_PASSWORD \
--auth-method-id $ORG_AUTH_METHOD_ID \
--format=json | jq -r .item.id)
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-login-name $ADMIN_USERNAME \
+	-password $ADMIN_PASSWORD \
+	-auth-method-id $ORG_AUTH_METHOD_ID \
+	-format=json | jq -r .item.id)
 
 echo "Org Admin User Account ID:" $ORG_ADMIN_USER_ACCOUNT_ID
-
-echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
 echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
 
 exit 0
