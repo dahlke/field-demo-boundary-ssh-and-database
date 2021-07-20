@@ -13,7 +13,7 @@
 - Review and update all the example outputs once the content settles
 - admin username / password env vars and dba username / password vars to make it easier
 - separate the global / org admin setup stuff and put the admin UI exploration earlier in the track?
-- user ADMIN_USERNAME instead of "adminuser" everywhere
+- standardize using `=` or a space in all the commands
 
 
 # Challenge Scripts (fully reviewed)

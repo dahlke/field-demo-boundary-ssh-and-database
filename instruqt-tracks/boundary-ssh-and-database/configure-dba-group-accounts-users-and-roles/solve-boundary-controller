@@ -25,10 +25,12 @@ echo "Postgres Read Only Role ID:" $PG_READ_ONLY_ROLE_ID
 echo "export PG_READ_ONLY_ROLE_ID=$PG_READ_ONLY_ROLE_ID" >> ~/.bashrc
 
 boundary roles add-principals \
-	-id=$DBA_GROUP_ID \
-	-principal=$PG_READ_ONLY_ROLE_ID
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id=$PG_READ_ONLY_ROLE_ID \
+	-principal=$DBA_GROUP_ID
 
 boundary roles add-grants \
+	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id=$PG_READ_ONLY_ROLE_ID \
 	-grant="id=*;type=*;actions=read,list"
 

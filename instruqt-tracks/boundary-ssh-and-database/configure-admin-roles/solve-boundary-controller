@@ -58,12 +58,14 @@ export GLOBAL_ADMIN_ROLE_ID=$( \
 echo "Global Admin Role ID:" $GLOBAL_ADMIN_ROLE_ID
 echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
 
-boundary roles add-grants -id $GLOBAL_ADMIN_ROLE_ID \
+boundary roles add-grants \
 	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id $GLOBAL_ADMIN_ROLE_ID \
 	-grant 'id=*;type=*;actions=*'
 
-boundary roles add-principals -id $GLOBAL_ADMIN_ROLE_ID \
+boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id $GLOBAL_ADMIN_ROLE_ID \
 	-principal $GLOBAL_ADMIN_USER_ID
 
 export ORG_ADMIN_ROLE_ID=$(

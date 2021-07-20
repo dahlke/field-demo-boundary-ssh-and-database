@@ -888,6 +888,7 @@ challenges:
     ```
     boundary authenticate password \
       -auth-method-id $ORG_AUTH_METHOD_ID \
+	    -keyring-type=none \
       -login-name $ADMIN_USERNAME \
       -password $ADMIN_PASSWORD
     ```
@@ -1245,19 +1246,22 @@ challenges:
   - type: text
     contents: |-
       Only admins in HashiCups Engineering have SSH access. However, the admins want to delegate Postgres access to
-      DBAs...
+      DBAs... TODO.
 
       - Group: Collection of users used for access control. A group is owned by one and only one scope.
+  - type: text
+    contents: |-
+      Now you have learned how to setup the initial resources in Boundary, how to log in, and how to connect to your
+      first target, it's time to learn how to break up access for different groups and roles at HashiCups.
+  - type: text
+    contents: |-
+      It is a policy in HashiCups Engineering that only admins are allowed SSH access to any hosts. However, there is
+      an exception which allows any DBAs in the HashiCups Engineering org to access any Postgres database.
+  - type: text
+    contents: |-
+      Since you already have learned how to do most of these individual steps, this challenge will be compressed and
+      cover the creation of groups, accounts, users, and roles all in one.
   assignment: |-
-    Now you have learned how to setup the initial resources in Boundary, how to log in, and how to connect to your
-    first target, it's time to learn how to break up access for different groups and roles at HashiCups.
-
-    It is a policy in HashiCups Engineering that only admins are allowed SSH access to any hosts. However, there is
-    an exception which allows any DBAs in the HashiCups Engineering org to access any Postgres database.
-
-    Since you already have learned how to do most of these individual steps, this challenge will be compressed and
-    cover the creation of groups, accounts, users, and roles all in one.
-
     In this challenge, we'll create a group and one account for one for a single DBA as an example.
 
     A group in Boundary is a resource that represents a collection of users that are treated equally for the purposes
@@ -1461,11 +1465,11 @@ challenges:
 
     ```
     boundary authenticate password \
-      -login-name="dbauser1" \
-      -password="dbauser1" \
-      -auth-method-id=$ORG_AUTH_METHOD_ID
+      -auth-method-id=$ORG_AUTH_METHOD_ID \
+	    -keyring-type=none \
+      -login-name=$DBA_USERNAME \
+      -password=$DBA_PASSWORD
     ```
-
     Example output:
 
     ```

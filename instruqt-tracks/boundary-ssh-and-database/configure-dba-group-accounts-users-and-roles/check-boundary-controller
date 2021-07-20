@@ -1,3 +1,14 @@
 #!/bin/bash -l
 
+# Check that the adminuser user exists in the global scope
+GLOBAL_ADMIN_USERNAME=$(boundary users list \
+	-scope-id=global \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-format=json | jq -r '.items[0].name')
+
+if [ "$GLOBAL_ADMIN_USERNAME" != "adminuser" ]; then
+    fail-message "You did not create the 'adminuser' user."
+    exit 1
+fi
+
 exit 0
