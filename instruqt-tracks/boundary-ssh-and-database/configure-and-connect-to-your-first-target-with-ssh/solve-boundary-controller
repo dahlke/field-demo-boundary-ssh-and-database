@@ -4,42 +4,41 @@
 HISTFILE=/root/.bash_history
 set -o history
 
-# TODO: change the name of these to represent the SSH nature of them compared to the Postgres one
-
-export HOST_CATALOG_ID=$(boundary host-catalogs create static \
+# TODO: should I use this same host catalog for the Postgres stuff?
+export PROJECT_HOST_CATALOG_ID=$(boundary host-catalogs create static \
 	-scope-id=$PROJECT_SCOPE_ID \
 	-name="HashiCups Web App" \
 	-description="For HashiCups App usage" \
 	-format=json | jq -r .item.id)
 
-echo "Host Catalog ID:" $HOST_CATALOG_ID
-echo "export HOST_CATALOG_ID=$HOST_CATALOG_ID" >> ~/.bashrc
+echo "Host Catalog ID:" $PROJECT_HOST_CATALOG_ID
+echo "export PROJECT_HOST_CATALOG_ID=$PROJECT_HOST_CATALOG_ID" >> ~/.bashrc
 
 export WORKER_HOST_ID=$(boundary hosts create static \
 	-name=worker-host \
 	-description="Boundary Worker host" \
 	-address="boundary-worker" \
-	-host-catalog-id=$HOST_CATALOG_ID \
+	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
 	-format=json | jq -r .item.id)
 
 echo "Worker Host ID:" $WORKER_HOST_ID
 echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
 
-export HOST_SET_ID=$(boundary host-sets create static \
-	-name="test-host-set" \
+export SSH_HOST_SET_ID=$(boundary host-sets create static \
+	-name="test-ssh-host-set" \
 	-description="Test machine host set" \
-	-host-catalog-id=$HOST_CATALOG_ID \
+	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
 	-format=json | jq -r .item.id)
 
-echo "Host Set ID:" $HOST_CATALOG_ID
-echo "export HOST_SET_ID=$HOST_SET_ID" >> ~/.bashrc
+echo "Host Set ID:" $PROJECT_HOST_CATALOG_ID
+echo "export SSH_HOST_SET_ID=$SSH_HOST_SET_ID" >> ~/.bashrc
 
 boundary host-sets add-hosts \
-	-id=$HOST_SET_ID \
+	-id=$SSH_HOST_SET_ID \
 	-host=$WORKER_HOST_ID
 
 # TODO update this env var name?
-export TARGET_ID=$(boundary targets create tcp \
+export SSH_TARGET_ID=$(boundary targets create tcp \
 	-name="ssh-test-targets" \
 	-description="Test SSH target" \
 	-default-port=22 \
@@ -47,13 +46,13 @@ export TARGET_ID=$(boundary targets create tcp \
 	-session-connection-limit="-1" \
 	-format=json | jq -r .item.id)
 
-echo "Target ID:" $TARGET_ID
-echo "export TARGET_ID=$TARGET_ID" >> ~/.bashrc
+echo "Target ID:" $SSH_TARGET_ID
+echo "export SSH_TARGET_ID=$SSH_TARGET_ID" >> ~/.bashrc
 
 boundary targets add-host-sets \
-	-id=$TARGET_ID \
-	-host-set=$HOST_SET_ID
+	-id=$SSH_TARGET_ID \
+	-host-set=$SSH_HOST_SET_ID
 
-# TODO: boundary connect ssh -target-id=$TARGET_ID
+# TODO: boundary connect ssh -target-id=$SSH_TARGET_ID
 
 exit 0

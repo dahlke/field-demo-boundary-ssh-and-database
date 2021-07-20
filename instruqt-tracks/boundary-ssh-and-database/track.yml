@@ -1023,7 +1023,7 @@ challenges:
     Grab the host catalog ID from the output and store it in an environment variable for later usage.
 
     ```
-    export HOST_CATALOG_ID=<HOST_CATALOG_ID>
+    export PROJECT_HOST_CATALOG_ID=<PROJECT_HOST_CATALOG_ID>
     ```
 
     Next, create a new *host*.
@@ -1035,7 +1035,7 @@ challenges:
       -name=worker-host \
       -description="Boundary Worker host" \
       -address="boundary-worker" \
-      -host-catalog-id=$HOST_CATALOG_ID
+      -host-catalog-id=$PROJECT_HOST_CATALOG_ID
     ```
 
     Example output:
@@ -1069,7 +1069,7 @@ challenges:
     boundary host-sets create static \
       -name="test-machines" \
       -description="Test machine host set" \
-      -host-catalog-id=$HOST_CATALOG_ID
+      -host-catalog-id=$PROJECT_HOST_CATALOG_ID
     ```
 
     Example output:
@@ -1091,14 +1091,14 @@ challenges:
     Grab the host set ID from the output and store it in an environment variable for later usage.
 
     ```
-    export HOST_SET_ID=<HOST_SET_ID>
+    export SSH_HOST_SET_ID=<SSH_HOST_SET_ID>
     ```
 
     Now you can add the hosts you created above to the host set.
 
     ```
     boundary host-sets add-hosts \
-      -id=$HOST_SET_ID \
+      -id=$SSH_HOST_SET_ID \
       -host=$WORKER_HOST_ID
     ```
 
@@ -1151,7 +1151,7 @@ challenges:
     Grab the target ID from the output and store it in an environment variable for later usage.
 
     ```
-    export TARGET_ID=<TARGET_ID>
+    export SSH_TARGET_ID=<SSH_TARGET_ID>
     ```
 
     The last bit of configuration you'll need to complete is adding the host set you created above to the target you
@@ -1159,8 +1159,8 @@ challenges:
 
     ```
     boundary targets add-host-sets \
-      -id=$TARGET_ID \
-      -host-set=$HOST_SET_ID
+      -id=$SSH_TARGET_ID \
+      -host-set=$SSH_HOST_SET_ID
     ```
 
     Example output:
@@ -1186,7 +1186,7 @@ challenges:
     Run the following command and confirm you see your host set added in the output.
 
     ```
-    boundary targets read -id=$TARGET_ID
+    boundary targets read -id=$SSH_TARGET_ID
     ```
 
     Example output:
@@ -1216,7 +1216,7 @@ challenges:
     You are ready to connect to the target. You can paste the target ID into the below command to connect.
 
     ```
-    boundary connect ssh -target-id=$TARGET_ID
+    boundary connect ssh -target-id=$SSH_TARGET_ID
     ```
 
     Be sure to respond `yes` when asked if you are sure you want to continue connecting. You will then be dropped
@@ -1504,14 +1504,53 @@ challenges:
     ---
 
     Now that you have created a new org and project, you can configure the new hosts that you will connect to. All
-    hosts must be part of a host set, both of which must be within a host catalog, so you need to create a host catalog
-    first.
+    hosts must be part of a host set, both of which must be within a host catalog. Since you already created a host
+    catalog for your SSH targets, you should reuse that one.
+
+    Create a new host named, "postgres" with description, "Postgres host" under the newly created host catalog.
 
     ```
-    boundary host-catalogs create static \
-        -scope-id=$PROJECT_SCOPE_ID \
-        -name=DBA \
-        -description="For HashiCups Engineering DBA usage"
+    boundary hosts create static \
+      -name=postgres \
+      -description="Postgres host" \
+      -address="127.0.0.1" \
+      -host-catalog-id=$PROJECT_HOST_CATALOG_ID
+    ```
+
+    Example output:
+
+    ```
+    Host information:
+      Created Time:        Tue, 20 Jul 2021 22:54:57 UTC
+      Description:         Postgres host
+      Host Catalog ID:     hcst_n47YuM1GHH
+      ID:                  hst_SlpSfkv0Zc
+      Name:                postgres
+      Type:                static
+      Updated Time:        Tue, 20 Jul 2021 22:54:57 UTC
+      Version:             1
+
+      Scope:
+        ID:                p_Lytjza6aHm
+        Name:              HashiCups Web App
+        Parent Scope ID:   o_CI8um08Vd7
+        Type:              project
+
+    <...truncated..>
+    ```
+
+    TODO: Set the env var
+
+    ```
+    export POSTGRES_HOST_ID=<POSTGRES_HOST_ID>
+    echo "export POSTGRES_HOST_ID=$POSTGRES_HOST_ID" >> ~/.bashrc
+    ```
+
+    ```
+    boundary host-sets create static \
+      -name="test-postgres-host-set" \
+      -description="Postgres machine host set" \
+      -host-catalog-id=$PROJECT_HOST_CATALOG_ID
     ```
 
     Example output:
@@ -1520,64 +1559,17 @@ challenges:
     TODO
     ```
 
-    Then put the newly created host catalog ID into the environment.
+    TODO: Set the env var
 
     ```
-    export HOST_CATALOG_ID=<HOST_CATALOG_ID>
-    ```
-
-    TODO: one-liner
-
-    Now, create a new host named, "postgres" with description, "Postgres host" under the newly created host catalog.
-
-    ```
-    boundary hosts create static -name=postgres -description="Postgres host" \
-    -address="127.0.0.1" -host-catalog-id=$HOST_CATALOG_ID
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-
-    Repeat the step to create another host named, `localhost`.
-
-    ```
-    boundary hosts create static -name=localhost -description="Localhost for testing" \
-      -address="localhost" -host-catalog-id=$HOST_CATALOG_ID
-    ```
-
-    Example output:
-
-    ```
-    TODO
+    export POSTGRES_HOST_SET_ID=<POSTGRES_HOST_SET_ID>
+    echo "export POSTGRES_HOST_SET_ID=$POSTGRES_HOST_SET_ID" >> ~/.bashrc
     ```
 
     ```
-    boundary host-sets create static -name="test-machines" \
-    -description="Test machine host set" -host-catalog-id=$HOST_CATALOG_ID
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-
-    ```
-    boundary hosts list -host-catalog-id=$HOST_CATALOG_ID
-    ```
-
-    Example output:
-
-    ```
-    TODO
-    ```
-
-    ```
-    boundary host-sets add-hosts -id=<host_set_id> -host=<postgres_host_id> \
-      -host=<localhost_host_id>
+    boundary host-sets add-hosts \
+      -id=<host_set_id> \
+      -host=<postgres_host_id> \
     ```
 
     Example output:
@@ -1587,8 +1579,12 @@ challenges:
     ```
 
     ```
-    boundary targets create tcp -name="tests" -description="Test target" \
-        -default-port=22 -scope-id=$PROJECT_ID -session-connection-limit="-1"
+    boundary targets create tcp \
+      -name="tests" \
+      -description="Test target" \
+      -default-port=22 \
+      -scope-id=$PROJECT_SCOPE_ID \
+      -session-connection-limit="-1"
     ```
 
     Example output:
@@ -1597,8 +1593,16 @@ challenges:
     TODO
     ```
 
+
     ```
-    boundary targets add-host-sets -id=<target_id> -host-set=<host_set_id>
+    export POSTGRES_TARGET_ID=<POSTGRES_TARGET_ID>
+    echo "export POSTGRES_TARGET_ID=$POSTGRES_TARGET_ID" >> ~/.bashrc
+    ```
+
+    ```
+    boundary targets add-host-sets \
+      -id=$POSTGRES_TARGET_ID \
+      -host-set=$POSTGRES_HOST_SET_ID
     ```
 
     Example output:
