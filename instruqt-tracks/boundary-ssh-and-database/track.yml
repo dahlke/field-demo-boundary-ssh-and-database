@@ -78,7 +78,11 @@ challenges:
     In this challenge, you're going to create an org scope and project scope, without admin or default role creation.
     You're going to specify a role for managing these scopes by selected users in a later challenge.
 
-    TODO: explain boundary-controller-recovery.hcl
+    In this track you will make use of a the [Recovery KMS Workflow](https://www.boundaryproject.io/docs/installing/no-gen-resources#recovery-kms-workflow).
+    This allows you to use a key specifid to "recover" Boundary, but you can also use it to authenticate to Boundary
+    and manage it as a "global" super user. This allows you to authenticate from the CLI or from Terraform in order to
+    manage Boundary without any generated resources. The recovery block you will use is located at
+    `/root/boundary-controller-recovery.hcl`.
 
     ---
 

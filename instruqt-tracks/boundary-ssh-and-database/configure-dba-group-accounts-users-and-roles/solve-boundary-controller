@@ -15,9 +15,10 @@ echo "DBA Group ID:" $DBA_GROUP_ID
 echo "export DBA_GROUP_ID=$DBA_GROUP_ID" >> ~/.bashrc
 
 export PG_READ_ONLY_ROLE_ID=$(boundary roles create \
+	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id=$ORG_SCOPE_ID \
 	-name="postgres-read-only" \
-	-description="Role with read-only permission for Postgres."
+	-description="Role with read-only permission for Postgres." \
 	-format=json | jq -r .item.id)
 
 echo "Postgres Read Only Role ID:" $PG_READ_ONLY_ROLE_ID
