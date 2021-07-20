@@ -1267,7 +1267,7 @@ challenges:
   id: niaptwmxppym
   type: challenge
   title: Configure DBA Group, Accounts, Users and Roles
-  teaser: TODO
+  teaser: Configure a new group for DBAs who will need access to Postgres databases.
   notes:
   - type: text
     contents: |-
@@ -1303,7 +1303,13 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Group information:
+      Created Time:        Tue, 20 Jul 2021 00:08:58 UTC
+      Description:         HashiCups Engineering DBAs
+      ID:                  g_DcpYXCrI1t
+      Name:                dba
+      Updated Time:        Tue, 20 Jul 2021 00:08:58 UTC
+      Version:             1
 
     <...truncated..>
     ```
@@ -1464,7 +1470,6 @@ challenges:
 
     ```
     boundary authenticate password \
-      -recovery-config /root/boundary-controller-recovery.hcl \
       -login-name="dbauser1" \
       -password="dbauser1" \
       -auth-method-id=$ORG_AUTH_METHOD_ID
@@ -1477,84 +1482,12 @@ challenges:
 
     <...truncated..>
     ```
-  tabs:
-  - title: Controller
-    type: terminal
-    hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
-  - title: Boundary UI
-    type: service
-    hostname: boundary-controller
-    port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
-  difficulty: advanced
-  timelimit: 600
-- slug: configure-dba-users
-  id: tqoaybgkqdqu
-  type: challenge
-  title: Configure DBA Users
-  teaser: TODO
-  notes:
-  - type: text
-    contents: TODO
-  assignment: '# TODO'
-  tabs:
-  - title: Controller
-    type: terminal
-    hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
-  - title: Boundary UI
-    type: service
-    hostname: boundary-controller
-    port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
-  difficulty: advanced
-  timelimit: 600
-- slug: configure-dba-group
-  id: cb7pgukngpxf
-  type: challenge
-  title: Configure a DBA Group
-  teaser: TODO
-  notes:
-  - type: text
-    contents: TODO
-  assignment: '# TODO'
-  tabs:
-  - title: Controller
-    type: terminal
-    hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
-  - title: Boundary UI
-    type: service
-    hostname: boundary-controller
-    port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
-  difficulty: advanced
-  timelimit: 600
-- slug: configure-dba-roles
-  id: p69pk9cvtgi9
-  type: challenge
-  title: Configure DevOps and DBA Roles
-  teaser: TODO
-  notes:
-  - type: text
-    contents: TODO
-  assignment: '# TODO'
+
+    Grab the token from the output and store it in an environment variable for later usage.
+
+    ```
+    export BOUNDARY_TOKEN=<BOUNDARY_TOKEN>
+    ```
   tabs:
   - title: Controller
     type: terminal
@@ -1834,4 +1767,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "10765840429826885332"
+checksum: "17374575233026266398"
