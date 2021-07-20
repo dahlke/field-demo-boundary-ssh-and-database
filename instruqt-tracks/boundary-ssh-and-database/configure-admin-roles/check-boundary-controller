@@ -2,7 +2,6 @@
 
 # TODO: get the env vars from the solve script
 source ~/.bashrc
-cat ~/.bashrc
 
 # Check that the global scope anon listing role was created
 GLOBAL_ANON_LISTING_NAME=$(boundary roles list \

@@ -292,9 +292,9 @@ challenges:
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -auth-method-id $GLOBAL_AUTH_METHOD_ID \
       -login-name $ADMIN_USERNAME \
-      -password $ADMIN_PASSWORD \
-      -auth-method-id $GLOBAL_AUTH_METHOD_ID
+      -password $ADMIN_PASSWORD
     ```
 
     Example output:
@@ -330,9 +330,9 @@ challenges:
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -auth-method-id $ORG_AUTH_METHOD_ID \
       -login-name $ADMIN_USERNAME \
-      -password $ADMIN_PASSWORD \
-      -auth-method-id $ORG_AUTH_METHOD_ID
+      -password $ADMIN_PASSWORD
     ```
 
     Example output:
@@ -1752,4 +1752,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "12858490544537291260"
+checksum: "8026663581117808095"

@@ -2,27 +2,26 @@
 
 # TODO: get the env vars from the solve script
 source ~/.bashrc
-cat ~/.bashrc
 
-# Check that the org auth method exists
-ORG_AUTH_METHOD_NAME=$(boundary auth-methods list \
+# Check that the global auth method exists
+GLOBAL_AUTH_METHOD_NAME=$(boundary auth-methods list \
 	-scope-id=global \
 	-recovery-config /root/boundary-controller-recovery.hcl  \
 	-format=json | jq -r '.items[0].name')
 
-if [ "$ORG_AUTH_METHOD_NAME" != "hashicups_auth_method" ]; then
-    fail-message "You did not create the 'hashicups_auth_method' auth method."
+if [ "$GLOBAL_AUTH_METHOD_NAME" != "global_auth_method" ]; then
+    fail-message "You did not create the 'global_auth_method' auth method."
     exit 1
 fi
 
 # Check that the project auth method exists
-PROJECT_AUTH_METHOD_NAME=$(boundary auth-methods list \
+ORG_AUTH_METHOD_NAME=$(boundary auth-methods list \
 	-scope-id=$ORG_SCOPE_ID \
 	-recovery-config /root/boundary-controller-recovery.hcl  \
 	-format=json | jq -r '.items[0].name')
 
-if [ "$PROJECT_AUTH_METHOD_NAME" != "hashicups_auth_method" ]; then
-    fail-message "You did not create the 'hashicups_app_auth_method' auth method."
+if [ "$ORG_AUTH_METHOD_NAME" != "hashicups_eng_auth_method" ]; then
+    fail-message "You did not create the 'hashicups_eng_app_auth_method' auth method."
     exit 1
 fi
 

@@ -13,7 +13,7 @@
 - Review and update all the example outputs once the content settles
 - All the solve scripts assume  you haven't run anything yet, and might error out if so, so maybe check for them  in the bashrc at least at first?
 - separate the global / org admin setup stuff and put the admin UI exploration earlier in the track?
-- Run track tests and make sure they are consistently working
+- Run track tests and make sure they are consistently working, they are currently failing
   -  then standardize using `=` or a space in all the commands
   - standardize scope / recovery-config locations in args
   - standardize  the `USERNAME` vs. `USER_NAME` for users
@@ -28,8 +28,8 @@
   - [-] cleanup
 - configure-auth-methods
   - [-] setup
-  - [ ] solve
-  - [ ] check
+  - [x] solve
+  - [x] check
   - [-] cleanup
 - configure-admin-accounts
   - [-] setup
