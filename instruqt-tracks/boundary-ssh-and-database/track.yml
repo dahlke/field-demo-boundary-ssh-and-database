@@ -121,6 +121,7 @@ challenges:
 
     ```
     export ORG_SCOPE_ID=<ORG_SCOPE_ID>
+    echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
     ```
 
     Create a new org under the new org scope named, "HashiCups Web App" using the org scope ID from above, again,
@@ -157,13 +158,6 @@ challenges:
 
     ```
     export PROJECT_SCOPE_ID=<PROJECT_SCOPE_ID>
-    ```
-
-    Before continuing to the next challenge, be sure to add the environment variables you set above to the `~/.bashrc`
-    file so they can be used across sessions.
-
-    ```
-    echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
     echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc
     ```
 
@@ -219,6 +213,7 @@ challenges:
 
     ```
     export GLOBAL_AUTH_METHOD_ID=<GLOBAL_AUTH_METHOD_ID>
+    echo "export GLOBAL_AUTH_METHOD_ID=$GLOBAL_AUTH_METHOD_ID" >> ~/.bashrc
     ```
 
     Then, create an auth method in the org scope you created in the first challenge.
@@ -256,13 +251,6 @@ challenges:
 
     ```
     export ORG_AUTH_METHOD_ID=<ORG_AUTH_METHOD_ID>
-    ```
-
-    Before continuing to the next challenge, be sure to add the environment variables you set above to the `~/.bashrc`
-    file so they can be used across sessions.
-
-    ```
-    echo "export GLOBAL_AUTH_METHOD_ID=$GLOBAL_AUTH_METHOD_ID" >> ~/.bashrc
     echo "export ORG_AUTH_METHOD_ID=$ORG_AUTH_METHOD_ID" >> ~/.bashrc
     ```
 
@@ -294,13 +282,14 @@ challenges:
     ---
 
     You'll need login accounts for an admin user for both of your auth methods. You'll use the username `adminuser`
-    and the password `adminuser` for both.
+    and the password `adminuser` for both. Both of these values have been placed in your `~/.bashrc` file for you as
+    `ADMIN_USERNAME` and `ADMIN_PASSWORD` to simplify and reduce the possibility of typos.
 
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -login-name "adminuser" \
-      -password "adminuser" \
+      -login-name $ADMIN_USERNAME \
+      -password $ADMIN_PASSWORD \
       -auth-method-id $GLOBAL_AUTH_METHOD_ID
     ```
 
@@ -327,6 +316,7 @@ challenges:
 
     ```
     export GLOBAL_ADMIN_USER_ACCOUNT_ID=<GLOBAL_ADMIN_USER_ACCOUNT_ID>
+    echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     ```
 
     TODO: try to log in here and see if it works?
@@ -336,8 +326,8 @@ challenges:
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -login-name "adminuser" \
-      -password "adminuser" \
+      -login-name $ADMIN_USERNAME \
+      -password $ADMIN_PASSWORD \
       -auth-method-id $ORG_AUTH_METHOD_ID
     ```
 
@@ -365,13 +355,6 @@ challenges:
 
     ```
     export ORG_ADMIN_USER_ACCOUNT_ID=<ORG_ADMIN_USER_ACCOUNT_ID>
-    ```
-
-    Before continuing to the next challenge, be sure to add the environment variables you set above to the `~/.bashrc`
-    file so they can be used across sessions.
-
-    ```
-    echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     ```
 
@@ -409,7 +392,7 @@ challenges:
     ```
     boundary users create -scope-id global \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -name "adminuser" \
+      -name $ADMIN_USERNAME \
       -description "Admin user for global scope."
     ```
 
@@ -436,6 +419,7 @@ challenges:
 
     ```
     export GLOBAL_ADMIN_USER_ID=<GLOBAL_ADMIN_USER_ID>
+    echo "export GLOBAL_ADMIN_USER_ID=$GLOBAL_ADMIN_USER_ID" >> ~/.bashrc
     ```
 
     Then, add the newly created global user to the global account.
@@ -471,7 +455,7 @@ challenges:
     ```
     boundary users create -scope-id $ORG_SCOPE_ID \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -name "adminuser" \
+      -name $ADMIN_USERNAME \
       -description "Admin user for HashiCups Engineering org scope."
     ```
 
@@ -499,6 +483,7 @@ challenges:
 
     ```
     export ORG_ADMIN_USER_ID=<ORG_ADMIN_USER_ID>
+    echo "export ORG_ADMIN_USER_ID=$ORG_ADMIN_USER_ID" >> ~/.bashrc
     ```
 
     You'll now add the user to the account for the org scope similarly to how you did before.
@@ -528,14 +513,6 @@ challenges:
         Type:              org
 
     <...truncated...>
-    ```
-
-    The last thing you shold do is put all the environment variables you defined into
-    your `~/.bashrc` file for future usage.
-
-    ```
-    echo "export GLOBAL_ADMIN_USER_ID=$GLOBAL_ADMIN_USER_ID" >> ~/.bashrc
-    echo "export ORG_ADMIN_USER_ID=$ORG_ADMIN_USER_ID" >> ~/.bashrc
     ```
 
     You have now created your users, and attached them to their respective accounts. It's time to associate those with
@@ -607,6 +584,7 @@ challenges:
 
     ```
     export GLOBAL_ANON_LISTING_ID=<GLOBAL_ANON_LISTING_ID>
+    echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
     ```
 
     Then, add the required grants and principals to the global anonymous listing ID.
@@ -689,6 +667,7 @@ challenges:
 
     ```
     export ORG_ANON_LISTING_ID=<ORG_ANON_LISTING_ID>
+    echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
     ```
 
     Then, add the required grants and principals to the org anonymous listing ID.
@@ -773,6 +752,7 @@ challenges:
 
     ```
     export GLOBAL_ADMIN_ROLE_ID=<GLOBAL_ADMIN_ROLE_ID>
+    echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
     ```
 
     Then, add the the newly created role to the global admin user.
@@ -854,6 +834,7 @@ challenges:
 
     ```
     export ORG_ADMIN_ROLE_ID=<ORG_ADMIN_ROLE_ID>
+    echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
     ```
 
     Then, add the the newly created role to the org admin user.
@@ -903,8 +884,8 @@ challenges:
     ```
     boundary authenticate password \
       -auth-method-id $ORG_AUTH_METHOD_ID \
-      -login-name adminuser \
-      -password adminuser
+      -login-name $ADMIN_USERNAME \
+      -password $ADMIN_PASSWORD
     ```
 
     Example output:
@@ -927,18 +908,6 @@ challenges:
 
     ```
     export BOUNDARY_TOKEN=<BOUNDARY_TOKEN>
-    ```
-
-    The last thing you shold do is put all the environment variables you defined into
-    your `~/.bashrc` file for future usage.
-
-    ```
-    echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
-    echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
-    echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
-    echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
-    echo "export ADMIN_USERNAME=adminuser" >> ~/.bashrc
-    echo "export ADMIN_PASSWORD=adminuser" >> ~/.bashrc
     echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
     ```
 
@@ -1277,20 +1246,28 @@ challenges:
       - Group: Collection of users used for access control. A group is owned by one and only one scope.
   assignment: |-
     Now you have learned how to setup the initial resources in Boundary, how to log in, and how to connect to your
-    target, it's time to learn how to break up access for different groups and roles at HashiCups.
+    first target, it's time to learn how to break up access for different groups and roles at HashiCups.
 
     It is a policy in HashiCups Engineering that only admins are allowed SSH access to any hosts. However, there is
     an exception which allows any DBAs in the HashiCups Engineering org to access any Postgres database.
 
-    TODO: Since you already have learned how to do all these individual steps, this challenge will be compressed and
-    cover the creation of accounts, users, roles and groups all in one.
+    Since you already have learned how to do most of these individual steps, this challenge will be compressed and
+    cover the creation of groups, accounts, users, and roles all in one.
 
-    In this challenge, we'll create one account for one for a single DBA as an example. You must be logged in as the
-    admin user for this challenge. TODO: does it matter which admin user?
+    In this challenge, we'll create a group and one account for one for a single DBA as an example.
+
+    A group in Boundary is a resource that represents a collection of users that are treated equally for the purposes
+    of access control. A group is a principal, which allows it to be assigned to roles. Roles assigned to a group are
+    indirectly assigned to the users in the group, and users receive all permissions of the assigned roles.
+
+    Groups can be defined at the Global, Organization, or Project scope.
+
+    TODO: for now this uses the recovery-config, but I should fix the admin user to use that.
 
     ---
 
-    This time, you'll start out by creating a group for the HashiCups Engineering DBAs team.
+    This time, you'll start out by creating a group for the "HashiCups Engineering DBAs" team, under the HashiCups
+    Engineering org scope.
 
     ```
     boundary groups create \
@@ -1318,21 +1295,49 @@ challenges:
 
     ```
     export DBA_GROUP_ID=<DBA_GROUP_ID>
+    echo "export DBA_GROUP_ID=$DBA_GROUP_ID" >> ~/.bashrc
     ```
 
-    You'll need a login account for any DBA user, and this time you'll only want to tie it to the org. You'll use the
-    username `dbauser1` and the password `dbauser1` for both.
+    Once you have the DBA group created, you'll need to create a role that will be attached to that principal. Since
+    this is not for admin users, they should have read-only permissions.
+
+    ```
+    boundary roles create \
+      -scope-id=$ORG_SCOPE_ID \
+      -name="postgres-read-only" \
+      -description="Role with read-only permission for Postgres."
+    ```
+
+    Grab the DBA group ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export PG_READ_ONLY_ROLE_ID=<PG_READ_ONLY_ROLE_ID>
+    echo "export PG_READ_ONLY_ROLE_ID=$PG_READ_ONLY_ROLE_ID" >> ~/.bashrc
+    ```
+
+    ```
+    boundary roles add-principals \
+      -id=$DBA_GROUP_ID \
+      -principal=$PG_READ_ONLY_ROLE_ID
+    ```
+
+    ```
+    boundary roles add-grants \
+      -id=$PG_READ_ONLY_ROLE_ID \
+      -grant="id=*;type=*;actions=read,list"
+    ```
+
+    Now that you have the group created, and associated the correct roles with it. It's time to create a login account
+    for a DBA user.  You'll use the username `dbauser1` and the password `dbauser1` for both. Those  values have been
+    placed in your environment for you as `DBA_USERNAME` and `DBA_PASSWORD`.
 
     Create the login account.
-
-    # TODO: admin users don't seem to have all the power they should
-    # TODO: use the recovery key?
 
     ```
     boundary accounts create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -login-name "dbauser1" \
-      -password "dbauser1" \
+      -login-name $DBA_USERNAME \
+      -password $DBA_PASSWORD \
       -auth-method-id $ORG_AUTH_METHOD_ID
     ```
 
@@ -1360,6 +1365,7 @@ challenges:
 
     ```
     export DBA_USER_ACCOUNT_ID=<DBA_USER_ACCOUNT_ID>
+    echo "export DBA_USER_ACCOUNT_ID=$DBA_USER_ACCOUNT_ID" >> ~/.bashrc
     ```
 
     ```
@@ -1394,6 +1400,7 @@ challenges:
 
     ```
     export DBA_USER_ID=<DBA_USER_ID>
+    echo "export DBA_USER_ID=$DBA_USER_ID" >> ~/.bashrc
     ```
 
     ```
@@ -1423,28 +1430,6 @@ challenges:
     <...truncated..>
     ```
 
-    ```
-    boundary groups create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
-      -name="dba" \
-      -description="HashiCups Engineering DBAs" \
-      -scope-id=$ORG_SCOPE_ID
-    ```
-
-    Example output:
-
-    ```
-    TODO
-
-    <...truncated..>
-    ```
-
-    Grab the DBA group ID from the output and store it in an environment variable for later usage.
-
-    ```
-    export DBA_GROUP_ID=<DBA_GROUP_ID>
-    ```
-
     Add the user to the group.
 
     ```
@@ -1468,6 +1453,8 @@ challenges:
     <...truncated..>
     ```
 
+    Finally, confirm that you can log in with the DBA user's credentials.
+
     ```
     boundary authenticate password \
       -login-name="dbauser1" \
@@ -1483,26 +1470,16 @@ challenges:
     <...truncated..>
     ```
 
-    Grab the token from the output and store it in an environment variable for later usage.
-
-    ```
-    export BOUNDARY_TOKEN=<BOUNDARY_TOKEN>
-    ```
+    Congratulations! You have successfully set up your DBA group, assigned some policies, and added an account and
+    user. You're ready to verify the permissions as the DBA user, and connect to your Postgres database.
   tabs:
   - title: Controller
     type: terminal
     hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
   - title: Boundary UI
     type: service
     hostname: boundary-controller
     port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   difficulty: advanced
   timelimit: 600
 - slug: configure-and-connect-to-postgres-with-tcp
@@ -1767,4 +1744,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "17374575233026266398"
+checksum: "9693977704192842451"

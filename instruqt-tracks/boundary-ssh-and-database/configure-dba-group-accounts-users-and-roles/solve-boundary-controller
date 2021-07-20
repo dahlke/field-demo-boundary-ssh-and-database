@@ -14,6 +14,23 @@ export DBA_GROUP_ID=$(boundary groups create \
 echo "DBA Group ID:" $DBA_GROUP_ID
 echo "export DBA_GROUP_ID=$DBA_GROUP_ID" >> ~/.bashrc
 
+export PG_READ_ONLY_ROLE_ID=$(boundary roles create \
+	-scope-id=$ORG_SCOPE_ID \
+	-name="postgres-read-only" \
+	-description="Role with read-only permission for Postgres."
+	-format=json | jq -r .item.id)
+
+echo "Postgres Read Only Role ID:" $PG_READ_ONLY_ROLE_ID
+echo "export PG_READ_ONLY_ROLE_ID=$PG_READ_ONLY_ROLE_ID" >> ~/.bashrc
+
+boundary roles add-principals \
+	-id=$DBA_GROUP_ID \
+	-principal=$PG_READ_ONLY_ROLE_ID
+
+boundary roles add-grants \
+	-id=$PG_READ_ONLY_ROLE_ID \
+	-grant="id=*;type=*;actions=read,list"
+
 export DBA_USER_ACCOUNT_ID=$(boundary accounts create password \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-login-name "dbauser1" \
