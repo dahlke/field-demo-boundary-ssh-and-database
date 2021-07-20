@@ -1263,10 +1263,10 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 600
-- slug: configure-dba-accounts
+- slug: configure-dba-group-accounts-users-and-roles
   id: niaptwmxppym
   type: challenge
-  title: Configure DBA Accounts
+  title: Configure DBA Group, Accounts, Users and Roles
   teaser: TODO
   notes:
   - type: text
@@ -1834,4 +1834,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "7873939391135817959"
+checksum: "10765840429826885332"
