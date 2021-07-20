@@ -11,17 +11,20 @@
 - Review the copy in assignments / notes / teasers / descriptions / add links all over
 - Packer images
 - Review and update all the example outputs once the content settles
-- admin username / password env vars and dba username / password vars to make it easier
+- All the solve scripts assume  you haven't run anything yet, and might error out if so, so maybe check for them  in the bashrc at least at first?
 - separate the global / org admin setup stuff and put the admin UI exploration earlier in the track?
-- standardize using `=` or a space in all the commands
+- Run track tests and make sure they are consistently working
+  -  then standardize using `=` or a space in all the commands
+  - standardize scope / recovery-config locations in args
+  - standardize  the `USERNAME` vs. `USER_NAME` for users
 
 
 # Challenge Scripts (fully reviewed)
 
 - getting-started-with-boundary
   - [x] setup
-  - [ ] solve
-  - [ ] check
+  - [x] solve
+  - [x] check
   - [-] cleanup
 - configure-auth-methods
   - [-] setup

@@ -888,7 +888,7 @@ challenges:
     ```
     boundary authenticate password \
       -auth-method-id $ORG_AUTH_METHOD_ID \
-	    -keyring-type=none \
+      -keyring-type=none \
       -login-name $ADMIN_USERNAME \
       -password $ADMIN_PASSWORD
     ```
@@ -1466,7 +1466,7 @@ challenges:
     ```
     boundary authenticate password \
       -auth-method-id=$ORG_AUTH_METHOD_ID \
-	    -keyring-type=none \
+      -keyring-type=none \
       -login-name=$DBA_USERNAME \
       -password=$DBA_PASSWORD
     ```
@@ -1752,4 +1752,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "9693977704192842451"
+checksum: "12858490544537291260"
