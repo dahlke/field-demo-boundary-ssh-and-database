@@ -2,7 +2,8 @@
 
 # Check that the host catalog was created.
 PROJECT_HOST_CATALOG_ID=$(boundary host-catalogs list \
-	-scope-id=$PROJECT_SCOPE_ID -format=json | jq -r '.items[0].id')
+	-scope-id=$PROJECT_SCOPE_ID \
+	-format=json | jq -r '.items[0].id')
 
 if [ "$PROJECT_HOST_CATALOG_ID" = "" ]; then
     fail-message "You did not create the Host Catalog."
@@ -11,7 +12,8 @@ fi
 
 # Check that the boundary worker host was created.
 WORKER_HOST_ID=$(boundary hosts list \
-	-host-catalog-id=$PROJECT_HOST_CATALOG_ID -format=json | jq -r '.items[0].id')
+	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
+	-format=json | jq -r '.items[0].id')
 
 if [ "$WORKER_HOST_ID" = "" ]; then
     fail-message "You did not create the Worker Host."
@@ -20,7 +22,8 @@ fi
 
 # Check that the host set was created.
 SSH_HOST_SET_ID=$(boundary host-sets list \
-	-host-catalog-id=$PROJECT_HOST_CATALOG_ID -format=json | jq -r '.items[0].id')
+	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
+	-format=json | jq -r '.items[0].id')
 
 if [ "$SSH_HOST_SET_ID" = "" ]; then
     fail-message "You did not create the Host Catalog."
@@ -29,7 +32,8 @@ fi
 
 # Check that the target was created.
 SSH_TARGET_ID=$(boundary targets list \
-	-scope-id=$PROJECT_SCOPE_ID -format=json | jq -r '.items[0].id')
+	-scope-id=$PROJECT_SCOPE_ID \
+	-format=json | jq -r '.items[0].id')
 
 if [ "$SSH_TARGET_ID" = "" ]; then
     fail-message "You did not create the Target."

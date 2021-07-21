@@ -43,4 +43,6 @@ boundary targets add-host-sets \
 	-id=$POSTGRES_TARGET_ID \
 	-host-set=$POSTGRES_TARGET_ID
 
+# TODO: boundary connect ssh -target-id=$POSTGRES_TARGET_ID
+
 exit 0

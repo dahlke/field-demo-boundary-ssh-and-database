@@ -97,8 +97,8 @@ challenges:
 
     ```
     boundary scopes create -name 'HashiCups Engineering' \
-      -scope-id 'global' \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -scope-id 'global' \
       -skip-admin-role-creation \
       -skip-default-role-creation
     ```
@@ -132,9 +132,10 @@ challenges:
     without the admin or default roles being created.
 
     ```
-    boundary scopes create -name 'HashiCups Web App' \
-      -scope-id $ORG_SCOPE_ID \
+    boundary scopes create \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -name 'HashiCups Web App' \
+      -scope-id $ORG_SCOPE_ID \
       -skip-admin-role-creation \
       -skip-default-role-creation
     ```
@@ -394,8 +395,9 @@ challenges:
     the principal in the role you create in the following step.
 
     ```
-    boundary users create -scope-id global \
+    boundary users create \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -scope-id global \
       -name $ADMIN_USERNAME \
       -description "Admin user for global scope."
     ```
@@ -457,8 +459,9 @@ challenges:
     You'll do the same now for the org scope. Create the user for the org scope.
 
     ```
-    boundary users create -scope-id $ORG_SCOPE_ID \
+    boundary users create \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -scope-id $ORG_SCOPE_ID \
       -name $ADMIN_USERNAME \
       -description "Admin user for HashiCups Engineering org scope."
     ```
@@ -560,8 +563,8 @@ challenges:
     First, create global anonymous listing roles.
 
     ```
-    boundary roles create -name 'global_anon_listing' \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+    boundary roles create \
+      -name 'global_anon_listing' \
       -scope-id 'global'
     ```
 
@@ -594,14 +597,16 @@ challenges:
     Then, add the required grants and principals to the global anonymous listing ID.
 
     ```
-    boundary roles add-grants -id $GLOBAL_ANON_LISTING_ID \
+    boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $GLOBAL_ANON_LISTING_ID \
       -grant 'id=*;type=auth-method;actions=list,authenticate' \
       -grant 'id=*;type=scope;actions=list,no-op' \
       -grant 'id={{account.id}};actions=read,change-password'
 
-    boundary roles add-principals -id $GLOBAL_ANON_LISTING_ID \
+    boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $GLOBAL_ANON_LISTING_ID \
       -principal 'u_anon'
     ```
 
@@ -642,8 +647,9 @@ challenges:
     Then, you'll need to create the anonymous listing role for org scope.
 
     ```
-    boundary roles create -name 'org_anon_listing' \
+    boundary roles create \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -name 'org_anon_listing' \
       -scope-id $ORG_SCOPE_ID
     ```
 
@@ -677,14 +683,16 @@ challenges:
     Then, add the required grants and principals to the org anonymous listing ID.
 
     ```
-    boundary roles add-grants -id $ORG_ANON_LISTING_ID \
+    boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $ORG_ANON_LISTING_ID \
       -grant 'id=*;type=auth-method;actions=list,authenticate' \
       -grant 'type=scope;actions=list' \
       -grant 'id={{account.id}};actions=read,change-password'
 
-    boundary roles add-principals -id $ORG_ANON_LISTING_ID \
+    boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $ORG_ANON_LISTING_ID \
       -principal 'u_anon'
     ```
 
@@ -727,10 +735,11 @@ challenges:
     Create the global admin role for `adminuser`.
 
     ```
-    boundary roles create -name 'global_admin' \
-        -recovery-config /root/boundary-controller-recovery.hcl \
-        -scope-id 'global' \
-        -grant-scope-id $ORG_SCOPE_ID
+    boundary roles create \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -scope-id 'global' \
+      -name 'global_admin' \
+      -grant-scope-id $ORG_SCOPE_ID
     ```
 
     Example output:
@@ -762,12 +771,14 @@ challenges:
     Then, add the the newly created role to the global admin user.
 
     ```
-    boundary roles add-grants -id $GLOBAL_ADMIN_ROLE_ID \
+    boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $GLOBAL_ADMIN_ROLE_ID \
       -grant 'id=*;type=*;actions=*'
 
-    boundary roles add-principals -id $GLOBAL_ADMIN_ROLE_ID \
+    boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $GLOBAL_ADMIN_ROLE_ID \
       -principal $GLOBAL_ADMIN_USER_ID
     ```
 
@@ -808,8 +819,9 @@ challenges:
     Create the org admin role.
 
     ```
-    boundary roles create -name 'org_admin' \
+    boundary roles create \
       -recovery-config /tmp/recovery.hcl \
+      -name 'org_admin' \
       -scope-id $ORG_SCOPE_ID \
       -grant-scope-id $PROJECT_SCOPE_ID
     ```
@@ -844,12 +856,14 @@ challenges:
     Then, add the the newly created role to the org admin user.
 
     ```
-    boundary roles add-grants -id $ORG_ADMIN_ROLE_ID \
+    boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $ORG_ADMIN_ROLE_ID \
       -grant 'id=*;type=*;actions=*'
 
-    boundary roles add-principals -id $ORG_ADMIN_ROLE_ID \
+    boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $ORG_ADMIN_ROLE_ID \
       -principal $ORG_ADMIN_USER_ID
     ```
 
@@ -1539,7 +1553,7 @@ challenges:
     <...truncated..>
     ```
 
-    TODO: Set the env var
+    Grab the Postgres host ID from the output and store it in an environment variable for later usage.
 
     ```
     export POSTGRES_HOST_ID=<POSTGRES_HOST_ID>
@@ -1559,7 +1573,7 @@ challenges:
     TODO
     ```
 
-    TODO: Set the env var
+    Grab the Postgres host set ID from the output and store it in an environment variable for later usage.
 
     ```
     export POSTGRES_HOST_SET_ID=<POSTGRES_HOST_SET_ID>
@@ -1593,6 +1607,7 @@ challenges:
     TODO
     ```
 
+    Grab the Postgres target ID from the output and store it in an environment variable for later usage.
 
     ```
     export POSTGRES_TARGET_ID=<POSTGRES_TARGET_ID>
@@ -1633,7 +1648,7 @@ challenges:
   id: 6n8fgeuzipfy
   type: challenge
   title: Manage Sessions
-  teaser: Learn how you can use Boundary for session management.
+  teaser: Learn how you can manage Boundary sessions.
   notes:
   - type: text
     contents: TODO
@@ -1756,4 +1771,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "8026663581117808095"
+checksum: "11046115385184291439"

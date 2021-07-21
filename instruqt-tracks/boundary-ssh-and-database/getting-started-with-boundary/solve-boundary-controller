@@ -7,23 +7,25 @@ set -o history
 # TODO: check if they exist already due to skipping potentially having an existing one already.
 
 # Create the Org Scope
-export ORG_SCOPE_ID=$( \
-boundary scopes create -name 'HashiCups Engineering' -scope-id 'global' \
--recovery-config /root/boundary-controller-recovery.hcl \
--skip-admin-role-creation \
--skip-default-role-creation \
--format=json | jq -r .item.id)
+export ORG_SCOPE_ID=$(boundary scopes create \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-name 'HashiCups Engineering' \
+	-scope-id 'global' \
+	-skip-admin-role-creation \
+	-skip-default-role-creation \
+	-format=json | jq -r .item.id)
 
 echo "Org Scope ID:" $ORG_SCOPE_ID
 echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
 
 # Create the Project Scope
-export PROJECT_SCOPE_ID=$( \
-boundary scopes create -name 'HashiCups Web App' -scope-id $ORG_SCOPE_ID \
--recovery-config /root/boundary-controller-recovery.hcl \
--skip-admin-role-creation \
--skip-default-role-creation \
--format=json | jq -r .item.id)
+export PROJECT_SCOPE_ID=$(boundary scopes create \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-name 'HashiCups Web App' \
+	-scope-id $ORG_SCOPE_ID \
+	-skip-admin-role-creation \
+	-skip-default-role-creation \
+	-format=json | jq -r .item.id)
 
 echo "Project Scope ID:" $PROJECT_SCOPE_ID
 echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc

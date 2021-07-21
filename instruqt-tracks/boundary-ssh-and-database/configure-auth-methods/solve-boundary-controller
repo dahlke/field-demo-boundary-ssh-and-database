@@ -20,7 +20,6 @@ export ORG_AUTH_METHOD_ID=$(boundary auth-methods create password \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
 	-name 'hashicups_eng_auth_method' \
-	-description 'Password auth method for HashiCups Engineering org scope.'  \
 	-format=json | jq -r .item.id)
 
 echo "Org Auth Method ID:" $ORG_AUTH_METHOD_ID

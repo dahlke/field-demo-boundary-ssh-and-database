@@ -24,7 +24,6 @@ boundary users add-accounts \
 export ORG_ADMIN_USER_ID=$(boundary users create -scope-id $ORG_SCOPE_ID \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name $ADMIN_USERNAME \
-	-description "Admin User for HashiCups Engineering org scope." \
 	-format=json | jq -r .item.id)
 
 echo "Org Admin User ID:" $ORG_ADMIN_USER_ID

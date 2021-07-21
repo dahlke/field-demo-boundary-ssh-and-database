@@ -1,3 +1,14 @@
 #!/bin/bash -l
 
+# Check that the host catalog was created.
+# PROJECT_HOST_CATALOG_ID=$(boundary host-catalogs list \
+	# -scope-id=$PROJECT_SCOPE_ID \
+	# -format=json | jq -r '.items[0].id')
+
+# if [ "$PROJECT_HOST_CATALOG_ID" = "" ]; then
+    # fail-message "You did not create the Host Catalog."
+	# exit 1
+# fi
+
+
 exit 0

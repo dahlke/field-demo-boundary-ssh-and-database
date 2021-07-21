@@ -2,21 +2,16 @@
 
 ## General
 
-- Why Boundary?
-- Vault Integration?
-- Tie this into LDAP?
+- Vault Integration? Tie this into LDAP?
 - Multiple boxes for workers and controllers?
-- get rid of `-description` since it doesn't really add a ton of value? or add it everywhere so people know about it?
 - Create slides for the workshop
+- Integrate HashiCups
 - Review the copy in assignments / notes / teasers / descriptions / add links all over
 - Packer images
 - Review and update all the example outputs once the content settles
-- All the solve scripts assume  you haven't run anything yet, and might error out if so, so maybe check for them  in the bashrc at least at first?
 - separate the global / org admin setup stuff and put the admin UI exploration earlier in the track?
 - Run track tests and make sure they are consistently working, they are currently failing
-  -  then standardize using `=` or a space in all the commands
-  - standardize scope / recovery-config locations in args
-  - standardize  the `USERNAME` vs. `USER_NAME` for users
+  -  standardize all the arguments to each function call (using `=` or strings)
 
 
 # Challenge Scripts (fully reviewed)
@@ -33,43 +28,28 @@
   - [-] cleanup
 - configure-admin-accounts
   - [-] setup
-  - [ ] solve
-  - [ ] check
+  - [x] solve
+  - [x] check
   - [-] cleanup
 - configure-admin-users
   - [-] setup
-  - [ ] solve
-  - [ ] check
+  - [x] solve
+  - [x] check
   - [-] cleanup
 - configure-admin-roles
   - [-] setup
-  - [ ] solve
-  - [ ] check
+  - [x] solve
+  - [x] check
   - [-] cleanup
 - configure-and-connect-to-your-first-target-with-ssh
   - [-] setup
-  - [ ] solve
-  - [ ] check
+  - [x] solve
+  - [x] check
   - [-] cleanup
-- configure-dba-accounts
+- configure-dba-group-accounts-users-and-roles
   - [-] setup
-  - [ ] solve
-  - [ ] check
-  - [-] cleanup
-- configure-dba-users
-  - [-] setup
-  - [ ] solve
-  - [ ] check
-  - [-] cleanup
-- configure-dba-group
-  - [-] setup
-  - [ ] solve
-  - [ ] check
-  - [ ] cleanup
-- configure-dba-roles
-  - [-] setup
-  - [ ] solve
-  - [ ] check
+  - [x] solve
+  - [x] check
   - [-] cleanup
 - configure-and-connect-to-postgres-with-tcp
   - [-] setup
@@ -86,3 +66,4 @@
   - [ ] check
   - [ ] solve
   - [-] cleanup
+

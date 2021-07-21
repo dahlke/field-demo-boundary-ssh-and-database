@@ -16,7 +16,6 @@ echo "export PROJECT_HOST_CATALOG_ID=$PROJECT_HOST_CATALOG_ID" >> ~/.bashrc
 
 export WORKER_HOST_ID=$(boundary hosts create static \
 	-name=worker-host \
-	-description="Boundary Worker host" \
 	-address="boundary-worker" \
 	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
 	-format=json | jq -r .item.id)
