@@ -3,7 +3,7 @@
 # Check that the boundary worker host was created.
 POSTGRES_HOST_NAME=$(boundary hosts list \
 	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
-	-format=json | jq -r '.items[-1].name')
+	-format=json | jq -r ".items[-1].name")
 
 if [ "$POSTGRES_HOST_NAME" != "postgres-host" ]; then
     fail-message "You did not create the Postgres host."
@@ -13,7 +13,7 @@ fi
 # Check that the host set was created.
 POSTGRES_HOST_SET_NAME=$(boundary host-sets list \
 	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
-	-format=json | jq -r '.items[-1].name')
+	-format=json | jq -r ".items[-1].name")
 
 if [ "$POSTGRES_HOST_SET_NAME" != "test-postgres-host-set" ]; then
     fail-message "You did not create the Postgres host set."
@@ -23,7 +23,7 @@ fi
 # Check that the target was created.
 POSTGRES_TARGET_NAME=$(boundary targets list \
 	-scope-id=$PROJECT_SCOPE_ID \
-	-format=json | jq -r '.items[-1].name')
+	-format=json | jq -r ".items[-1].name")
 
 if [ "$POSTGRES_TARGET_NAME" != "postgres-test-targets" ]; then
     fail-message "You did not create the Postgres Target."

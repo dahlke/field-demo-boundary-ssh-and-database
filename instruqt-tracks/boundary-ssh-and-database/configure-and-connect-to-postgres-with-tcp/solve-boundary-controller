@@ -48,6 +48,6 @@ boundary targets add-host-sets \
 # boundary roles add-grants \
 	# -recovery-config /root/boundary-controller-recovery.hcl \
 	# -id $ORG_ADMIN_ROLE_ID \
-	# -grant 'id=*;type=*;actions=*;output_fields=*'
+	# -grant "id=*;type=*;actions=*;"
 
 exit 0

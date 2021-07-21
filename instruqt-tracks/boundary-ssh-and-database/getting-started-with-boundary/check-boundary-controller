@@ -7,10 +7,10 @@ source ~/.bashrc
 ORG_SCOPE_NAME=$(boundary scopes list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id=global \
-	-format=json | jq -r '.items[0].name')
+	-format=json | jq -r ".items[0].name")
 
 if [ "$ORG_SCOPE_NAME" != "HashiCups Engineering" ]; then
-    fail-message "You did not create the 'HashiCups Engineering' org scope."
+    fail-message "You did not create the HashiCups Engineering org scope."
 	exit 1
 fi
 
@@ -18,10 +18,10 @@ fi
 PROJECT_SCOPE_NAME=$(boundary scopes list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id=$ORG_SCOPE_ID \
-	-format=json | jq -r '.items[0].name')
+	-format=json | jq -r ".items[0].name")
 
 if [ "$PROJECT_SCOPE_NAME" != "HashiCups Web App" ]; then
-    fail-message "You did not create the 'HashiCups Web App' project scope."
+    fail-message "You did not create the HashiCups Web App project scope."
     exit 1
 fi
 

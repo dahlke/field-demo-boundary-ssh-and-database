@@ -7,13 +7,13 @@ source ~/.bashrc
 GLOBAL_ADMIN_USER_ACCOUNT_NAME=$(boundary accounts list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-auth-method-id=$GLOBAL_AUTH_METHOD_ID \
-	-format=json | jq -r '.items[0].attributes.login_name')
+	-format=json | jq -r ".items[0].attributes.login_name")
 
 echo "Global Auth Method ID:" $GLOBAL_AUTH_METHOD_ID
 echo "Global Admin User Account Name:" $GLOBAL_ADMIN_USER_ACCOUNT_NAME
 
 if [ "$GLOBAL_ADMIN_USER_ACCOUNT_NAME" != "adminuser" ]; then
-    fail-message "You did not create the 'adminuser' account in the global scope."
+    fail-message "You did not create the `adminuser` account in the global scope."
     exit 1
 fi
 
@@ -21,10 +21,10 @@ fi
 ORG_ADMIN_USER_ACCOUNT_NAME=$(boundary accounts list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-auth-method-id=$ORG_AUTH_METHOD_ID \
-	-format=json | jq -r '.items[0].attributes.login_name')
+	-format=json | jq -r ".items[0].attributes.login_name")
 
 if [ "$ORG_ADMIN_USER_ACCOUNT_NAME" != "adminuser" ]; then
-    fail-message "You did not create the 'adminuser' account for the org auth method."
+    fail-message "You did not create the `adminuser` account for the org auth method."
     exit 1
 fi
 

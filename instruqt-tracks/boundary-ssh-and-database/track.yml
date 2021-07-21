@@ -96,9 +96,9 @@ challenges:
     Create a new org under the `global` scope named "HashiCups Engineering".
 
     ```
-    boundary scopes create -name 'HashiCups Engineering' \
+    boundary scopes create -name "HashiCups Engineering" \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -scope-id 'global' \
+      -scope-id "global" \
       -skip-admin-role-creation \
       -skip-default-role-creation
     ```
@@ -139,7 +139,7 @@ challenges:
     ```
     boundary scopes create \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -name 'HashiCups Web App' \
+      -name "HashiCups Web App" \
       -scope-id $ORG_SCOPE_ID \
       -skip-admin-role-creation \
       -skip-default-role-creation
@@ -205,8 +205,8 @@ challenges:
     boundary auth-methods create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -scope-id global \
-      -name 'global_auth_method' \
-      -description 'Password auth method for global scope.'
+      -name "global_auth_method" \
+      -description "Password auth method for global scope."
     ```
 
     Example output:
@@ -242,8 +242,8 @@ challenges:
     boundary auth-methods create password \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -scope-id $ORG_SCOPE_ID \
-      -name 'hashicups_eng_auth_method' \
-      -description 'Password auth method for HashiCups Engineering org scope.'
+      -name "hashicups_eng_auth_method" \
+      -description "Password auth method for HashiCups Engineering org scope."
     ```
 
     Example output:
@@ -576,8 +576,8 @@ challenges:
 
     ```
     boundary roles create \
-      -name 'global_anon_listing' \
-      -scope-id 'global'
+      -name "global_anon_listing" \
+      -scope-id "global"
     ```
 
     Example output:
@@ -612,14 +612,14 @@ challenges:
     boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $GLOBAL_ANON_LISTING_ID \
-      -grant 'id=*;type=auth-method;actions=list,authenticate' \
-      -grant 'id=*;type=scope;actions=list,no-op' \
-      -grant 'id={{account.id}};actions=read,change-password'
+      -grant "id=*;type=auth-method;actions=list,authenticate" \
+      -grant "id=*;type=scope;actions=list,no-op" \
+      -grant "id={{account.id}};actions=read,change-password"
 
     boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $GLOBAL_ANON_LISTING_ID \
-      -principal 'u_anon'
+      -principal "u_anon"
     ```
 
     Example output:
@@ -651,7 +651,7 @@ challenges:
     ```
     boundary roles create \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -name 'org_anon_listing' \
+      -name "org_anon_listing" \
       -scope-id $ORG_SCOPE_ID
     ```
 
@@ -687,14 +687,14 @@ challenges:
     boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $ORG_ANON_LISTING_ID \
-      -grant 'id=*;type=auth-method;actions=list,authenticate' \
-      -grant 'type=scope;actions=list' \
-      -grant 'id={{account.id}};actions=read,change-password'
+      -grant "id=*;type=auth-method;actions=list,authenticate" \
+      -grant "type=scope;actions=list" \
+      -grant "id={{account.id}};actions=read,change-password"
 
     boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $ORG_ANON_LISTING_ID \
-      -principal 'u_anon'
+      -principal "u_anon"
     ```
 
     Example output:
@@ -732,8 +732,8 @@ challenges:
     ```
     boundary roles create \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -scope-id 'global' \
-      -name 'global_admin' \
+      -scope-id "global" \
+      -name "global_admin" \
       -grant-scope-id $ORG_SCOPE_ID
     ```
 
@@ -769,7 +769,7 @@ challenges:
     boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $GLOBAL_ADMIN_ROLE_ID \
-      -grant 'id=*;type=*;actions=*,output_fields=*'
+      -grant "id=*;type=*;actions=*,output_fields=*"
 
     boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
@@ -816,7 +816,7 @@ challenges:
     ```
     boundary roles create \
       -recovery-config /tmp/recovery.hcl \
-      -name 'org_admin' \
+      -name "org_admin" \
       -scope-id $ORG_SCOPE_ID \
       -grant-scope-id $PROJECT_SCOPE_ID
     ```
@@ -859,7 +859,7 @@ challenges:
     boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $ORG_ADMIN_ROLE_ID \
-      -grant 'id=*;type=*;actions=*;output_fields=*'
+      -grant "id=*;type=*;actions=*;output_fields=*"
 
     boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
@@ -1858,4 +1858,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "3453104289586928459"
+checksum: "11282926058772145808"
