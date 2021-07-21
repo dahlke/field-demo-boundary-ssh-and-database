@@ -769,7 +769,7 @@ challenges:
     boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $GLOBAL_ADMIN_ROLE_ID \
-      -grant 'id=*;type=*;actions=*'
+      -grant 'id=*;type=*;actions=*,output_fields=*'
 
     boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
@@ -859,7 +859,7 @@ challenges:
     boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $ORG_ADMIN_ROLE_ID \
-      -grant 'id=*;type=*;actions=*'
+      -grant 'id=*;type=*;actions=*;output_fields=*'
 
     boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
@@ -1305,13 +1305,13 @@ challenges:
       Since you already have learned how to do most of these individual steps, this challenge will be compressed and
       cover the creation of groups, accounts, users, and roles all in one.
   assignment: |-
-    In this challenge, we'll create a group and one account for one for a single DBA as an example.
-
     A group in Boundary is a resource that represents a collection of users that are treated equally for the purposes
     of access control. A group is a principal, which allows it to be assigned to roles. Roles assigned to a group are
     indirectly assigned to the users in the group, and users receive all permissions of the assigned roles.
 
     Groups can be defined at the Global, Organization, or Project scope.
+
+    In this challenge, you'll create a group, one account for a DBA and one user for a DBA, as an example.
 
     TODO: for now this uses the recovery-config, but I should fix the admin user to use that.
 
@@ -1354,8 +1354,8 @@ challenges:
     echo "export DBA_GROUP_ID=$DBA_GROUP_ID" >> ~/.bashrc
     ```
 
-    Once you have the DBA group created, you'll need to create a role that will be attached to that principal. Since
-    this is not for admin users, they should have read-only permissions.
+    Once you have the DBA group created, you'll need to create a role that will be attached to that group principal.
+    Since this is not for admin users, they should have read-only permissions.
 
     ```
     boundary roles create \
@@ -1473,6 +1473,8 @@ challenges:
     ```
     echo "export DBA_USER_ID=$DBA_USER_ID" >> ~/.bashrc
     ```
+
+    Add that user to the DBA account.
 
     ```
     boundary users set-accounts \
@@ -1667,7 +1669,7 @@ challenges:
     boundary targets create tcp \
       -name="tests" \
       -description="Test target" \
-      -default-port=22 \
+      -default-port=5432 \
       -scope-id=$PROJECT_SCOPE_ID \
       -session-connection-limit="-1"
     ```
@@ -1735,17 +1737,10 @@ challenges:
   - title: Controller
     type: terminal
     hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
   - title: Boundary UI
     type: service
     hostname: boundary-controller
     port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   difficulty: advanced
   timelimit: 600
 - slug: manage-sessions
@@ -1785,14 +1780,6 @@ challenges:
   - title: Worker
     type: terminal
     hostname: boundary-worker
-  - title: Boundary UI
-    type: service
-    hostname: boundary-controller
-    port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   difficulty: advanced
   timelimit: 600
 - slug: explore-the-admin-ui
@@ -1820,26 +1807,10 @@ challenges:
     # Explore the Admin Console
 
     Boundary's Admin Console provides an easy way to manage resources. Before using Boundary to securely access any
-    dynamic infrastructure, you should take a tour of the console to understand all the components.
+    dynamic infrastructure, you should take a tour of the console to understand all the components. Now that you have
+    explored using Boundary from the CLI, and understand the domain model, it's time to take the UI for a spin.
 
-    TODO: update or remove this based on the direction of the track.
-
-    In this track, Boundary has already been
-    [installed](https://learn.hashicorp.com/tutorials/boundary/getting-started-install?in=boundary/getting-started)
-    for you. A Boundary Controller and a Boundary Worker are also already running. To make your initial tour through
-    Boundary a little more interesting, Boundary was
-    [initialized with generated resources](https://www.boundaryproject.io/docs/installing/no-gen-resources).
-
-    What are generated resources? Boundary can automatically generate a number of resources to make getting started
-    easier. Default scopes, auth methods, user, account, and targets are just some of the resources Boundary will
-    generate unless you tell it not to.
-
-    If you are not familiar with installing Boundary, the reference architecture, or concepts like scopes, auth methods,
-    users, accounts, and more - check out the [Install and Configure Boundary Track](TODO).
-
-    ---
-
-    # Exploring Roles, Principals and Grants in the Admin UI
+    ## Exploring Roles, Principals and Grants in the Admin UI
 
     Open the Boundary UI tab. You should see a login screen. To access the password for the `admin` user that was
     generated for you, grab it from the environment in the Controller terminal tab.
@@ -1877,12 +1848,6 @@ challenges:
     Now that you have taken a tour of the admin UI and understand the generated resources, you are ready to connect
     to your first target via Boundary.
   tabs:
-  - title: Controller
-    type: terminal
-    hostname: boundary-controller
-  - title: Worker
-    type: terminal
-    hostname: boundary-worker
   - title: Boundary UI
     type: service
     hostname: boundary-controller
@@ -1893,4 +1858,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "3858436205542074489"
+checksum: "3453104289586928459"

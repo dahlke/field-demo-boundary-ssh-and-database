@@ -12,8 +12,8 @@ boundary users add-accounts \
 
 export GLOBAL_ANON_LISTING_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-name 'global_anon_listing' \
-	-scope-id 'global' \
+	-name "global_anon_listing" \
+	-scope-id "global" \
 	-format=json | jq -r .item.id)
 
 echo "Global Anon Listing ID:" $GLOBAL_ANON_LISTING_ID
@@ -54,8 +54,8 @@ boundary roles add-principals \
 
 export GLOBAL_ADMIN_ROLE_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-name 'global_admin' \
-	-scope-id 'global' \
+	-name "global_admin" \
+	-scope-id "global" \
 	-grant-scope-id $ORG_SCOPE_ID \
 	-format=json | jq -r .item.id)
 
@@ -65,7 +65,11 @@ echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
 boundary roles add-grants \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $GLOBAL_ADMIN_ROLE_ID \
-	-grant 'id=*;type=*;actions=*'
+	-grant "id=*;type=*;actions=*" \
+	-grant "id=$GLOBAL_AUTH_METHOD_ID;type=*;actions=*"
+	# -grant "id={{account.id}};type=*;actions=*"
+
+# TODO: update the grants
 
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
@@ -85,7 +89,8 @@ echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
 boundary roles add-grants \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $ORG_ADMIN_ROLE_ID \
-	-grant 'id=*;type=*;actions=*'
+	-grant 'id=*;type=*;actions=*;' \
+	-grant "id=$ORG_AUTH_METHOD_ID;type=*;actions=*"
 
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \

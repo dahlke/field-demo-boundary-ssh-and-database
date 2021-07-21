@@ -9,8 +9,7 @@
 - Packer images
 - Run track tests and make sure they are consistently working, they are currently failing
   -  standardize all the arguments to each function call (using `=` or strings)
-- Capitalize "host" to Host or "host set" to Host Set, etc everywhere.
-
+- TODO: update all the grants so they work properly with the resources that are created. Make sure that I update it in the track as well.
 
 # Challenge Scripts (initial review)
 
