@@ -51,8 +51,8 @@
   - [-] cleanup
 - configure-and-connect-to-postgres-with-tcp
   - [-] setup
-  - [ ] solve
-  - [ ] check
+  - [x] solve
+  - [x] check
   - [-] cleanup
 - manage-sessions
   - [-] setup
@@ -61,7 +61,7 @@
   - [-] cleanup
 - explore-the-admin-ui
   - [-] setup
-  - [ ] check
-  - [ ] solve
+  - [x] check
+  - [x] solve
   - [-] cleanup
 

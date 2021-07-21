@@ -15,7 +15,7 @@ owner: hashicorp
 developers:
 - neil@hashicorp.com
 private: true
-published: false
+published: true
 show_timer: true
 skipping_enabled: true
 challenges:
@@ -1757,8 +1757,26 @@ challenges:
   - type: text
     contents: TODO
   assignment: |-
-    ```
     TODO
+
+    ```
+    boundary sessions list -scope-id=$PROJECT_ID
+    ```
+
+    ```
+    boundary sessions read -id=<session_id>
+    ```
+
+    ```
+    boundary sessions cancel -id=<session_id>
+    ```
+
+    ```
+    boundary targets authorize-session -id=<target_id> -host-id=<host_id>
+    ```
+
+    ```
+    boundary connect -authz-token=<authorization_token>
     ```
   tabs:
   - title: Controller
@@ -1875,4 +1893,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "3432249239596025548"
+checksum: "3858436205542074489"
