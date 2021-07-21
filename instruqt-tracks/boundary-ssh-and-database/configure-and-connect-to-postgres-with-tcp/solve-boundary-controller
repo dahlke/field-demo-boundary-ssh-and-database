@@ -45,9 +45,4 @@ boundary targets add-host-sets \
 # TODO: boundary connect postgres -target-id=$POSTGRES_TARGET_ID
 # This is throwing an error
 
-# boundary roles add-grants \
-	# -recovery-config /root/boundary-controller-recovery.hcl \
-	# -id $ORG_ADMIN_ROLE_ID \
-	# -grant "id=*;type=*;actions=*;"
-
 exit 0
