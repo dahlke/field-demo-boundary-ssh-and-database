@@ -121,10 +121,15 @@ challenges:
     <...truncated...>
     ```
 
-    Grab the org scope ID from the output and store it in an environment variable for later usage.
+    Grab the org scope ID from the output and store it in an environment variable.
 
     ```
     export ORG_SCOPE_ID=<ORG_SCOPE_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
     ```
 
@@ -163,6 +168,11 @@ challenges:
 
     ```
     export PROJECT_SCOPE_ID=<PROJECT_SCOPE_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc
     ```
 
@@ -218,10 +228,15 @@ challenges:
 
     ```
     export GLOBAL_AUTH_METHOD_ID=<GLOBAL_AUTH_METHOD_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export GLOBAL_AUTH_METHOD_ID=$GLOBAL_AUTH_METHOD_ID" >> ~/.bashrc
     ```
 
-    Then, create an auth method in the org scope you created in the first challenge.
+    Next, create an auth method in the org scope you created in the first challenge.
 
     ```
     boundary auth-methods create password \
@@ -250,6 +265,11 @@ challenges:
 
     ```
     export ORG_AUTH_METHOD_ID=<ORG_AUTH_METHOD_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export ORG_AUTH_METHOD_ID=$ORG_AUTH_METHOD_ID" >> ~/.bashrc
     ```
 
@@ -315,6 +335,11 @@ challenges:
 
     ```
     export GLOBAL_ADMIN_USER_ACCOUNT_ID=<GLOBAL_ADMIN_USER_ACCOUNT_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     ```
 
@@ -354,6 +379,11 @@ challenges:
 
     ```
     export ORG_ADMIN_USER_ACCOUNT_ID=<ORG_ADMIN_USER_ACCOUNT_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export ORG_ADMIN_USER_ACCOUNT_ID=$ORG_ADMIN_USER_ACCOUNT_ID" >> ~/.bashrc
     ```
 
@@ -414,6 +444,11 @@ challenges:
 
     ```
     export GLOBAL_ADMIN_USER_ID=<GLOBAL_ADMIN_USER_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export GLOBAL_ADMIN_USER_ID=$GLOBAL_ADMIN_USER_ID" >> ~/.bashrc
     ```
 
@@ -468,6 +503,11 @@ challenges:
 
     ```
     export ORG_ADMIN_USER_ID=<ORG_ADMIN_USER_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export ORG_ADMIN_USER_ID=$ORG_ADMIN_USER_ID" >> ~/.bashrc
     ```
 
@@ -563,6 +603,11 @@ challenges:
 
     ```
     export GLOBAL_ANON_LISTING_ID=<GLOBAL_ANON_LISTING_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
     ```
 
@@ -606,7 +651,7 @@ challenges:
     <...truncated...>
     ```
 
-    Then, you'll need to create the anonymous listing role for org scope.
+    You'll also need to create the anonymous listing role for org scope.
 
     ```
     boundary roles create \
@@ -633,10 +678,15 @@ challenges:
 
     ```
     export ORG_ANON_LISTING_ID=<ORG_ANON_LISTING_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
     ```
 
-    Then, add the required grants and principals to the org anonymous listing ID.
+    Add the required grants and principals to the org anonymous listing ID.
 
     ```
     boundary roles add-grants \
@@ -715,10 +765,15 @@ challenges:
 
     ```
     export GLOBAL_ADMIN_ROLE_ID=<GLOBAL_ADMIN_ROLE_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
     ```
 
-    Then, add the the newly created role to the global admin user.
+    Add the the newly created role to the global admin user.
 
     ```
     boundary roles add-grants \
@@ -800,10 +855,15 @@ challenges:
 
     ```
     export ORG_ADMIN_ROLE_ID=<ORG_ADMIN_ROLE_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
     ```
 
-    Then, add the the newly created role to the org admin user.
+    Add the the newly created role to the org admin user.
 
     ```
     boundary roles add-grants \
@@ -877,6 +937,11 @@ challenges:
 
     ```
     export BOUNDARY_TOKEN=<BOUNDARY_TOKEN>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
     ```
 
@@ -990,6 +1055,12 @@ challenges:
     export PROJECT_HOST_CATALOG_ID=<PROJECT_HOST_CATALOG_ID>
     ```
 
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
+    echo "export PROJECT_HOST_CATALOG=$PROJECT_HOST_CATALOG" >> ~/.bashrc
+    ```
+
     Next, create a new *host*.
 
     TODO: Explain that `boundary-worker` resolves to the extra host.
@@ -1024,6 +1095,12 @@ challenges:
     export WORKER_HOST_ID=<WORKER_HOST_ID>
     ```
 
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
+    echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
+    ```
+
     A *host set* groups together hosts, which provide logically equivalent services. Targets work off of host sets,
     so even if there is only one hosts, you will still create a host set to contain one host.
 
@@ -1056,6 +1133,12 @@ challenges:
 
     ```
     export SSH_HOST_SET_ID=<SSH_HOST_SET_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
+    echo "export SSH_HOST_SET_ID=$SSH_HOST_SET_ID" >> ~/.bashrc
     ```
 
     Now you can add the hosts you created above to the host set.
@@ -1116,6 +1199,12 @@ challenges:
 
     ```
     export SSH_TARGET_ID=<SSH_TARGET_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
+    echo "export SSH_TARGET_ID=$SSH_TARGET_ID" >> ~/.bashrc
     ```
 
     The last bit of configuration you'll need to complete is adding the host set you created above to the target you
@@ -1267,6 +1356,11 @@ challenges:
 
     ```
     export DBA_GROUP_ID=<DBA_GROUP_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export DBA_GROUP_ID=$DBA_GROUP_ID" >> ~/.bashrc
     ```
 
@@ -1284,6 +1378,11 @@ challenges:
 
     ```
     export PG_READ_ONLY_ROLE_ID=<PG_READ_ONLY_ROLE_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export PG_READ_ONLY_ROLE_ID=$PG_READ_ONLY_ROLE_ID" >> ~/.bashrc
     ```
 
@@ -1337,6 +1436,11 @@ challenges:
 
     ```
     export DBA_USER_ACCOUNT_ID=<DBA_USER_ACCOUNT_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export DBA_USER_ACCOUNT_ID=$DBA_USER_ACCOUNT_ID" >> ~/.bashrc
     ```
 
@@ -1372,6 +1476,11 @@ challenges:
 
     ```
     export DBA_USER_ID=<DBA_USER_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export DBA_USER_ID=$DBA_USER_ID" >> ~/.bashrc
     ```
 
@@ -1499,6 +1608,11 @@ challenges:
 
     ```
     export POSTGRES_HOST_ID=<POSTGRES_HOST_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export POSTGRES_HOST_ID=$POSTGRES_HOST_ID" >> ~/.bashrc
     ```
 
@@ -1529,6 +1643,11 @@ challenges:
 
     ```
     export POSTGRES_HOST_SET_ID=<POSTGRES_HOST_SET_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export POSTGRES_HOST_SET_ID=$POSTGRES_HOST_SET_ID" >> ~/.bashrc
     ```
 
@@ -1584,6 +1703,11 @@ challenges:
 
     ```
     export POSTGRES_TARGET_ID=<POSTGRES_TARGET_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
     echo "export POSTGRES_TARGET_ID=$POSTGRES_TARGET_ID" >> ~/.bashrc
     ```
 
