@@ -591,11 +591,6 @@ challenges:
       Updated Time:        Thu, 08 Jul 2021 18:15:12 UTC
       Version:             1
 
-      Scope:
-        ID:                global
-        Name:              global
-        Type:              global
-
     <...truncated...>
     ```
 
@@ -752,11 +747,6 @@ challenges:
       Name:                org_admin
       Updated Time:        Thu, 08 Jul 2021 18:24:01 UTC
       Version:             1
-
-      Scope:
-        ID:                global
-        Name:              global
-        Type:              global
 
     <...truncated...>
     ```
@@ -1735,6 +1725,12 @@ challenges:
     ```
 
     Connect to it...
+
+    ```
+    boundary connect postgres -target-id=$POSTGRES_TARGET_ID
+    ```
+
+    TODO: throwing an SSL error
   tabs:
   - title: Controller
     type: terminal

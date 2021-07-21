@@ -4,7 +4,6 @@
 HISTFILE=/root/.bash_history
 set -o history
 
-
 export POSTGRES_HOST_ID=$(boundary hosts create static \
 	-name=postgres-host \
 	-description="Postgres host" \
@@ -41,8 +40,9 @@ echo "export POSTGRES_TARGET_ID=$POSTGRES_TARGET_ID" >> ~/.bashrc
 
 boundary targets add-host-sets \
 	-id=$POSTGRES_TARGET_ID \
-	-host-set=$POSTGRES_TARGET_ID
+	-host-set=$POSTGRES_HOST_SET_ID
 
-# TODO: boundary connect ssh -target-id=$POSTGRES_TARGET_ID
+# TODO: boundary connect postgres -target-id=$POSTGRES_TARGET_ID
+# This is throwing an error
 
 exit 0

@@ -4,17 +4,15 @@
 
 - Vault Integration? Tie this into LDAP?
 - Multiple boxes for workers and controllers?
-- Create slides for the workshop
-- Integrate HashiCups
+- Integrate HashiCups, and make it a workshop w/ slides instead of a demo?
 - Review the copy in the track / add links all over
 - Packer images
-- Update all the outputs / truncate as much as possible.
 - Run track tests and make sure they are consistently working, they are currently failing
   -  standardize all the arguments to each function call (using `=` or strings)
-- separate the export and the echo
+- Capitalize "host" to Host or "host set" to Host Set, etc everywhere.
 
 
-# Challenge Scripts (fully reviewed)
+# Challenge Scripts (initial review)
 
 - getting-started-with-boundary
   - [x] setup
