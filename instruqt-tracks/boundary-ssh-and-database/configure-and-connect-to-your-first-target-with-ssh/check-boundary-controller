@@ -15,7 +15,7 @@ WORKER_HOST_NAME=$(boundary hosts list \
 	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
 	-format=json | jq -r '.items[0].name')
 
-if [ "$WORKER_HOST_NAME" != "boundary-worker" ]; then
+if [ "$WORKER_HOST_NAME" != "worker-host" ]; then
     fail-message "You did not create the worker host."
 	exit 1
 fi
