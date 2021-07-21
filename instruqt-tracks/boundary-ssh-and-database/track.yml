@@ -243,12 +243,6 @@ challenges:
       Updated Time:                Thu, 08 Jul 2021 18:08:10 UTC
       Version:                     1
 
-      Scope:
-        ID:                        o_fBAIPOJhtH
-        Name:                      HashiCups Engineering
-        Parent Scope ID:           global
-        Type:                      org
-
     <...truncated...>
     ```
 
@@ -413,11 +407,6 @@ challenges:
       Updated Time:        Wed, 14 Jul 2021 01:19:02 UTC
       Version:             1
 
-      Scope:
-        ID:                global
-        Name:              global
-        Type:              global
-
     <...truncated...>
     ```
 
@@ -448,11 +437,6 @@ challenges:
       Updated Time:        Wed, 14 Jul 2021 01:19:39 UTC
       Version:             2
 
-      Scope:
-        ID:                global
-        Name:              global
-        Type:              global
-
     <...truncated...>
     ```
 
@@ -476,12 +460,6 @@ challenges:
       Name:                adminuser
       Updated Time:        Wed, 14 Jul 2021 01:20:24 UTC
       Version:             1
-
-      Scope:
-        ID:                o_0tn1qel2vw
-        Name:              HashiCups Engineering
-        Parent Scope ID:   global
-        Type:              org
 
     <...truncated...>
     ```
@@ -512,12 +490,6 @@ challenges:
       Name:                adminuser
       Updated Time:        Wed, 14 Jul 2021 01:21:00 UTC
       Version:             2
-
-      Scope:
-        ID:                o_0tn1qel2vw
-        Name:              HashiCups Engineering
-        Parent Scope ID:   global
-        Type:              org
 
     <...truncated...>
     ```
@@ -621,11 +593,6 @@ challenges:
       Updated Time:        Thu, 08 Jul 2021 18:17:10 UTC
       Version:             2
 
-      Scope:
-        ID:                global
-        Name:              global
-        Type:              global
-
     <...truncated...>
 
     Role information:
@@ -635,11 +602,6 @@ challenges:
       Name:                global_anon_listing
       Updated Time:        Thu, 08 Jul 2021 18:17:11 UTC
       Version:             3
-
-      Scope:
-        ID:                global
-        Name:              global
-        Type:              global
 
     <...truncated...>
     ```
@@ -663,12 +625,6 @@ challenges:
       Name:                org_anon_listing
       Updated Time:        Thu, 08 Jul 2021 18:18:26 UTC
       Version:             1
-
-      Scope:
-        ID:                o_tc3qudleXh
-        Name:              HashiCups
-        Parent Scope ID:   global
-        Type:              org
 
     <...truncated...>
     ```
@@ -722,12 +678,6 @@ challenges:
       Name:                org_anon_listing
       Updated Time:        Thu, 08 Jul 2021 18:22:28 UTC
       Version:             3
-
-      Scope:
-        ID:                o_tc3qudleXh
-        Name:              HashiCups
-        Parent Scope ID:   global
-        Type:              org
 
     <...truncated...>
     ```
@@ -1513,15 +1463,13 @@ challenges:
   - type: text
     contents: TODO
   assignment: |-
-    TODO: only once the users are configured above.
+    Now that you have created a group and an example DBA user, you can configure the new targets that you will connect
+    to.  All hosts must be part of a host set, both of which must be within a host catalog. Since you already created a
+    host catalog for your SSH targets, you should reuse that one.
 
     ---
 
-    Now that you have created a new org and project, you can configure the new hosts that you will connect to. All
-    hosts must be part of a host set, both of which must be within a host catalog. Since you already created a host
-    catalog for your SSH targets, you should reuse that one.
-
-    Create a new host named, "postgres" with description, "Postgres host" under the newly created host catalog.
+    Create a new host named "postgres" in the host catalog created earlier.
 
     ```
     boundary hosts create static \
@@ -1544,12 +1492,6 @@ challenges:
       Updated Time:        Tue, 20 Jul 2021 22:54:57 UTC
       Version:             1
 
-      Scope:
-        ID:                p_Lytjza6aHm
-        Name:              HashiCups Web App
-        Parent Scope ID:   o_CI8um08Vd7
-        Type:              project
-
     <...truncated..>
     ```
 
@@ -1570,7 +1512,17 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Host Set information:
+      Created Time:        Wed, 21 Jul 2021 00:55:41 UTC
+      Description:         Postgres machine host set
+      Host Catalog ID:     hcst_Xo6sVeh7Xx
+      ID:                  hsst_3Z3rznlr8C
+      Name:                test-postgres-host-set
+      Type:                static
+      Updated Time:        Wed, 21 Jul 2021 00:55:41 UTC
+      Version:             1
+
+    <...truncated..>
     ```
 
     Grab the Postgres host set ID from the output and store it in an environment variable for later usage.
@@ -1582,14 +1534,24 @@ challenges:
 
     ```
     boundary host-sets add-hosts \
-      -id=<host_set_id> \
-      -host=<postgres_host_id> \
+      -id=$POSTGRES_HOST_SET_ID \
+      -host=$POSTGRES_HOST_ID
     ```
 
     Example output:
 
     ```
-    TODO
+    Host Set information:
+      Created Time:        Wed, 21 Jul 2021 00:55:41 UTC
+      Description:         Postgres machine host set
+      Host Catalog ID:     hcst_Xo6sVeh7Xx
+      ID:                  hsst_3Z3rznlr8C
+      Name:                test-postgres-host-set
+      Type:                static
+      Updated Time:        Wed, 21 Jul 2021 00:57:03 UTC
+      Version:             2
+
+    <...truncated..>
     ```
 
     ```
@@ -1604,7 +1566,18 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Target information:
+      Created Time:               Wed, 21 Jul 2021 00:57:21 UTC
+      Description:                Test target
+      ID:                         ttcp_lUwoQUFcsi
+      Name:                       tests
+      Session Connection Limit:   -1
+      Session Max Seconds:        28800
+      Type:                       tcp
+      Updated Time:               Wed, 21 Jul 2021 00:57:21 UTC
+      Version:                    1
+
+    <...truncated..>
     ```
 
     Grab the Postgres target ID from the output and store it in an environment variable for later usage.
@@ -1623,7 +1596,18 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Target information:
+      Created Time:               Wed, 21 Jul 2021 00:57:21 UTC
+      Description:                Test target
+      ID:                         ttcp_lUwoQUFcsi
+      Name:                       tests
+      Session Connection Limit:   -1
+      Session Max Seconds:        28800
+      Type:                       tcp
+      Updated Time:               Wed, 21 Jul 2021 00:57:53 UTC
+      Version:                    2
+
+    <...truncated..>
     ```
 
     Connect to it...

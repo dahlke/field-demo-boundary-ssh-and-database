@@ -6,12 +6,12 @@
 - Multiple boxes for workers and controllers?
 - Create slides for the workshop
 - Integrate HashiCups
-- Review the copy in assignments / notes / teasers / descriptions / add links all over
+- Review the copy in the track / add links all over
 - Packer images
-- Review and update all the example outputs once the content settles
-- separate the global / org admin setup stuff and put the admin UI exploration earlier in the track?
+- Update all the outputs / truncate as much as possible.
 - Run track tests and make sure they are consistently working, they are currently failing
   -  standardize all the arguments to each function call (using `=` or strings)
+- separate the export and the echo
 
 
 # Challenge Scripts (fully reviewed)
