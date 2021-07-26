@@ -30,10 +30,10 @@ export $(dbus-launch)
 #########
 # Put the username / password env vars in the bashrc for solve scripts
 #########
-export ADMIN_USERNAME="adminuser"
-export ADMIN_PASSWORD="adminuser"
+export ADMIN_USERNAME="admin"
+export ADMIN_PASSWORD="password"
 export DBA_USERNAME="dbauser1"
-export DBA_PASSWORD="dbauser1"
+export DBA_PASSWORD="password"
 
 # Add the user name and passwords to the bashrc to make the solve scripts simpler
 echo "export ADMIN_USERNAME=$ADMIN_USERNAME" >> ~/.bashrc

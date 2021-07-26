@@ -300,8 +300,8 @@ challenges:
 
     ---
 
-    You'll need login accounts for an admin user for both of your auth methods. You'll use the username `adminuser`
-    and the password `adminuser` for both. Both of these values have been placed in your `~/.bashrc` file for you as
+    You'll need login accounts for an admin user for both of your auth methods. You'll use the username `admin`
+    and the password `password` for both. Both of these values have been placed in your `~/.bashrc` file for you as
     `ADMIN_USERNAME` and `ADMIN_PASSWORD` to simplify and reduce the possibility of typos.
 
     ```
@@ -433,7 +433,7 @@ challenges:
       Created Time:        Wed, 14 Jul 2021 01:19:02 UTC
       Description:         Admin user for global scope.
       ID:                  u_8ZbkJa5Zkq
-      Name:                adminuser
+      Name:                admin
       Updated Time:        Wed, 14 Jul 2021 01:19:02 UTC
       Version:             1
 
@@ -468,7 +468,7 @@ challenges:
       Created Time:        Wed, 14 Jul 2021 01:19:02 UTC
       Description:         Admin user for global scope.
       ID:                  u_8ZbkJa5Zkq
-      Name:                adminuser
+      Name:                admin
       Updated Time:        Wed, 14 Jul 2021 01:19:39 UTC
       Version:             2
 
@@ -492,7 +492,7 @@ challenges:
       Created Time:        Wed, 14 Jul 2021 01:20:24 UTC
       Description:         Admin user for HashiCups Engineering org scope.
       ID:                  u_GujSZDvIKR
-      Name:                adminuser
+      Name:                admin
       Updated Time:        Wed, 14 Jul 2021 01:20:24 UTC
       Version:             1
 
@@ -527,7 +527,7 @@ challenges:
       Created Time:        Wed, 14 Jul 2021 01:20:24 UTC
       Description:         Admin user for HashiCups Engineering org scope.
       ID:                  u_GujSZDvIKR
-      Name:                adminuser
+      Name:                admin
       Updated Time:        Wed, 14 Jul 2021 01:21:00 UTC
       Version:             2
 
@@ -567,8 +567,8 @@ challenges:
 
     - To allow anonymous (unauthenticated) users the ability to list scopes and auth methods in the `global` scope.
     - To allow anonymous (unauthenticated) users the ability to list scopes and auth methods in the org scope.
-    - To allow `adminuser` user administration grants at the org scope.
-    - To allow `adminuser` user administration grants at the project scope.
+    - To allow `admin` user administration grants at the org scope.
+    - To allow `admin` user administration grants at the project scope.
 
     ---
 
@@ -727,7 +727,7 @@ challenges:
     <...truncated...>
     ```
 
-    Create the global admin role for `adminuser`.
+    Create the global admin role for `admin`.
 
     ```
     boundary roles create \
@@ -1389,7 +1389,7 @@ challenges:
     ```
 
     Now that you have the group created, and associated the correct roles with it. It's time to create a login account
-    for a DBA user.  You'll use the username `dbauser1` and the password `dbauser1` for both. Those  values have been
+    for a DBA user.  You'll use the username `dbauser1` and the password `password` for both. Those  values have been
     placed in your environment for you as `DBA_USERNAME` and `DBA_PASSWORD`.
 
     Create the login account.
@@ -1437,7 +1437,7 @@ challenges:
     ```
     boundary users create \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -name="dbauser1" \
+      -name=$DBA_USERNAME \
       -description="An example DBA user." \
       -scope-id=$ORG_SCOPE_ID
     ```
@@ -1858,4 +1858,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "10522279170916287867"
+checksum: "11209493545399195611"

@@ -68,8 +68,6 @@ boundary roles add-grants \
 	-grant "id=*;type=*;actions=*" \
 	-grant "id=$GLOBAL_AUTH_METHOD_ID;type=*;actions=*"
 
-# TODO: update the grants
-
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $GLOBAL_ADMIN_ROLE_ID \
@@ -85,6 +83,7 @@ export ORG_ADMIN_ROLE_ID=$(boundary roles create \
 echo "Org Admin Role ID:" $ORG_ADMIN_ROLE_ID
 echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
 
+# TODO add the listing roles?
 boundary roles add-grants \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $ORG_ADMIN_ROLE_ID \

@@ -42,7 +42,6 @@ boundary targets add-host-sets \
 	-id=$POSTGRES_TARGET_ID \
 	-host-set=$POSTGRES_HOST_SET_ID
 
-# TODO: boundary connect postgres -target-id=$POSTGRES_TARGET_ID
-# This is throwing an error
+# TODO: boundary connect postgres -target-id=$POSTGRES_TARGET_ID -dbname postgres -username postgres -- -l
 
 exit 0
