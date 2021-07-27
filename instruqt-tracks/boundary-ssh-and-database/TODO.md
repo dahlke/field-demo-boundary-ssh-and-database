@@ -7,9 +7,9 @@
 - Integrate HashiCups, and make it a workshop w/ slides instead of a demo?
 - Review the copy in the track / add links all over
 - Packer images
-- Run track tests and make sure they are consistently working, they are currently failing
-  -  standardize all the arguments to each function call (using `=` or strings)
-- TODO: update all the grants so they work properly with the resources that are created. Make sure that I update it in the track as well.
+- Standardize all the arguments to each function call (using `=` or strings, and wrapping in quotes)
+- Update comments in the solve scripts
+- Make a note to use the notes for each challenge so I don't duplicate information
 
 # Challenge Scripts (initial review)
 
@@ -22,6 +22,11 @@
   - [-] setup
   - [x] solve
   - [x] check
+  - [-] cleanup
+- configure-your-first-roles
+  - [-] setup
+  - [ ] solve
+  - [ ] check
   - [-] cleanup
 - configure-admin-accounts
   - [-] setup
@@ -63,4 +68,3 @@
   - [x] check
   - [x] solve
   - [-] cleanup
-

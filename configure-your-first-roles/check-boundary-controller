@@ -1,0 +1,30 @@
+#!/bin/bash -l
+
+# TODO: do we really need this?
+source ~/.bashrc
+
+# Check that the global scope anon listing role was created
+GLOBAL_ANON_LISTING_NAME=$(boundary roles list \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id "global" \
+	-format=json | jq -r ".items[0].name")
+
+if [ "$GLOBAL_ANON_LISTING_NAME" != "global_anon_listing" ]; then
+    fail-message "You did not create the `global_anon_listing` role."
+    exit 1
+fi
+
+# Check that the org scope anon listing role was created
+ORG_ANON_LISTING_NAME=$(boundary roles list \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id $ORG_SCOPE_ID \
+	-format=json | jq -r ".items[0].name")
+
+if [ "$ORG_ANON_LISTING_NAME" != "org_anon_listing" ]; then
+    fail-message "You did not create the `org_anon_listing` role."
+    exit 1
+fi
+
+# TODO: check the bashrc file
+
+exit 0

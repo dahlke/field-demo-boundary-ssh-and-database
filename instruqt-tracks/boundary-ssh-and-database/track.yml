@@ -1,7 +1,7 @@
-slug: boundary-ssh-and-database
+slug: managing-boundary-in-production-ssh-and-database
 id: adnyt8negprv
 type: track
-title: Managing Boundary for SSH and Database Access
+title: 'Managing Boundary in Production: SSH and Database Access'
 teaser: Learn how to take a blank canvas Boundary deployment and configure it for production usage.
 description: |-
   In this track, you will take a blank canvas Boundary cluster, and learn how to get it ready for production. That
@@ -49,9 +49,9 @@ challenges:
       installing Boundary, the reference architecture, or concepts like scopes, auth methods, users, accounts, and
       more - check out the [Install and Configure Boundary Track](TODO).
   - type: text
-    contents: The Boundary cluster was initialized *without generated resources*...
-  - type: text
     contents: |-
+      The Boundary cluster was initialized *without generated resources*...
+
       What are generated resources? When you run `boundary dev` or boundary `database init`, Boundary automatically
       generates a number of resources to make getting started easier. Default scopes, auth methods, user, account, and
       targets are just some of the resources Boundary will generate unless you tell it not to.
@@ -278,6 +278,226 @@ challenges:
   - title: Controller
     type: terminal
     hostname: boundary-controller
+  difficulty: advanced
+  timelimit: 600
+- slug: configure-your-first-roles
+  id: qup9zxi31fyp
+  type: challenge
+  title: Configure Your First Roles
+  teaser: Learn to set up your first roles in Boundary and view the UI.
+  notes:
+  - type: text
+    contents: |-
+      In this challenge, you will learn about the following Boundary resources.
+
+      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
+
+      TODO: describe grants
+  - type: text
+    contents: |-
+      Roles in Boundary manage the permissions given to principals (*users* and *groups*).
+
+      Boundary has three principals (in this case, users) that exist by default in the `global` scope, and cannot be
+      deleted: anonymous (`u_anon`), authenticate (`u_auth`), and recovery (`u_recovery`).
+
+      In this challenge you will use `u_anon`, which represents users that are not authenticated with Boundary. This
+      is useful for providing permissions to users who are not logged in, and want to inspect certain endpoints in
+      Boundary to log in.
+  - type: text
+    contents: |-
+      This is useful not only from the CLI, but the Boundary UI leverages the `u_anon` principal to display the scopes
+      and auth methods to unauthenticated users.
+
+      You'll get your first glimpse of the the UI in this challenge, too.
+  - type: text
+    contents: |-
+      Don't worry. You'll learn to create your own principals (users and groups) later in this track. You'll also get
+      a full tour of the Admin UI.
+  assignment: |-
+    Currently, Boundary is locked down. A user without access to the `recovery-config.hcl` file, would not even be able
+    to see the scopes or auth methods that you just created. This means the average user is completely left in the
+    dark when trying to authenticate.
+
+    The first two roles you will created will allow anonymous (unauthenticated) users the ability to list scopes and
+    their auth methods. Once you have created these two roles, you'll attach them to the `u_anon` principal, which
+    will allow any user to discover how and where to log in.
+
+    Since the Boundary UI leverages the `u_anon` principal at the login page, creating these roles also will allow
+    you to start leveraging the Boundary UI.
+
+    ---
+
+    First, open the Boundary UI tab. You should see a white screen. This is because currently, Boundary is configured
+    to not allow anonymous users the ability to see the scopes or the auth methods in boundary. To allow for users
+    to see the auth methods in the `global` scope, you'll need to create an anonymous role in the `global` scope that
+    can list the scopes, auth methods, and allow a user to see their account and update their password.
+
+    Let's create that anonymous listing role in the `global` scope, with the name `global_anon_listing`.
+
+    ```
+    boundary roles create \
+      -scope-id global \
+      -name global_anon_listing
+    ```
+
+    Example output:
+
+    ```
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:15:12 UTC
+      Grant Scope ID:      global
+      ID:                  r_h28yjg9dhH
+      Name:                global_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:15:12 UTC
+      Version:             1
+
+    <...truncated...>
+    ```
+
+    Grab the global anon listing ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export GLOBAL_ANON_LISTING_ID=<GLOBAL_ANON_LISTING_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
+    echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
+    ```
+
+    Once the user
+
+    Then, add the required grants and principals to the global anonymous listing ID.
+
+    TODO: explain the grants, and the format for them.
+
+    ```
+    boundary roles add-grants \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $GLOBAL_ANON_LISTING_ID \
+      -grant "id=*;type=auth-method;actions=list,authenticate" \
+      -grant "id=*;type=scope;actions=list,no-op" \
+      -grant "id={{account.id}};actions=read,change-password"
+
+    boundary roles add-principals \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $GLOBAL_ANON_LISTING_ID \
+      -principal "u_anon"
+    ```
+
+    Example output:
+
+    ```
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:15:12 UTC
+      Grant Scope ID:      global
+      ID:                  r_h28yjg9dhH
+      Name:                global_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:17:10 UTC
+      Version:             2
+
+    <...truncated...>
+
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:15:12 UTC
+      Grant Scope ID:      global
+      ID:                  r_h28yjg9dhH
+      Name:                global_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:17:11 UTC
+      Version:             3
+
+    <...truncated...>
+    ```
+
+    You'll also need to create the anonymous listing role for org scope.
+
+    ```
+    boundary roles create \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -name "org_anon_listing" \
+      -scope-id $ORG_SCOPE_ID
+    ```
+
+    Example output:
+
+    ```
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:18:26 UTC
+      Grant Scope ID:      o_tc3qudleXh
+      ID:                  r_u0dn7mU3uh
+      Name:                org_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:18:26 UTC
+      Version:             1
+
+    <...truncated...>
+    ```
+
+    Grab the org anon listing ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export ORG_ANON_LISTING_ID=<ORG_ANON_LISTING_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
+    echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
+    ```
+
+    Add the required grants and principals to the org anonymous listing ID.
+
+    ```
+    boundary roles add-grants \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $ORG_ANON_LISTING_ID \
+      -grant "id=*;type=auth-method;actions=list,authenticate" \
+      -grant "type=scope;actions=list" \
+      -grant "id={{account.id}};actions=read,change-password"
+
+    boundary roles add-principals \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $ORG_ANON_LISTING_ID \
+      -principal "u_anon"
+    ```
+
+    Example output:
+
+    ```
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:18:26 UTC
+      Grant Scope ID:      o_tc3qudleXh
+      ID:                  r_u0dn7mU3uh
+      Name:                org_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:22:27 UTC
+      Version:             2
+
+      Scope:
+        ID:                o_tc3qudleXh
+        Name:              HashiCups
+        Parent Scope ID:   global
+        Type:              org
+
+    <...truncated...>
+
+    Role information:
+      Created Time:        Thu, 08 Jul 2021 18:18:26 UTC
+      Grant Scope ID:      o_tc3qudleXh
+      ID:                  r_u0dn7mU3uh
+      Name:                org_anon_listing
+      Updated Time:        Thu, 08 Jul 2021 18:22:28 UTC
+      Version:             3
+
+    <...truncated...>
+    ```
+  tabs:
+  - title: Controller
+    type: terminal
+    hostname: boundary-controller
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
   difficulty: advanced
   timelimit: 600
 - slug: configure-admin-accounts
@@ -546,186 +766,27 @@ challenges:
   id: vojdkujfd7of
   type: challenge
   title: Configure Admin Roles
-  teaser: Learn to setup the admin roles in Boundary to manage scopes in your production deployment.
+  teaser: Learn to setup the roles in Boundary for admin access to your scopes.
   notes:
   - type: text
-    contents: '- Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.'
+    contents: TODO
   assignment: |-
-    This challenge will focus on the creation of *roles*.
-
-    Roles in Boundary manage the permissions given to principals (*users* and *groups*).
-
-    The following describes the four baseline roles you'll need to create to manage resources within the org and
-    project scopes created above. These roles are similar to the roles created for you if generation had not been
+    The following describes the three baseline roles you'll need to create to manage resources within the org and
+    project scopes created above.  These roles are similar to the roles created for you if generation had not been
     skipped during `boundary database init` when executed with the `-skip-initial-login-role-creation` flag, Declaring
     roles explicitly allows you to manage them independently and fully within Terraform or via the CLI. In doing so,
     you can precisely define their access.
 
-    The following example creates 4 roles:
+    The following example creates 3 roles:
 
-    TODO: maybe use different names for the global / org admin users?
+    The first two roles will allow anonymous (unauthenticated) users the ability to list scopes and their auth methods.
+    Once you have created these two roles, the user will be able to discover how and where to log in. It also will
+    allow you to use the UI to login.
 
-    - To allow anonymous (unauthenticated) users the ability to list scopes and auth methods in the `global` scope.
-    - To allow anonymous (unauthenticated) users the ability to list scopes and auth methods in the org scope.
-    - To allow `admin` user administration grants at the org scope.
-    - To allow `admin` user administration grants at the project scope.
+    The last three roles will all be `admin` roles, which give the user administrative access to a given scope. You will
+    create a role for admin access for the `global` scope, org scope, and project scope.
 
     ---
-
-    First, create global anonymous listing roles.
-
-    ```
-    boundary roles create \
-      -name "global_anon_listing" \
-      -scope-id "global"
-    ```
-
-    Example output:
-
-    ```
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 18:15:12 UTC
-      Grant Scope ID:      global
-      ID:                  r_h28yjg9dhH
-      Name:                global_anon_listing
-      Updated Time:        Thu, 08 Jul 2021 18:15:12 UTC
-      Version:             1
-
-    <...truncated...>
-    ```
-
-    Grab the global anon listing ID from the output and store it in an environment variable for later usage.
-
-    ```
-    export GLOBAL_ANON_LISTING_ID=<GLOBAL_ANON_LISTING_ID>
-    ```
-
-    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
-
-    ```
-    echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
-    ```
-
-    Then, add the required grants and principals to the global anonymous listing ID.
-
-    ```
-    boundary roles add-grants \
-      -recovery-config /root/boundary-controller-recovery.hcl \
-      -id $GLOBAL_ANON_LISTING_ID \
-      -grant "id=*;type=auth-method;actions=list,authenticate" \
-      -grant "id=*;type=scope;actions=list,no-op" \
-      -grant "id={{account.id}};actions=read,change-password"
-
-    boundary roles add-principals \
-      -recovery-config /root/boundary-controller-recovery.hcl \
-      -id $GLOBAL_ANON_LISTING_ID \
-      -principal "u_anon"
-    ```
-
-    Example output:
-
-    ```
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 18:15:12 UTC
-      Grant Scope ID:      global
-      ID:                  r_h28yjg9dhH
-      Name:                global_anon_listing
-      Updated Time:        Thu, 08 Jul 2021 18:17:10 UTC
-      Version:             2
-
-    <...truncated...>
-
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 18:15:12 UTC
-      Grant Scope ID:      global
-      ID:                  r_h28yjg9dhH
-      Name:                global_anon_listing
-      Updated Time:        Thu, 08 Jul 2021 18:17:11 UTC
-      Version:             3
-
-    <...truncated...>
-    ```
-
-    You'll also need to create the anonymous listing role for org scope.
-
-    ```
-    boundary roles create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
-      -name "org_anon_listing" \
-      -scope-id $ORG_SCOPE_ID
-    ```
-
-    Example output:
-
-    ```
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 18:18:26 UTC
-      Grant Scope ID:      o_tc3qudleXh
-      ID:                  r_u0dn7mU3uh
-      Name:                org_anon_listing
-      Updated Time:        Thu, 08 Jul 2021 18:18:26 UTC
-      Version:             1
-
-    <...truncated...>
-    ```
-
-    Grab the org anon listing ID from the output and store it in an environment variable for later usage.
-
-    ```
-    export ORG_ANON_LISTING_ID=<ORG_ANON_LISTING_ID>
-    ```
-
-    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
-
-    ```
-    echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
-    ```
-
-    Add the required grants and principals to the org anonymous listing ID.
-
-    ```
-    boundary roles add-grants \
-      -recovery-config /root/boundary-controller-recovery.hcl \
-      -id $ORG_ANON_LISTING_ID \
-      -grant "id=*;type=auth-method;actions=list,authenticate" \
-      -grant "type=scope;actions=list" \
-      -grant "id={{account.id}};actions=read,change-password"
-
-    boundary roles add-principals \
-      -recovery-config /root/boundary-controller-recovery.hcl \
-      -id $ORG_ANON_LISTING_ID \
-      -principal "u_anon"
-    ```
-
-    Example output:
-
-    ```
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 18:18:26 UTC
-      Grant Scope ID:      o_tc3qudleXh
-      ID:                  r_u0dn7mU3uh
-      Name:                org_anon_listing
-      Updated Time:        Thu, 08 Jul 2021 18:22:27 UTC
-      Version:             2
-
-      Scope:
-        ID:                o_tc3qudleXh
-        Name:              HashiCups
-        Parent Scope ID:   global
-        Type:              org
-
-    <...truncated...>
-
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 18:18:26 UTC
-      Grant Scope ID:      o_tc3qudleXh
-      ID:                  r_u0dn7mU3uh
-      Name:                org_anon_listing
-      Updated Time:        Thu, 08 Jul 2021 18:22:28 UTC
-      Version:             3
-
-    <...truncated...>
-    ```
 
     Create the global admin role for `admin`.
 
@@ -1858,4 +1919,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "11209493545399195611"
+checksum: "12509217224682214423"

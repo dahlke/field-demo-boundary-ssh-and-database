@@ -5,8 +5,9 @@ HISTFILE=/root/.bash_history
 set -o history
 
 # Create the User Principal for Org Admin User
-export GLOBAL_ADMIN_USER_ID=$(boundary users create -scope-id global \
+export GLOBAL_ADMIN_USER_ID=$(boundary users create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id global \
 	-name $ADMIN_USERNAME \
 	-description "Admin User for global scope." \
 	-format=json | jq -r .item.id)
@@ -21,8 +22,9 @@ boundary users add-accounts \
 	-account $GLOBAL_ADMIN_USER_ACCOUNT_ID
 
 # Create the User Principal for Project Admin User
-export ORG_ADMIN_USER_ID=$(boundary users create -scope-id $ORG_SCOPE_ID \
+export ORG_ADMIN_USER_ID=$(boundary users create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
+	-scope-id $ORG_SCOPE_ID \
 	-name $ADMIN_USERNAME \
 	-format=json | jq -r .item.id)
 
