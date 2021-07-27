@@ -190,16 +190,23 @@ challenges:
   teaser: Learn to configure auth methods in Boundary for user authentication.
   notes:
   - type: text
-    contents: '- Auth Methods: a resource that provides a mechanism for users to authenticate to Boundary.'
+    contents: |-
+      In this challenge, you will learn about the following Boundary resource.
+
+      - Auth Methods: a resource that provides a mechanism for users to authenticate to Boundary.
+  - type: text
+    contents: |-
+      Auth methods are resources that provide a mechanism for users to authenticate to Boundary. An auth method
+      contains accounts which link an individual user to a set of credentials and managed groups which groups accounts
+      that satisfy criteria and can be used as principals in roles.
+
+      Auth methods can be defined at either a `global` or org scope.
   assignment: |-
     This challenge will focus on the creation of *auth methods*.
 
-    Now that you have your org scope and project scope created, it's time to add an auth method. Auth methods are
-    resources that provide a mechanism for users to authenticate to Boundary. An auth method contains accounts which
-    link an individual user to a set of credentials and managed groups which groups accounts that satisfy criteria
-    and can be used as principals in roles. Auth methods can be defined at either a `global` or org scope.
+    Now that you have your org scope and project scope created, it's time to add your first auth method.
 
-    First, create an auth method in the `global` scope.
+    Create an auth method in the `global` scope.
 
     ```
     boundary auth-methods create password \
@@ -288,15 +295,20 @@ challenges:
   notes:
   - type: text
     contents: |-
-      In this challenge, you will learn about the following Boundary resources.
+      In this challenge, you will learn about the following Boundary resource.
 
       - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
-
-      TODO: describe grants
   - type: text
     contents: |-
       Roles in Boundary manage the permissions given to principals (*users* and *groups*).
 
+      Boundary's permissions model is a composable, RBAC, allow-only model that attempts to marry flexibility with
+      usability.
+
+      At a very high level, permissions within Boundary are declared via grant strings and mapped to users via roles.
+      You'll learn more about permissions in Boundary in this challenge.
+  - type: text
+    contents: |-
       Boundary has three principals (in this case, users) that exist by default in the `global` scope, and cannot be
       deleted: anonymous (`u_anon`), authenticate (`u_auth`), and recovery (`u_recovery`).
 
@@ -332,7 +344,7 @@ challenges:
     to see the auth methods in the `global` scope, you'll need to create an anonymous role in the `global` scope that
     can list the scopes, auth methods, and allow a user to see their account and update their password.
 
-    Let's create that anonymous listing role in the `global` scope, with the name `global_anon_listing`.
+    Create the anonymous listing role in the `global` scope, with the name `global_anon_listing`.
 
     ```
     boundary roles create \
@@ -366,11 +378,21 @@ challenges:
     echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
     ```
 
-    Once the user
+    Then, add the required grants to the newly created role.
 
-    Then, add the required grants and principals to the global anonymous listing ID.
+    A grant string has a form similar to: `id=<id>;type=<type>;actions=<action list>;output_fields=<fields list>`.
 
-    TODO: explain the grants, and the format for them.
+    Each grant string is a mapping that describes a resource or set of resources and the permissions that should be
+    granted on them.
+
+    There are currently two types of selectors:
+
+    - An `id` field that indicates a specific resource or a wildcard to match all
+    - A `type` field that indicates a specific resource type or a wildcard to match all; this might also be used to grant permissions on collections of resources
+
+    For example - the first `grant` below: you will use a wildcard (`*`) grant for `id`, on the `auth-method` `type`,
+    with the `actions` of `list` and `authenticate`. This will allow this role to see the auth methods in Boundary
+    without being authenticated.
 
     ```
     boundary roles add-grants \
@@ -379,7 +401,11 @@ challenges:
       -grant "id=*;type=auth-method;actions=list,authenticate" \
       -grant "id=*;type=scope;actions=list,no-op" \
       -grant "id={{account.id}};actions=read,change-password"
+    ```
 
+    And then add the global anonymous listing ID to the `u_anon` principal that exists by default.
+
+    ```
     boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $GLOBAL_ANON_LISTING_ID \
@@ -410,7 +436,11 @@ challenges:
     <...truncated...>
     ```
 
-    You'll also need to create the anonymous listing role for org scope.
+    If you go to the Boundary UI tab now and hit refresh in the top right corner, you should be able to see the
+    global auth methods now.
+
+    However, you'll notice that you still can't see the org auth method. To do that, you'll also need to create the
+    anonymous listing role for org scope.
 
     ```
     boundary roles create \
@@ -490,6 +520,9 @@ challenges:
 
     <...truncated...>
     ```
+
+    You should now be able to list the auth methods for both the global and org scope, as well as see them in the
+    Boundary UI. You're now ready to start configuring your admin users.
   tabs:
   - title: Controller
     type: terminal
@@ -1919,4 +1952,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "12509217224682214423"
+checksum: "15962016253946137245"
