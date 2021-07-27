@@ -9,7 +9,6 @@
 - Packer images
 - Standardize all the arguments to each function call (using `=` or strings, and wrapping in quotes)
 - Update comments in the solve scripts
-- Make a note to use the notes for each challenge so I don't duplicate information
 
 # Challenge Scripts (initial review)
 
