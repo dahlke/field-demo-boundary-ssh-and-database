@@ -841,12 +841,17 @@ challenges:
 
     ```
     Role information:
-      Created Time:        Thu, 08 Jul 2021 18:24:01 UTC
-      Grant Scope ID:      o_tc3qudleXh
-      ID:                  r_4xpg4AbE04
-      Name:                org_admin
-      Updated Time:        Thu, 08 Jul 2021 18:24:01 UTC
+      Created Time:        Wed, 28 Jul 2021 00:19:55 UTC
+      Grant Scope ID:      global
+      ID:                  r_SvKKIc1cET
+      Name:                global_admin
+      Updated Time:        Wed, 28 Jul 2021 00:19:55 UTC
       Version:             1
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
 
     <...truncated...>
     ```
@@ -867,7 +872,7 @@ challenges:
 
     ```
     boundary roles create \
-      -recovery-config /tmp/recovery.hcl \
+      -recovery-config /root/boundary-controller-recovery.hcl \
       -name "org_admin" \
       -scope-id global \
       -grant-scope-id $ORG_SCOPE_ID
@@ -876,7 +881,18 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Role information:
+      Created Time:        Wed, 28 Jul 2021 00:20:35 UTC
+      Grant Scope ID:      o_hWf0Qxaqed
+      ID:                  r_rSx4YiFQlV
+      Name:                org_admin
+      Updated Time:        Wed, 28 Jul 2021 00:20:35 UTC
+      Version:             1
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
 
     <...truncated...>
     ```
@@ -897,7 +913,7 @@ challenges:
 
     ```
     boundary roles create \
-      -recovery-config /tmp/recovery.hcl \
+      -recovery-config /root/boundary-controller-recovery.hcl \
       -name "org_admin" \
       -scope-id $ORG_SCOPE_ID \
       -grant-scope-id $PROJECT_SCOPE_ID
@@ -906,7 +922,19 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Role information:
+      Created Time:        Wed, 28 Jul 2021 00:21:24 UTC
+      Grant Scope ID:      p_sXnGCxGZpT
+      ID:                  r_2ONjKkE5Tp
+      Name:                org_admin
+      Updated Time:        Wed, 28 Jul 2021 00:21:24 UTC
+      Version:             1
+
+      Scope:
+        ID:                o_hWf0Qxaqed
+        Name:              HashiCups Engineering
+        Parent Scope ID:   global
+        Type:              org
 
     <...truncated...>
     ```
@@ -1997,4 +2025,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "3273540218823608413"
+checksum: "8595907404962593468"
