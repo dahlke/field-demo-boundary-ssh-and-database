@@ -10,7 +10,7 @@ set -o history
 export ORG_SCOPE_ID=$(boundary scopes create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name "HashiCups Engineering" \
-	-scope-id "global" \
+	-scope-id global \
 	-skip-admin-role-creation \
 	-skip-default-role-creation \
 	-format=json | jq -r .item.id)

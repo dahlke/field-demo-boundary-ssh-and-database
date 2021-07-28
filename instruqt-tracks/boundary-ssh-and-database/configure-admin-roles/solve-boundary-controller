@@ -4,29 +4,21 @@
 HISTFILE=/root/.bash_history
 set -o history
 
-# TODO: update the challenge to match the order in which things are done here.
-
-#####
-# Create the Project Admin Role
-#####
-export PROJECT_ADMIN_ROLE_ID=$(boundary roles create \
+###
+# Create the Global Admin Role
+###
+export GLOBAL_ADMIN_ROLE_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-name "org_admin" \
-	-scope-id $ORG_SCOPE_ID \
-	-grant-scope-id $PROJECT_SCOPE_ID \
+	-name "global_admin" \
+	-scope-id global \
 	-format=json | jq -r .item.id)
 
-echo "Project Admin Role ID:" $PPROJECT_ADMIN_ROLE_ID
-echo "export PROJECT_ADMIN_ROLE_ID=$PROJECT_ADMIN_ROLE_ID" >> ~/.bashrc
+echo "Global Admin Role ID:" $GLOBAL_ADMIN_ROLE_ID
+echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
 
-boundary roles add-grants \
-	-recovery-config /root/boundary-controller-recovery.hcl \
-	-id $PROJECT_ADMIN_ROLE_ID \
-	-grant "id=*;type=*;actions=*"
-
-#####
+###
 # Create the Org Admin Role
-#####
+###
 export ORG_ADMIN_ROLE_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name "org_admin" \
@@ -37,60 +29,74 @@ export ORG_ADMIN_ROLE_ID=$(boundary roles create \
 echo "Org Admin Role ID:" $ORG_ADMIN_ROLE_ID
 echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
 
-boundary roles add-grants \
+###
+# Create the Project Admin Role
+###
+export PROJECT_ADMIN_ROLE_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-id $ORG_ADMIN_ROLE_ID \
-	-grant "id=*;type=*;actions=*"
-
-# Attach the org admin role, and the project admin role
-boundary roles add-principals \
-	-recovery-config /root/boundary-controller-recovery.hcl \
-	-id $ORG_ADMIN_ROLE_ID \
-	-principal=$ORG_ADMIN_USER_ID
-
-boundary roles add-principals \
-	-recovery-config /root/boundary-controller-recovery.hcl \
-	-id $PROJECT_ADMIN_ROLE_ID \
-	-principal=$ORG_ADMIN_USER_ID
-
-#####
-# Create the Global Admin Role
-#####
-export GLOBAL_ADMIN_ROLE_ID=$(boundary roles create \
-	-recovery-config /root/boundary-controller-recovery.hcl \
-	-name "global_admin" \
-	-scope-id "global" \
+	-name "org_admin" \
+	-scope-id $ORG_SCOPE_ID \
+	-grant-scope-id $PROJECT_SCOPE_ID \
 	-format=json | jq -r .item.id)
 
-echo "Global Admin Role ID:" $GLOBAL_ADMIN_ROLE_ID
-echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
+echo "Project Admin Role ID:" $PPROJECT_ADMIN_ROLE_ID
+echo "export PROJECT_ADMIN_ROLE_ID=$PROJECT_ADMIN_ROLE_ID" >> ~/.bashrc
 
+
+###
+# Attach admin grants to each role
+###
 boundary roles add-grants \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $GLOBAL_ADMIN_ROLE_ID \
 	-grant "id=*;type=*;actions=*"
 
-# Attach the global admin role, org admin role, and the project admin role
-boundary roles add-principals \
-	-recovery-config /root/boundary-controller-recovery.hcl \
-	-id $PROJECT_ADMIN_ROLE_ID \
-	-principal=$GLOBAL_ADMIN_USER_ID
-
-boundary roles add-principals \
+boundary roles add-grants \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $ORG_ADMIN_ROLE_ID \
-	-principal=$GLOBAL_ADMIN_USER_ID
+	-grant "id=*;type=*;actions=*"
 
+boundary roles add-grants \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id $PROJECT_ADMIN_ROLE_ID \
+	-grant "id=*;type=*;actions=*"
+
+###
+# Attach all scope admin grants to the org admin user
+###
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $GLOBAL_ADMIN_ROLE_ID \
 	-principal $GLOBAL_ADMIN_USER_ID
 
-#####
+boundary roles add-principals \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id $ORG_ADMIN_ROLE_ID \
+	-principal=$GLOBAL_ADMIN_USER_ID
+
+boundary roles add-principals \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id $PROJECT_ADMIN_ROLE_ID \
+	-principal=$GLOBAL_ADMIN_USER_ID
+
+###
+# Attach org and project scope admin grants to the org admin user
+###
+boundary roles add-principals \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id $ORG_ADMIN_ROLE_ID \
+	-principal=$ORG_ADMIN_USER_ID
+
+boundary roles add-principals \
+	-recovery-config /root/boundary-controller-recovery.hcl \
+	-id $PROJECT_ADMIN_ROLE_ID \
+	-principal=$ORG_ADMIN_USER_ID
+
+###
 # Login as the global admin user
-#####
+###
 export BOUNDARY_TOKEN=$(boundary authenticate password \
-	-auth-method-id $ORG_AUTH_METHOD_ID \
+	-auth-method-id $GLOBAL_AUTH_METHOD_ID \
 	-login-name=$ADMIN_USERNAME \
 	-keyring-type=none \
 	-password=$ADMIN_PASSWORD \

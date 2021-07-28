@@ -10,7 +10,7 @@ GLOBAL_ADMIN_USERNAME=$(boundary users list \
 	-format=json | jq -r ".items[-1].name")
 
 if [ "$GLOBAL_ADMIN_USERNAME" != "admin" ]; then
-    fail-message "You did not create the `admin` user in the global scope."
+    fail-message "You did not create the admin user in the global scope."
     exit 1
 fi
 
@@ -21,7 +21,7 @@ ORG_ADMIN_USERNAME=$(boundary users list \
 	-format=json | jq -r ".items[-1].name")
 
 if [ "$ORG_ADMIN_USERNAME" != "admin" ]; then
-    fail-message "You did not create the `admin` user in the org scope."
+    fail-message "You did not create the admin user in the org scope."
     exit 1
 fi
 

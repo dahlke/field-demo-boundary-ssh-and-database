@@ -13,7 +13,7 @@ echo "Global Auth Method ID:" $GLOBAL_AUTH_METHOD_ID
 echo "Global Admin User Account Name:" $GLOBAL_ADMIN_USER_ACCOUNT_NAME
 
 if [ "$GLOBAL_ADMIN_USER_ACCOUNT_NAME" != "admin" ]; then
-    fail-message "You did not create the `admin` account in the global scope."
+    fail-message "You did not create the admin account in the global scope."
     exit 1
 fi
 
@@ -24,7 +24,7 @@ ORG_ADMIN_USER_ACCOUNT_NAME=$(boundary accounts list \
 	-format=json | jq -r ".items[0].attributes.login_name")
 
 if [ "$ORG_ADMIN_USER_ACCOUNT_NAME" != "admin" ]; then
-    fail-message "You did not create the `admin` account for the org auth method."
+    fail-message "You did not create the admin account for the org auth method."
     exit 1
 fi
 

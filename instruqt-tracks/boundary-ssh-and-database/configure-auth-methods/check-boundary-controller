@@ -10,7 +10,7 @@ GLOBAL_AUTH_METHOD_NAME=$(boundary auth-methods list \
 	-format=json | jq -r ".items[0].name")
 
 if [ "$GLOBAL_AUTH_METHOD_NAME" != "global_auth_method" ]; then
-    fail-message "You did not create the `global_auth_method` auth method."
+    fail-message "You did not create the global_auth_method auth method."
     exit 1
 fi
 
@@ -21,7 +21,7 @@ ORG_AUTH_METHOD_NAME=$(boundary auth-methods list \
 	-format=json | jq -r ".items[0].name")
 
 if [ "$ORG_AUTH_METHOD_NAME" != "hashicups_eng_auth_method" ]; then
-    fail-message "You did not create the `hashicups_eng_app_auth_method` auth method."
+    fail-message "You did not create the hashicups_eng_app_auth_method auth method."
     exit 1
 fi
 

@@ -38,9 +38,9 @@ challenges:
     contents: |-
       In this challenge, you will learn about the following Boundary resources.
 
-      - Scope: Abstract permission boundary modeled as a container. A scope can contain scopes forming a tree.
-      - Organization: Top-level container (scope) which owns zero to many projects and zero to many authentication methods. An organization inherits from scope allowing it to own zero to many groups, roles, policies, targets, host catalogs or credential stores.
-      - Project: Child scope of an organization.
+      - *Scope*: Abstract permission boundary modeled as a container. A scope can contain scopes forming a tree.
+      - *Organization*: Top-level container (scope) which owns zero to many projects and zero to many authentication methods. An organization inherits from scope allowing it to own zero to many groups, roles, policies, targets, host catalogs or credential stores.
+      - *Project*: Child scope of an organization.
   - type: text
     contents: |-
       Boundary has already been
@@ -65,16 +65,17 @@ challenges:
       methods, users, accounts, etc.?
 
       You will learn that in this track.
+  - type: text
+    contents: |-
+      This first challenge will focus on *scopes*.
+
+      Scopes are a foundational part of Boundary. They allow users to partition resources and assign ownership of
+      resources to principals. There are three types of scopes within Boundary:
+
+      - *Global (`global`):* There is only one `global` scope. It is the entry point for initial administration/setup and to manage the org scopes.
+      - *Org:* Under the `global` scope, you can create multiple org scopes. Orgs are used to hold IAM-related resources and project scopes.
+      - *Project:* Under each org scope, you can create multiple project scopes. Projects are used to hold infrastructure-related resources.
   assignment: |-
-    This first challenge will focus on *scopes*.
-
-    What are scopes, you ask? Scopes are a foundational part of Boundary. They allow users to partition resources
-    and assign ownership of resources to principals. There are three types of scopes within Boundary:
-
-    - *Global (`global`):* There is only one `global` scope. It is the entry point for initial administration/setup and to manage the org scopes.
-    - *Org:* Under the `global` scope, you can create multiple org scopes. Orgs are used to hold IAM-related resources and project scopes.
-    - *Project:* Under each org scope, you can create multiple project scopes. Projects are used to hold infrastructure-related resources.
-
     In this challenge, you're going to create an org scope and project scope, without admin or default role creation.
     You're going to specify a role for managing these scopes by selected users in a later challenge.
 
@@ -98,7 +99,7 @@ challenges:
     ```
     boundary scopes create -name "HashiCups Engineering" \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -scope-id "global" \
+      -scope-id global \
       -skip-admin-role-creation \
       -skip-default-role-creation
     ```
@@ -193,7 +194,7 @@ challenges:
     contents: |-
       In this challenge, you will learn about the following Boundary resource.
 
-      - Auth Methods: a resource that provides a mechanism for users to authenticate to Boundary.
+      - *Auth Methods*: a resource that provides a mechanism for users to authenticate to Boundary.
   - type: text
     contents: |-
       Auth methods are resources that provide a mechanism for users to authenticate to Boundary. An auth method
@@ -295,7 +296,7 @@ challenges:
     contents: |-
       In this challenge, you will learn about the following Boundary resource.
 
-      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
+      - *Role*: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
   - type: text
     contents: |-
       Roles in Boundary manage the permissions given to principals (*users* and *groups*).
@@ -541,7 +542,7 @@ challenges:
     contents: |-
       In this challenge, you will learn about the following Boundary resource.
 
-      - Account: Represents a unique set of credentials issued from a configured auth method which can be used to establish the identity of a user.
+      - *Account*: Represents a unique set of credentials issued from a configured auth method which can be used to establish the identity of a user.
   - type: text
     contents: |-
       Previously you learned how to create auth methods in Boundary. After you set up your auth methods in Boundary, you
@@ -550,7 +551,7 @@ challenges:
       Accounts represent external notions of a particular entity. Among other use-cases, this mechanism allows for an
       easy way to switch users to new IdPs within the organization deploying Boundary.
   - type: text
-    contents: You'll start with admin accounts, and will configure other types of users in later challenges.
+    contents: You'll start with admin accounts, and will configure other types of accounts in later challenges.
   assignment: |-
     You'll need login accounts for an admin user for both of your auth methods. You'll use the username `admin`
     and the password `password` for both. Both of these values have been placed in your `~/.bashrc` file for you as
@@ -658,10 +659,9 @@ challenges:
   notes:
   - type: text
     contents: |-
-      In this challenge, you will learn about the following Boundary resources.
+      In this challenge, you will learn about the following Boundary resource.
 
-      - User: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
-      - Role: Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants.
+      - *User*: Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups.
   - type: text
     contents: |-
       Users and groups in Boundary are collectively known as *principals*. Assigning *grants* on *roles* is performed
@@ -809,29 +809,32 @@ challenges:
   teaser: Learn to setup the roles in Boundary for admin access to your scopes.
   notes:
   - type: text
-    contents: TODO
+    contents: |-
+      Now that you have created the Admin accounts and users, you'll need to assign permissions to them so they
+      can be leveraged for actually administering Boundary.
+  - type: text
+    contents: |-
+      You have already created two admin users. One should have full admin privileges (global, org and project scopes)
+      and one should be limited to having admin privileges in only the org and project scopes.
+  - type: text
+    contents: |-
+      These roles are similar to the roles created for you if generation had not been skipped during
+      `boundary database init` when executed with the `-skip-initial-login-role-creation` flag.
+  - type: text
+    contents: |-
+      Declaring roles explicitly allows you to manage them independently and fully within Terraform or via the CLI. In doing so,
+      you can precisely define their access.
   assignment: |-
-    The following describes the three baseline roles you'll need to create to manage resources within the org and
-    project scopes created above.  These roles are similar to the roles created for you if generation had not been
-    skipped during `boundary database init` when executed with the `-skip-initial-login-role-creation` flag, Declaring
-    roles explicitly allows you to manage them independently and fully within Terraform or via the CLI. In doing so,
-    you can precisely define their access.
+    First, you'll want to create all the different admin roles, before attaching them to the user principals and
+    accounts you created in previous challenges.
 
-    The following example creates 3 roles:
-
-    The last three roles will all be `admin` roles, which give the user administrative access to a given scope. You will
-    create a role for admin access for the `global` scope, org scope, and project scope.
-
-    ---
-
-    Create the global admin role for `admin`.
+    Start by creating the `global` admin role.
 
     ```
     boundary roles create \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -scope-id "global" \
-      -name "global_admin" \
-      -grant-scope-id $ORG_SCOPE_ID
+      -scope-id global \
+      -name "global_admin"
     ```
 
     Example output:
@@ -860,80 +863,20 @@ challenges:
     echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
     ```
 
-    Add the the newly created role to the global admin user.
-
-    ```
-    boundary roles add-grants \
-      -recovery-config /root/boundary-controller-recovery.hcl \
-      -id $GLOBAL_ADMIN_ROLE_ID \
-      -grant "id=*;type=*;actions=*,output_fields=*"
-
-    boundary roles add-principals \
-      -recovery-config /root/boundary-controller-recovery.hcl \
-      -id $GLOBAL_ADMIN_ROLE_ID \
-      -principal $GLOBAL_ADMIN_USER_ID
-    ```
-
-    Example output:
-
-    ```
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 18:24:01 UTC
-      Grant Scope ID:      o_tc3qudleXh
-      ID:                  r_4xpg4AbE04
-      Name:                org_admin
-      Updated Time:        Thu, 08 Jul 2021 18:29:43 UTC
-      Version:             2
-
-      Scope:
-        ID:                global
-        Name:              global
-        Type:              global
-
-    <...truncated...>
-
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 20:39:30 UTC
-      Grant Scope ID:      o_ya8JEJso6y
-      ID:                  r_oYoJ05W5zI
-      Name:                org_admin
-      Updated Time:        Thu, 08 Jul 2021 20:41:21 UTC
-      Version:             3
-
-      Scope:
-        ID:                global
-        Name:              global
-        Type:              global
-
-    <...truncated...>
-    ```
-
     Create the org admin role.
 
     ```
     boundary roles create \
       -recovery-config /tmp/recovery.hcl \
       -name "org_admin" \
-      -scope-id $ORG_SCOPE_ID \
-      -grant-scope-id $PROJECT_SCOPE_ID
+      -scope-id global \
+      -grant-scope-id $ORG_SCOPE_ID
     ```
 
     Example output:
 
     ```
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 20:46:20 UTC
-      Grant Scope ID:      p_4Z5uFpAkBZ
-      ID:                  r_Uh8SiJtFpg
-      Name:
-      Updated Time:        Thu, 08 Jul 2021 20:46:20 UTC
-      Version:             1
-
-      Scope:
-        ID:                o_ya8JEJso6y
-        Name:              HashiCups
-        Parent Scope ID:   global
-        Type:              org
+    TODO
 
     <...truncated...>
     ```
@@ -950,7 +893,61 @@ challenges:
     echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
     ```
 
-    Add the the newly created role to the org admin user.
+    Create the project admin role.
+
+    ```
+    boundary roles create \
+      -recovery-config /tmp/recovery.hcl \
+      -name "org_admin" \
+      -scope-id $ORG_SCOPE_ID \
+      -grant-scope-id $PROJECT_SCOPE_ID
+    ```
+
+    Example output:
+
+    ```
+    TODO
+
+    <...truncated...>
+    ```
+
+    Grab the project admin role ID from the output and store it in an environment variable for later usage.
+
+    ```
+    export PROJECT_ADMIN_ROLE_ID=<PROJECT_ADMIN_ROLE_ID>
+    ```
+
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
+    echo "export PROJECT_ADMIN_ROLE_ID=$PROJECT_ADMIN_ROLE_ID" >> ~/.bashrc
+    ```
+
+    ---
+
+    Now that you have created all the roles that you'll need, it's time to assign the grants for their respective needs.
+
+    Start with the global admin role.
+
+    ```
+    boundary roles add-grants \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $GLOBAL_ADMIN_ROLE_ID \
+      -grant "id=*;type=*;actions=*,output_fields=*"
+    ```
+
+    Example output:
+
+    ```
+    TODO
+
+    <...truncated...>
+    ```
+
+    Note that the grant `'id=*;type=*;actions=*'` represents administrative access, as it is allowed ot perform any
+    action on any type of resource.
+
+    Do the same on the remaining two admin roles for the org and project scopes.
 
     ```
     boundary roles add-grants \
@@ -958,47 +955,80 @@ challenges:
       -id $ORG_ADMIN_ROLE_ID \
       -grant "id=*;type=*;actions=*;output_fields=*"
 
+    boundary roles add-grants \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $PROJECT_ADMIN_ROLE_ID \
+      -grant "id=*;type=*;actions=*;output_fields=*"
+    ```
+
+    Example output:
+
+    ```
+    TODO
+
+    <...truncated...>
+    ```
+
+    Now, with all the admin roles created and permissions assigned to each role, it's time for you to add the roles
+    to the user principals you created previously.
+
+    Since the global admin user will need admin privileges in the global, org and project scopes, you'll add all three
+    of the roles you just created to that user.
+
+    ```
+    boundary roles add-principals \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $GLOBAL_ADMIN_ROLE_ID \
+      -principal $GLOBAL_ADMIN_USER_ID
+
     boundary roles add-principals \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $ORG_ADMIN_ROLE_ID \
+      -principal $GLOBAL_ADMIN_USER_ID
+
+    boundary roles add-principals \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $PROJECT_ADMIN_ROLE_ID \
+      -principal $GLOBAL_ADMIN_USER_ID
+    ```
+
+    Example output:
+
+    ```
+    TODO
+
+    <...truncated...>
+    ```
+
+    The second admin user doesn't need global scope admin access, so for the second admin user, you'll only attach the
+    role that gives admin access for the org scope and the project scope.
+
+    ```
+    boundary roles add-principals \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $ORG_ADMIN_ROLE_ID \
+      -principal $ORG_ADMIN_USER_ID
+
+    boundary roles add-principals \
+      -recovery-config /root/boundary-controller-recovery.hcl \
+      -id $PROJECT_ADMIN_ROLE_ID \
       -principal $ORG_ADMIN_USER_ID
     ```
 
     Example output:
 
     ```
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 20:45:52 UTC
-      Grant Scope ID:      p_4Z5uFpAkBZ
-      ID:                  r_x6Yv15DBLy
-      Name:                org_admin
-      Updated Time:        Thu, 08 Jul 2021 20:46:52 UTC
-      Version:             2
-
-    <...truncated...>
-
-    Role information:
-      Created Time:        Thu, 08 Jul 2021 20:45:52 UTC
-      Grant Scope ID:      p_4Z5uFpAkBZ
-      ID:                  r_x6Yv15DBLy
-      Name:                org_admin
-      Updated Time:        Thu, 08 Jul 2021 20:46:52 UTC
-      Version:             3
-
-      Scope:
-        ID:                o_ya8JEJso6y
-        Name:              HashiCups
-        Parent Scope ID:   global
-        Type:              org
+    TODO
 
     <...truncated...>
     ```
 
-    Finally, log in as your new user.
+    And you're done configuring your admin users! You can now log in as the admin user.
+
 
     ```
     boundary authenticate password \
-      -auth-method-id $ORG_AUTH_METHOD_ID \
+      -auth-method-id $GLOBAL_AUTH_METHOD_ID \
       -keyring-type=none \
       -login-name $ADMIN_USERNAME \
       -password $ADMIN_PASSWORD
@@ -1007,20 +1037,10 @@ challenges:
     Example output:
 
     ```
-    Authentication information:
-      Account ID:      acctpw_06knpvPLCZ
-      Auth Method ID:  ampw_JzC1XNwLtJ
-      Expiration Time: Thu, 15 Jul 2021 22:41:10 UTC
-      User ID:         u_ckElkdIo8V
-
-    Storing the token in a keyring was disabled. The token is:
-    at_bs81pgyoFg_s1N9twB2L8pfRPJhqdBzP1re8df48twb9Ww1655esNcU2T4UyCLJXsjugb9iRWR7cduoKCNFQvd6VWdymZX3xq46xRDKVEVaiHqVoQEV3qMyndK1UF6KQxxJE2s
-    Please be sure to store it safely!
+    TODO
     ```
 
     Grab the token from the output and store it in an environment variable for later usage.
-
-    TODO: do this in the following challenge?
 
     ```
     export BOUNDARY_TOKEN=<BOUNDARY_TOKEN>
@@ -1031,6 +1051,9 @@ challenges:
     ```
     echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
     ```
+
+    You can also now log in through the Boundary UI using the admin username and password in either the global or org
+    scopes. Feel free to take the UI for a spin before continuing.
 
     Congratulations! You have setup the initial resources in Boundary, and retrieved your first Boundary token. Next,
     you will learn to connect to your first target, before learning about defining different types of users, roles, and
@@ -1057,10 +1080,18 @@ challenges:
     contents: |-
       In this challenge, you will learn about the following Boundary resources.
 
-      - Host: Computing element with a network address reachable from Boundary.
-      - Host catalog: Permission boundary modeled as a container containing scopes forming a tree.
-      - Host set: Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted.
-      - Target: Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets.
+      - *Host*: Computing element with a network address reachable from Boundary.
+      - *Host catalog*: Permission boundary modeled as a container containing scopes forming a tree.
+      - *Host set*: Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted.
+      - *Target*: Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets.
+  - type: text
+    contents: 'TODO: explain host catalog'
+  - type: text
+    contents: 'TODO: explain host sets'
+  - type: text
+    contents: 'TODO: explain hosts'
+  - type: text
+    contents: 'TODO: explain targets'
   assignment: |-
     [Targets](https://www.boundaryproject.io/docs/concepts/domain-model/targets) are Boundary resources that contain
     one or more [host sets](https://www.boundaryproject.io/docs/concepts/domain-model/host-sets). A target allows
@@ -1072,6 +1103,7 @@ challenges:
     target, and finally - connect to that host via Boundary.
 
     # TODO: explain the existence of the Boundary worker as that is what they are going to connect to.
+    # TODO: Up until now, you've been leveraging the recovery configuration
 
     ---
 
@@ -1871,7 +1903,10 @@ challenges:
     boundary connect -authz-token=<authorization_token>
     ```
   tabs:
-  - title: Controller
+  - title: Controller [Terminal 1]
+    type: terminal
+    hostname: boundary-controller
+  - title: Controller [Terminal 2]
     type: terminal
     hostname: boundary-controller
   - title: Worker
@@ -1962,4 +1997,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "3482501735690619267"
+checksum: "3273540218823608413"
