@@ -1446,7 +1446,7 @@ challenges:
 
     ```
     boundary targets create tcp \
-      -name="tests" \
+      -name="ssh-test-targets" \
       -description="Test SSH target" \
       -default-port=22 \
       -scope-id=$PROJECT_SCOPE_ID \
@@ -1822,10 +1822,19 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Authentication information:
+      Account ID:      acctpw_WTD8UQBgWh
+      Auth Method ID:  ampw_H7RbviPzRk
+      Expiration Time: Thu, 05 Aug 2021 16:59:47 UTC
+      User ID:         u_CD5SjsvIax
 
-    <...truncated..>
+    Storing the token in a keyring was disabled. The token is:
+    at_R9h53oyEfn_s1YQHhYBwFCy9qdpQUWiKZKxNq71bYnYVvAoMK5DLbjLro7nMksEqpW4qZvSqXfPS27zpqHg2EvXMfwjUGdG9eMq8yBLQCtjKCfR2zSUM8zbxoUfMnYK1fRhMb6gJKp
+    Please be sure to store it safely!
     ```
+
+    Note that you don't want to store this boundary token quite yet. You still have a bit more configuration to do
+    that will need the admin user to accomplish.
 
     Congratulations! You have successfully set up your DBA group, assigned some policies, and added an account and
     user. You're ready to verify the permissions as the DBA user, and connect to your Postgres database.
@@ -2152,4 +2161,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "16821456574875058206"
+checksum: "227471304748549926"
