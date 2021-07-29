@@ -6,8 +6,8 @@ set -o history
 
 export DBA_GROUP_ID=$(boundary groups create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-name="dba" \
-	-description="HashiCups Engineering DBAs" \
+	-name "dba" \
+	-description "HashiCups Engineering DBAs" \
 	-scope-id $ORG_SCOPE_ID \
 	-format json | jq -r .item.id)
 
@@ -17,8 +17,8 @@ echo "export DBA_GROUP_ID=$DBA_GROUP_ID" >> ~/.bashrc
 export PG_READ_ONLY_ROLE_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
-	-name="postgres-read-only" \
-	-description="Role with read-only permission for Postgres." \
+	-name "postgres-read-only" \
+	-description "Role with read-only permission for Postgres." \
 	-format json | jq -r .item.id)
 
 echo "Postgres Read Only Role ID:" $PG_READ_ONLY_ROLE_ID
@@ -26,12 +26,12 @@ echo "export PG_READ_ONLY_ROLE_ID=$PG_READ_ONLY_ROLE_ID" >> ~/.bashrc
 
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-id=$PG_READ_ONLY_ROLE_ID \
+	-id $PG_READ_ONLY_ROLE_ID \
 	-principal $DBA_GROUP_ID
 
 boundary roles add-grants \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-id=$PG_READ_ONLY_ROLE_ID \
+	-id $PG_READ_ONLY_ROLE_ID \
 	-grant="id=*;type=*;actions=read,list"
 
 export DBA_USER_ACCOUNT_ID=$(boundary accounts create password \
@@ -46,8 +46,8 @@ echo "export DBA_USER_ACCOUNT_ID=$DBA_USER_ACCOUNT_ID" >> ~/.bashrc
 
 export DBA_USER_ID=$(boundary users create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-name=$DBA_USERNAME \
-	-description="An example DBA user." \
+	-name  $DBA_USERNAME \
+	-description "An example DBA user." \
 	-scope-id $ORG_SCOPE_ID \
 	-format json | jq -r .item.id)
 
@@ -57,13 +57,13 @@ echo "export DBA_USER_ID=$DBA_USER_ID" >> ~/.bashrc
 # Attach the user to the account
 boundary users set-accounts \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-id=$DBA_USER_ID \
+	-id $DBA_USER_ID \
 	-account=$DBA_USER_ACCOUNT_ID
 
 # Then add the user to the DBA group
 boundary groups add-members \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-id=$DBA_GROUP_ID \
+	-id $DBA_GROUP_ID \
 	-member=$DBA_USER_ID
 
 exit 0
