@@ -10,7 +10,7 @@ export GLOBAL_ADMIN_USER_ID=$(boundary users create \
 	-scope-id global \
 	-name $ADMIN_USERNAME \
 	-description "Admin User for global scope." \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Global Admin User ID:" $GLOBAL_ADMIN_USER_ID
 echo "export GLOBAL_ADMIN_USER_ID=$GLOBAL_ADMIN_USER_ID" >> ~/.bashrc
@@ -26,7 +26,7 @@ export ORG_ADMIN_USER_ID=$(boundary users create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
 	-name $ADMIN_USERNAME \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Org Admin User ID:" $ORG_ADMIN_USER_ID
 echo "export ORG_ADMIN_USER_ID=$ORG_ADMIN_USER_ID" >> ~/.bashrc

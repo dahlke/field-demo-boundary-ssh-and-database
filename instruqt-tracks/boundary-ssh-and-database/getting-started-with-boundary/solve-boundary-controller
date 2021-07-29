@@ -13,7 +13,7 @@ export ORG_SCOPE_ID=$(boundary scopes create \
 	-scope-id global \
 	-skip-admin-role-creation \
 	-skip-default-role-creation \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Org Scope ID:" $ORG_SCOPE_ID
 echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
@@ -25,7 +25,7 @@ export PROJECT_SCOPE_ID=$(boundary scopes create \
 	-scope-id $ORG_SCOPE_ID \
 	-skip-admin-role-creation \
 	-skip-default-role-creation \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Project Scope ID:" $PROJECT_SCOPE_ID
 echo "export PROJECT_SCOPE_ID=$PROJECT_SCOPE_ID" >> ~/.bashrc

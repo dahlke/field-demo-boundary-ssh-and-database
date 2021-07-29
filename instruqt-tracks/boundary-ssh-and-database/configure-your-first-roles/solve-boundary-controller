@@ -11,7 +11,7 @@ export GLOBAL_ANON_LISTING_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id global \
 	-name global_anon_listing \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Global Anon Listing ID:" $GLOBAL_ANON_LISTING_ID
 echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
@@ -35,7 +35,7 @@ export ORG_ANON_LISTING_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name "org_anon_listing" \
 	-scope-id $ORG_SCOPE_ID \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Org Anon Listing ID:" $ORG_ANON_LISTING_ID
 echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc

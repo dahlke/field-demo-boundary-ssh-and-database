@@ -3,8 +3,8 @@
 # Check the DBA group exists
 DBA_GROUP_NAME=$(boundary groups list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-scope-id=$ORG_SCOPE_ID \
-	-format=json | jq -r ".items[0].name")
+	-scope-id $ORG_SCOPE_ID \
+	-format json | jq -r ".items[0].name")
 
 if [ "$DBA_GROUP_NAME" != "dba" ]; then
     fail-message "You did not create the dba group."
@@ -14,8 +14,8 @@ fi
 # Check the PG Read Only Role exists
 PG_READ_ONLY_ROLE_NAME=$(boundary roles list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-scope-id=$ORG_SCOPE_ID \
-	-format=json | jq -r ".items[2].name")
+	-scope-id $ORG_SCOPE_ID \
+	-format json | jq -r ".items[2].name")
 
 if [ "$PG_READ_ONLY_ROLE_NAME" != "postgres-read-only" ]; then
     fail-message "You did not create the postgres-read-only role."
@@ -27,8 +27,8 @@ fi
 # Check the DBA account exists
 DBA_ACCOUNT_NAME=$( boundary accounts list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-auth-method-id=$ORG_AUTH_METHOD_ID \
-	-format=json | jq -r ".items[1].attributes.login_name")
+	-auth-method-id $ORG_AUTH_METHOD_ID \
+	-format json | jq -r ".items[1].attributes.login_name")
 
 if [ "$DBA_ACCOUNT_NAME" != "dbauser1" ]; then
     fail-message "You did not create the dbauser1 account."
@@ -38,8 +38,8 @@ fi
 # Check the DBA user exists
 DBA_USER_NAME=$(boundary users list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-scope-id=$ORG_SCOPE_ID \
-	-format=json | jq -r ".items[1].name")
+	-scope-id $ORG_SCOPE_ID \
+	-format json | jq -r ".items[1].name")
 
 if [ "$DBA_USER_NAME" != "dbauser1" ]; then
     fail-message "You did not create the dbauser1 user."

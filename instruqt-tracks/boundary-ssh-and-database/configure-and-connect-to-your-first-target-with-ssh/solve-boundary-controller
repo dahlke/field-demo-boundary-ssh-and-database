@@ -6,10 +6,10 @@ set -o history
 
 # TODO: should I use this same host catalog for the Postgres stuff?
 export PROJECT_HOST_CATALOG_ID=$(boundary host-catalogs create static \
-	-scope-id=$PROJECT_SCOPE_ID \
+	-scope-id $PROJECT_SCOPE_ID \
 	-name="HashiCups Web App" \
 	-description="For HashiCups App usage" \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Host Catalog ID:" $PROJECT_HOST_CATALOG_ID
 echo "export PROJECT_HOST_CATALOG_ID=$PROJECT_HOST_CATALOG_ID" >> ~/.bashrc
@@ -17,8 +17,8 @@ echo "export PROJECT_HOST_CATALOG_ID=$PROJECT_HOST_CATALOG_ID" >> ~/.bashrc
 export WORKER_HOST_ID=$(boundary hosts create static \
 	-name=worker-host \
 	-address="boundary-worker" \
-	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
-	-format=json | jq -r .item.id)
+	-host-catalog-id $PROJECT_HOST_CATALOG_ID \
+	-format json | jq -r .item.id)
 
 echo "Worker Host ID:" $WORKER_HOST_ID
 echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
@@ -26,8 +26,8 @@ echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
 export SSH_HOST_SET_ID=$(boundary host-sets create static \
 	-name="test-ssh-host-set" \
 	-description="Test machine host set" \
-	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
-	-format=json | jq -r .item.id)
+	-host-catalog-id $PROJECT_HOST_CATALOG_ID \
+	-format json | jq -r .item.id)
 
 echo "SSH Host Set ID:" $PROJECT_HOST_CATALOG_ID
 echo "export SSH_HOST_SET_ID=$SSH_HOST_SET_ID" >> ~/.bashrc
@@ -40,9 +40,9 @@ export SSH_TARGET_ID=$(boundary targets create tcp \
 	-name="ssh-test-targets" \
 	-description="Test SSH target" \
 	-default-port=22 \
-	-scope-id=$PROJECT_SCOPE_ID \
+	-scope-id $PROJECT_SCOPE_ID \
 	-session-connection-limit="-1" \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "SSH Target ID:" $SSH_TARGET_ID
 echo "export SSH_TARGET_ID=$SSH_TARGET_ID" >> ~/.bashrc

@@ -6,8 +6,8 @@ source ~/.bashrc
 # Check that the admin user exists in the global scope
 GLOBAL_ADMIN_USERNAME=$(boundary users list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-scope-id=global \
-	-format=json | jq -r ".items[-1].name")
+	-scope-id global \
+	-format json | jq -r ".items[-1].name")
 
 if [ "$GLOBAL_ADMIN_USERNAME" != "admin" ]; then
     fail-message "You did not create the admin user in the global scope."
@@ -17,8 +17,8 @@ fi
 # Check that the admin user exists in the org scope
 ORG_ADMIN_USERNAME=$(boundary users list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-scope-id=$ORG_SCOPE_ID \
-	-format=json | jq -r ".items[-1].name")
+	-scope-id $ORG_SCOPE_ID \
+	-format json | jq -r ".items[-1].name")
 
 if [ "$ORG_ADMIN_USERNAME" != "admin" ]; then
     fail-message "You did not create the admin user in the org scope."

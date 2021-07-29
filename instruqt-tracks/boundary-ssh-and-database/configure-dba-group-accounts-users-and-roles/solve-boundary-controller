@@ -8,18 +8,18 @@ export DBA_GROUP_ID=$(boundary groups create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name="dba" \
 	-description="HashiCups Engineering DBAs" \
-	-scope-id=$ORG_SCOPE_ID \
-	-format=json | jq -r .item.id)
+	-scope-id $ORG_SCOPE_ID \
+	-format json | jq -r .item.id)
 
 echo "DBA Group ID:" $DBA_GROUP_ID
 echo "export DBA_GROUP_ID=$DBA_GROUP_ID" >> ~/.bashrc
 
 export PG_READ_ONLY_ROLE_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-scope-id=$ORG_SCOPE_ID \
+	-scope-id $ORG_SCOPE_ID \
 	-name="postgres-read-only" \
 	-description="Role with read-only permission for Postgres." \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Postgres Read Only Role ID:" $PG_READ_ONLY_ROLE_ID
 echo "export PG_READ_ONLY_ROLE_ID=$PG_READ_ONLY_ROLE_ID" >> ~/.bashrc
@@ -27,7 +27,7 @@ echo "export PG_READ_ONLY_ROLE_ID=$PG_READ_ONLY_ROLE_ID" >> ~/.bashrc
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id=$PG_READ_ONLY_ROLE_ID \
-	-principal=$DBA_GROUP_ID
+	-principal $DBA_GROUP_ID
 
 boundary roles add-grants \
 	-recovery-config /root/boundary-controller-recovery.hcl \
@@ -39,7 +39,7 @@ export DBA_USER_ACCOUNT_ID=$(boundary accounts create password \
 	-login-name $DBA_USERNAME \
 	-password $DBA_PASSWORD \
 	-auth-method-id $ORG_AUTH_METHOD_ID \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "DBA User Account ID:" $DBA_USER_ACCOUNT_ID
 echo "export DBA_USER_ACCOUNT_ID=$DBA_USER_ACCOUNT_ID" >> ~/.bashrc
@@ -48,8 +48,8 @@ export DBA_USER_ID=$(boundary users create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name=$DBA_USERNAME \
 	-description="An example DBA user." \
-	-scope-id=$ORG_SCOPE_ID \
-	-format=json | jq -r .item.id)
+	-scope-id $ORG_SCOPE_ID \
+	-format json | jq -r .item.id)
 
 echo "DBA User ID:" $DBA_USER_ID
 echo "export DBA_USER_ID=$DBA_USER_ID" >> ~/.bashrc

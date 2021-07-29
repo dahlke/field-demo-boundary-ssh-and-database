@@ -7,7 +7,7 @@ source ~/.bashrc
 GLOBAL_ANON_LISTING_NAME=$(boundary roles list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id global \
-	-format=json | jq -r ".items[0].name")
+	-format json | jq -r ".items[0].name")
 
 if [ "$GLOBAL_ANON_LISTING_NAME" != "global_anon_listing" ]; then
     fail-message "You did not create the global_anon_listing role."
@@ -18,7 +18,7 @@ fi
 ORG_ANON_LISTING_NAME=$(boundary roles list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
-	-format=json | jq -r ".items[0].name")
+	-format json | jq -r ".items[0].name")
 
 if [ "$ORG_ANON_LISTING_NAME" != "org_anon_listing" ]; then
     fail-message "You did not create the org_anon_listing role."

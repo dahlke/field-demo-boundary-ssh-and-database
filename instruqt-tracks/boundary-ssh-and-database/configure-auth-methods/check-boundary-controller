@@ -6,8 +6,8 @@ source ~/.bashrc
 # Check that the global auth method exists
 GLOBAL_AUTH_METHOD_NAME=$(boundary auth-methods list \
 	-recovery-config /root/boundary-controller-recovery.hcl  \
-	-scope-id=global \
-	-format=json | jq -r ".items[0].name")
+	-scope-id global \
+	-format json | jq -r ".items[0].name")
 
 if [ "$GLOBAL_AUTH_METHOD_NAME" != "global_auth_method" ]; then
     fail-message "You did not create the global_auth_method auth method."
@@ -17,8 +17,8 @@ fi
 # Check that the project auth method exists
 ORG_AUTH_METHOD_NAME=$(boundary auth-methods list \
 	-recovery-config /root/boundary-controller-recovery.hcl  \
-	-scope-id=$ORG_SCOPE_ID \
-	-format=json | jq -r ".items[0].name")
+	-scope-id $ORG_SCOPE_ID \
+	-format json | jq -r ".items[0].name")
 
 if [ "$ORG_AUTH_METHOD_NAME" != "hashicups_eng_auth_method" ]; then
     fail-message "You did not create the hashicups_eng_app_auth_method auth method."

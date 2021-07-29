@@ -11,7 +11,7 @@ export GLOBAL_ADMIN_ROLE_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name "global_admin" \
 	-scope-id global \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Global Admin Role ID:" $GLOBAL_ADMIN_ROLE_ID
 echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
@@ -24,7 +24,7 @@ export ORG_ADMIN_ROLE_ID=$(boundary roles create \
 	-name "org_admin" \
 	-scope-id global \
 	-grant-scope-id $ORG_SCOPE_ID \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Org Admin Role ID:" $ORG_ADMIN_ROLE_ID
 echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
@@ -37,7 +37,7 @@ export PROJECT_ADMIN_ROLE_ID=$(boundary roles create \
 	-name "project_admin" \
 	-scope-id $ORG_SCOPE_ID \
 	-grant-scope-id $PROJECT_SCOPE_ID \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Project Admin Role ID:" $PROJECT_ADMIN_ROLE_ID
 echo "export PROJECT_ADMIN_ROLE_ID=$PROJECT_ADMIN_ROLE_ID" >> ~/.bashrc
@@ -71,12 +71,12 @@ boundary roles add-principals \
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $ORG_ADMIN_ROLE_ID \
-	-principal=$GLOBAL_ADMIN_USER_ID
+	-principal $GLOBAL_ADMIN_USER_ID
 
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $PROJECT_ADMIN_ROLE_ID \
-	-principal=$GLOBAL_ADMIN_USER_ID
+	-principal $GLOBAL_ADMIN_USER_ID
 
 ###
 # Attach org and project scope admin grants to the org admin user
@@ -84,22 +84,22 @@ boundary roles add-principals \
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $ORG_ADMIN_ROLE_ID \
-	-principal=$ORG_ADMIN_USER_ID
+	-principal $ORG_ADMIN_USER_ID
 
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $PROJECT_ADMIN_ROLE_ID \
-	-principal=$ORG_ADMIN_USER_ID
+	-principal $ORG_ADMIN_USER_ID
 
 ###
 # Login as the global admin user
 ###
 export BOUNDARY_TOKEN=$(boundary authenticate password \
 	-auth-method-id $GLOBAL_AUTH_METHOD_ID \
-	-login-name=$ADMIN_USERNAME \
-	-keyring-type=none \
-	-password=$ADMIN_PASSWORD \
-	-format=json | jq -r .item.attributes.token)
+	-login-name $ADMIN_USERNAME \
+	-keyring-type none \
+	-password $ADMIN_PASSWORD \
+	-format json | jq -r .item.attributes.token)
 
 echo "Boundary Token:" $BOUNDARY_TOKEN
 echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc

@@ -8,8 +8,8 @@ export POSTGRES_HOST_ID=$(boundary hosts create static \
 	-name=postgres-host \
 	-description="Postgres host" \
 	-address="localhost" \
-	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
-	-format=json | jq -r .item.id)
+	-host-catalog-id $PROJECT_HOST_CATALOG_ID \
+	-format json | jq -r .item.id)
 
 echo "Postgres Host ID:" $POSTGRES_HOST_ID
 echo "export POSTGRES_HOST_ID=$POSTGRES_HOST_ID" >> ~/.bashrc
@@ -17,8 +17,8 @@ echo "export POSTGRES_HOST_ID=$POSTGRES_HOST_ID" >> ~/.bashrc
 export POSTGRES_HOST_SET_ID=$(boundary host-sets create static \
 	-name="test-postgres-host-set" \
 	-description="Postgres machine host set" \
-	-host-catalog-id=$PROJECT_HOST_CATALOG_ID \
-	-format=json | jq -r .item.id)
+	-host-catalog-id $PROJECT_HOST_CATALOG_ID \
+	-format json | jq -r .item.id)
 
 echo "Postgres Host Set ID:" $POSTGRES_HOST_SET_ID
 echo "export POSTGRES_HOST_SET_ID=$POSTGRES_HOST_SET_ID" >> ~/.bashrc
@@ -31,9 +31,9 @@ export POSTGRES_TARGET_ID=$(boundary targets create tcp \
 	-name="postgres-test-targets" \
 	-description="Test Postgres target" \
 	-default-port=5432 \
-	-scope-id=$PROJECT_SCOPE_ID \
+	-scope-id $PROJECT_SCOPE_ID \
 	-session-connection-limit="-1" \
-	-format=json | jq -r .item.id)
+	-format json | jq -r .item.id)
 
 echo "Postgres Target ID:" $POSTGRES_TARGET_ID
 echo "export POSTGRES_TARGET_ID=$POSTGRES_TARGET_ID" >> ~/.bashrc
