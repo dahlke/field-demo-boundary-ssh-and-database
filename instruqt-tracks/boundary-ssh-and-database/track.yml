@@ -874,8 +874,7 @@ challenges:
     boundary roles create \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -name "org_admin" \
-      -scope-id global \
-      -grant-scope-id $ORG_SCOPE_ID
+      -scope-id $ORG_SCOPE_ID
     ```
 
     Example output:
@@ -914,9 +913,8 @@ challenges:
     ```
     boundary roles create \
       -recovery-config /root/boundary-controller-recovery.hcl \
-      -name "org_admin" \
-      -scope-id $ORG_SCOPE_ID \
-      -grant-scope-id $PROJECT_SCOPE_ID
+      -name "project_admin" \
+      -scope-id $PROJECT_SCOPE_ID
     ```
 
     Example output:
@@ -955,24 +953,35 @@ challenges:
 
     Now that you have created all the roles that you'll need, it's time to assign the grants for their respective needs.
 
-    Start with the global admin role.
+    Start with the global scope admin role.
 
     ```
     boundary roles add-grants \
       -recovery-config /root/boundary-controller-recovery.hcl \
       -id $GLOBAL_ADMIN_ROLE_ID \
-      -grant "id=*;type=*;actions=*,output_fields=*"
+      -grant "id=*;type=*;actions=*"
     ```
 
     Example output:
 
     ```
-    TODO
+    Role information:
+      Created Time:        Wed, 28 Jul 2021 00:19:55 UTC
+      Grant Scope ID:      global
+      ID:                  r_SvKKIc1cET
+      Name:                global_admin
+      Updated Time:        Wed, 28 Jul 2021 00:23:31 UTC
+      Version:             2
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
 
     <...truncated...>
     ```
 
-    Note that the grant `'id=*;type=*;actions=*'` represents administrative access, as it is allowed ot perform any
+    Note the grant `'id=*;type=*;actions=*'`. This represents administrative access, as it is allowed to perform any
     action on any type of resource.
 
     Do the same on the remaining two admin roles for the org and project scopes.
@@ -992,7 +1001,34 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Role information:
+      Created Time:        Wed, 28 Jul 2021 00:20:35 UTC
+      Grant Scope ID:      o_hWf0Qxaqed
+      ID:                  r_rSx4YiFQlV
+      Name:                org_admin
+      Updated Time:        Wed, 28 Jul 2021 00:24:04 UTC
+      Version:             2
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
+    <...truncated...>
+
+    Role information:
+      Created Time:        Wed, 28 Jul 2021 00:21:24 UTC
+      Grant Scope ID:      p_sXnGCxGZpT
+      ID:                  r_2ONjKkE5Tp
+      Name:                org_admin
+      Updated Time:        Wed, 28 Jul 2021 00:24:04 UTC
+      Version:             2
+
+      Scope:
+        ID:                o_hWf0Qxaqed
+        Name:              HashiCups Engineering
+        Parent Scope ID:   global
+        Type:              org
 
     <...truncated...>
     ```
@@ -1023,7 +1059,49 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Role information:
+      Created Time:        Wed, 28 Jul 2021 00:19:55 UTC
+      Grant Scope ID:      global
+      ID:                  r_SvKKIc1cET
+      Name:                global_admin
+      Updated Time:        Wed, 28 Jul 2021 00:23:31 UTC
+      Version:             2
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
+    <...truncated...>
+
+    Role information:
+      Created Time:        Wed, 28 Jul 2021 00:20:35 UTC
+      Grant Scope ID:      o_hWf0Qxaqed
+      ID:                  r_rSx4YiFQlV
+      Name:                org_admin
+      Updated Time:        Wed, 28 Jul 2021 00:24:56 UTC
+      Version:             3
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
+    <...truncated...>
+
+    Role information:
+      Created Time:        Wed, 28 Jul 2021 00:21:24 UTC
+      Grant Scope ID:      p_sXnGCxGZpT
+      ID:                  r_2ONjKkE5Tp
+      Name:                org_admin
+      Updated Time:        Wed, 28 Jul 2021 00:24:56 UTC
+      Version:             3
+
+      Scope:
+        ID:                o_hWf0Qxaqed
+        Name:              HashiCups Engineering
+        Parent Scope ID:   global
+        Type:              org
 
     <...truncated...>
     ```
@@ -1046,13 +1124,42 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Role information:
+      Created Time:        Wed, 28 Jul 2021 00:20:35 UTC
+      Grant Scope ID:      o_hWf0Qxaqed
+      ID:                  r_rSx4YiFQlV
+      Name:                org_admin
+      Updated Time:        Wed, 28 Jul 2021 00:27:10 UTC
+      Version:             4
+
+      Scope:
+        ID:                global
+        Name:              global
+        Type:              global
+
+    <...truncated...>
+
+    Role information:
+      Created Time:        Wed, 28 Jul 2021 00:21:24 UTC
+      Grant Scope ID:      p_sXnGCxGZpT
+      ID:                  r_2ONjKkE5Tp
+      Name:                org_admin
+      Updated Time:        Wed, 28 Jul 2021 00:27:10 UTC
+      Version:             4
+
+      Scope:
+        ID:                o_hWf0Qxaqed
+        Name:              HashiCups Engineering
+        Parent Scope ID:   global
+        Type:              org
 
     <...truncated...>
     ```
 
     And you're done configuring your admin users! You can now log in as the admin user.
 
+    # TODO: this isn't working, neither is the UI so the previous role solve script must be busted
+    # TODO: explain the keyring type
 
     ```
     boundary authenticate password \
@@ -1065,7 +1172,15 @@ challenges:
     Example output:
 
     ```
-    TODO
+    Authentication information:
+      Account ID:      acctpw_aMSJti0TY0
+      Auth Method ID:  ampw_5FRUN6zMcF
+      Expiration Time: Wed, 04 Aug 2021 00:30:06 UTC
+      User ID:         u_nysEVj7khR
+
+    Storing the token in a keyring was disabled. The token is:
+    at_6639zZVa89_s14EEyd7VtG32XtieNb3fedVAr31wgQ9gi7nGfjNnEb5MtngduqjC1P28x3jr8tdqunKaPtByfgeu9hPW8PTaStLoHmRJjtGjvDvASS6VuYbgJ4Y8FiS51
+    Please be sure to store it safely!
     ```
 
     Grab the token from the output and store it in an environment variable for later usage.
@@ -2025,4 +2140,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "8595907404962593468"
+checksum: "14804740626876767589"

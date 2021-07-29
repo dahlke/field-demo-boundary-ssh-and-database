@@ -34,14 +34,13 @@ echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
 ###
 export PROJECT_ADMIN_ROLE_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
-	-name "org_admin" \
+	-name "project_admin" \
 	-scope-id $ORG_SCOPE_ID \
 	-grant-scope-id $PROJECT_SCOPE_ID \
 	-format=json | jq -r .item.id)
 
-echo "Project Admin Role ID:" $PPROJECT_ADMIN_ROLE_ID
+echo "Project Admin Role ID:" $PROJECT_ADMIN_ROLE_ID
 echo "export PROJECT_ADMIN_ROLE_ID=$PROJECT_ADMIN_ROLE_ID" >> ~/.bashrc
-
 
 ###
 # Attach admin grants to each role
@@ -62,7 +61,7 @@ boundary roles add-grants \
 	-grant "id=*;type=*;actions=*"
 
 ###
-# Attach all scope admin grants to the org admin user
+# Attach all scope admin grants to the global admin user
 ###
 boundary roles add-principals \
 	-recovery-config /root/boundary-controller-recovery.hcl \
