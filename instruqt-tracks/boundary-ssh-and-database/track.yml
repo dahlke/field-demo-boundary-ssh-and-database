@@ -1158,8 +1158,7 @@ challenges:
 
     And you're done configuring your admin users! You can now log in as the admin user.
 
-    # TODO: this isn't working, neither is the UI so the previous role solve script must be busted
-    # TODO: explain the keyring type
+    # TODO: explain the keyring type, do this in the next challenge?
 
     ```
     boundary authenticate password \
@@ -1218,8 +1217,6 @@ challenges:
   teaser: Use Boundary as a TCP proxy to SSH to a remote host.
   notes:
   - type: text
-    contents: 'TODO: add a diagram of the ref architecture and components to the notes and tell the user they can go view that if they need a refresher.'
-  - type: text
     contents: |-
       In this challenge, you will learn about the following Boundary resources.
 
@@ -1228,25 +1225,42 @@ challenges:
       - *Host set*: Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted.
       - *Target*: Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets.
   - type: text
-    contents: 'TODO: explain host catalog'
+    contents: |-
+      A [host catalog](https://www.boundaryproject.io/docs/concepts/domain-model/host-catalogs) is a resource that
+      contains hosts and host sets. A host catalog can only be defined within a project.
   - type: text
-    contents: 'TODO: explain host sets'
+    contents: |-
+      A [host set](https://www.boundaryproject.io/docs/concepts/domain-model/host-sets) is a resource that represents
+      a collection of hosts which are considered equivalent for the purposes of access control. A host set can only
+      include hosts from the same host catalog as the host set. A target can reference host sets from host catalogs
+      which belong to the same project as the target.
   - type: text
-    contents: 'TODO: explain hosts'
+    contents: |-
+      A [host](https://www.boundaryproject.io/docs/concepts/domain-model/hosts) is a resource that represents a
+      computing element with a network address reachable from Boundary. A host belongs to a host catalog. Hosts can
+      only be associated with host sets from the same host catalog as the host.
   - type: text
-    contents: 'TODO: explain targets'
+    contents: |-
+      A [target](https://www.boundaryproject.io/docs/concepts/domain-model/targets) is a resource that represents
+      a networked service with an associated set of permissions a user can connect to and interact with through
+      Boundary by way of a session. A target can only be defined within a project. A target can contain references to
+      host sets from host catalogs which belong to the same project as the target.
+  - type: text
+    contents: |-
+      When you put all it all together, targets are Boundary resources that contain one or more host sets. A target
+      allows Boundary users to define an endpoint with a default port and a protocol to establish a session. Unless
+      specified with a `-host-id` flag, Boundary will choose one Host in the host set to connect to at random.
+  - type: text
+    contents: |-
+      TODO: add a diagram of the ref architecture and components to the notes and tell the user they can go view that
+      if they need a refresher. Explain the existence of the boundary worker
   assignment: |-
-    [Targets](https://www.boundaryproject.io/docs/concepts/domain-model/targets) are Boundary resources that contain
-    one or more [host sets](https://www.boundaryproject.io/docs/concepts/domain-model/host-sets). A target allows
-    Boundary users to define an endpoint with a default port and a protocol to establish a session. Unless specified
-    with a `-host-id` flag, Boundary will choose one
-    [Host](https://www.boundaryproject.io/docs/concepts/domain-model/hosts) in the host set to connect to at random.
-
     In this challenge you are going to create a host catalog, add a host set with a new host to it, define it as a
     target, and finally - connect to that host via Boundary.
 
-    # TODO: explain the existence of the Boundary worker as that is what they are going to connect to.
-    # TODO: Up until now, you've been leveraging the recovery configuration
+    Up until now, you've been leveraging the Recovery KMS Workflow to create the anonymous listing users, as well
+    as the admin users. Since you now have admin users to leverage, you wil no longer need that workflow as long as
+    you are logged in as an admin user.
 
     ---
 
@@ -1320,12 +1334,11 @@ challenges:
     Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
 
     ```
-    echo "export PROJECT_HOST_CATALOG=$PROJECT_HOST_CATALOG" >> ~/.bashrc
+    echo "export PROJECT_HOST_CATALOG_ID=$PROJECT_HOST_CATALOG_ID" >> ~/.bashrc
     ```
 
-    Next, create a new *host*.
-
-    TODO: Explain that `boundary-worker` resolves to the extra host.
+    Next, create a new *host*. Note that the address you'll be using is `boundary-worker` which resolves to the
+    Boundary worker node that you want to connect to.
 
     ```
     boundary hosts create static \
@@ -1537,6 +1550,8 @@ challenges:
     Be sure to respond `yes` when asked if you are sure you want to continue connecting. You will then be dropped
     into the shell for the `boundary-worker`, connecting your SSH session via Boundary.
 
+    TODO: If you see an error, run the command again.
+
     You have now successfully connected to your first target using via SSH using Boundary! Next, you'll learn
     how to use Boundary to connect to a Postgres instance using TCP.
   tabs:
@@ -1594,7 +1609,6 @@ challenges:
 
     ```
     boundary groups create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
       -name="dba" \
       -description="HashiCups Engineering DBAs" \
       -scope-id=$ORG_SCOPE_ID
@@ -1668,7 +1682,6 @@ challenges:
 
     ```
     boundary accounts create password \
-      -recovery-config /root/boundary-controller-recovery.hcl \
       -login-name $DBA_USERNAME \
       -password $DBA_PASSWORD \
       -auth-method-id $ORG_AUTH_METHOD_ID
@@ -1708,7 +1721,6 @@ challenges:
 
     ```
     boundary users create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
       -name=$DBA_USERNAME \
       -description="An example DBA user." \
       -scope-id=$ORG_SCOPE_ID
@@ -2140,4 +2152,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "14804740626876767589"
+checksum: "16821456574875058206"
