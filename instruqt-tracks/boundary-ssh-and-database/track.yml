@@ -1675,7 +1675,7 @@ challenges:
     ```
     boundary roles add-grants \
       -id $PG_READ_ONLY_ROLE_ID \
-      -grant="id=*;type=*;actions=read,list"
+      -grant "id=*;type=*;actions=read,list"
     ```
 
     Now that you have the group created, and associated the correct roles with it. It's time to create a login account

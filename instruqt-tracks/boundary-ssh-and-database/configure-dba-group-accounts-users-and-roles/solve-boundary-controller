@@ -32,7 +32,7 @@ boundary roles add-principals \
 boundary roles add-grants \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $PG_READ_ONLY_ROLE_ID \
-	-grant="id=*;type=*;actions=read,list"
+	-grant "id=*;type=*;actions=read,list"
 
 export DBA_USER_ACCOUNT_ID=$(boundary accounts create password \
 	-recovery-config /root/boundary-controller-recovery.hcl \

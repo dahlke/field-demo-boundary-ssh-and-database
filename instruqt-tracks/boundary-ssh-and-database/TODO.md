@@ -4,13 +4,15 @@
 
 - Vault Integration? Tie this into LDAP?
 - Multiple boxes for workers and controllers?
-- Integrate HashiCups, and make it a workshop w/ slides instead of a demo?
 - Review the copy in the track / add links all over
 - Packer images
 - Standardize all the arguments to each function call (using `=` or strings, and wrapping in quotes)
 - Update comments in the solve scripts
-- Include Credential Stores w/ Vault?
+- Boundary Credentials and Credential Stores
+- Integrate Vault (w/ LDAP?)
 - Capitalize Worker / Controller wherever necessary. Clean up the tab names?
+- Slides
+- HashiCups?
 
 # Challenge Scripts (initial review)
 
