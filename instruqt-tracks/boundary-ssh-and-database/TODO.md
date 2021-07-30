@@ -7,7 +7,6 @@
 - Review the copy in the track / add links all over
 - Packer images
 - Standardize all the arguments to each function call (using `=` or strings, and wrapping in quotes)
-- Update comments in the solve scripts
 - Boundary Credentials and Credential Stores
 - Integrate Vault (w/ LDAP?)
 - Capitalize Worker / Controller wherever necessary. Clean up the tab names?
@@ -16,6 +15,8 @@
 - Fully cover the Domain Model
 
 # Challenge Scripts (initial review)
+
+- Update comments in the all the scripts scripts
 
 - getting-started-with-boundary
   - [x] setup

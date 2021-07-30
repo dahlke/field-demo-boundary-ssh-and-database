@@ -1,9 +1,5 @@
 #!/bin/bash -l
 
-# Enable bash history
-HISTFILE=/root/.bash_history
-set -o history
-
 export DBA_GROUP_ID=$(boundary groups create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name "dba" \

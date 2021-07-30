@@ -1,9 +1,5 @@
 #!/bin/bash -l
 
-# Enable bash history
-HISTFILE=/root/.bash_history
-set -o history
-
 # TODO: should I use this same host catalog for the Postgres stuff?
 export PROJECT_HOST_CATALOG_ID=$(boundary host-catalogs create static \
 	-scope-id $PROJECT_SCOPE_ID \

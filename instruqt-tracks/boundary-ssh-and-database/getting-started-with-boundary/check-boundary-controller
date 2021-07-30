@@ -1,6 +1,8 @@
 #!/bin/bash -l
 
+###
 # Check that the HashiCups org scope exists
+###
 ORG_SCOPE_NAME=$(boundary scopes list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id global \
@@ -11,7 +13,9 @@ if [ "$ORG_SCOPE_NAME" != "HashiCups Engineering" ]; then
 	exit 1
 fi
 
+###
 # Check that the HashiCups App project scope exists
+###
 PROJECT_SCOPE_NAME=$(boundary scopes list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
@@ -22,6 +26,30 @@ if [ "$PROJECT_SCOPE_NAME" != "HashiCups Web App" ]; then
     exit 1
 fi
 
-# TODO: check for the env vars in the .bashrc file
+###
+# Check the expected env vars are set
+###
+if [ "$ORG_SCOPE_ID" = "" ]; then
+    fail-message "You did not set the ORG_SCOPE_ID env var."
+    exit 1
+fi
+
+if [ "$PROJECT_SCOPE_ID" = "" ]; then
+    fail-message "You did not set the PROJECT_SCOPE_ID env var."
+    exit 1
+fi
+
+###
+# Check the expected env vars were added to the ~/.bashrc file
+###
+if ! grep -q 'ORG_SCOPE_ID' ~/.bashrc; then
+    fail-message "You did not add the ORG_SCOPE_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'PROJECT_SCOPE_ID' ~/.bashrc; then
+    fail-message "You did not add the PROJECT_SCOPE_ID env var to your ~/.bashrc file."
+	exit 1
+fi
 
 exit 0

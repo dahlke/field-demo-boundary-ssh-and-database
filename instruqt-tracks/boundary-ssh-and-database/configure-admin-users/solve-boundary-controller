@@ -1,10 +1,8 @@
 #!/bin/bash -l
 
-# Enable bash history
-HISTFILE=/root/.bash_history
-set -o history
-
-# Create the User Principal for Org Admin User
+###
+# Create the User Principal for Org Admin User, store the ID in the environment
+###
 export GLOBAL_ADMIN_USER_ID=$(boundary users create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id global \
@@ -15,13 +13,17 @@ export GLOBAL_ADMIN_USER_ID=$(boundary users create \
 echo "Global Admin User ID:" $GLOBAL_ADMIN_USER_ID
 echo "export GLOBAL_ADMIN_USER_ID=$GLOBAL_ADMIN_USER_ID" >> ~/.bashrc
 
-# Add Global Admin User Principal to the Global Admin Account
+###
+# Add Global Admin User Principal to the Global Admin Account, store the ID in the environment
+###
 boundary users add-accounts \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $GLOBAL_ADMIN_USER_ID \
 	-account $GLOBAL_ADMIN_USER_ACCOUNT_ID
 
-# Create the User Principal for Project Admin User
+###
+# Create the User Principal for Project Admin User, store the ID in the environment
+###
 export ORG_ADMIN_USER_ID=$(boundary users create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
@@ -31,7 +33,9 @@ export ORG_ADMIN_USER_ID=$(boundary users create \
 echo "Org Admin User ID:" $ORG_ADMIN_USER_ID
 echo "export ORG_ADMIN_USER_ID=$ORG_ADMIN_USER_ID" >> ~/.bashrc
 
-# Add Project User Principal to the Project Admin Account
+###
+# Add Project User Principal to the Project Admin Account, store the ID in the environment
+###
 boundary users add-accounts \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-id $ORG_ADMIN_USER_ID \

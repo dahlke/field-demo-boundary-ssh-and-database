@@ -1,12 +1,8 @@
 #!/bin/bash -l
 
-# Enable bash history
-HISTFILE=/root/.bash_history
-set -o history
-
-# TODO: check if they exist already due to skipping potentially having an existing one already.
-
-# Create the Org Scope
+###
+# Create the Org Scope, store the ID in the environment
+###
 export ORG_SCOPE_ID=$(boundary scopes create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name "HashiCups Engineering" \
@@ -18,7 +14,9 @@ export ORG_SCOPE_ID=$(boundary scopes create \
 echo "Org Scope ID:" $ORG_SCOPE_ID
 echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
 
-# Create the Project Scope
+###
+# Create the Project Scope, store the ID in the environment
+###
 export PROJECT_SCOPE_ID=$(boundary scopes create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name "HashiCups Web App" \

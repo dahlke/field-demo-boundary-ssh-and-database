@@ -1,11 +1,7 @@
 #!/bin/bash -l
 
-# Enable bash history
-HISTFILE=/root/.bash_history
-set -o history
-
 #####
-# Create the anonymous listing role for the global scope
+# Create the anonymous listing role for the global scope, store the ID in the environment
 #####
 export GLOBAL_ANON_LISTING_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
@@ -29,7 +25,7 @@ boundary roles add-principals \
 	-principal "u_anon"
 
 #####
-# Create the anonymous listing role for the org scope
+# Create the anonymous listing role for the org scope, store the ID in the environment
 #####
 export ORG_ANON_LISTING_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
