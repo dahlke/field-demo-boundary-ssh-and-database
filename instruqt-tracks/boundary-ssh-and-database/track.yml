@@ -2289,18 +2289,15 @@ challenges:
   assignment: |-
     # Explore the Admin Console
 
-    Boundary's Admin Console provides an easy way to manage resources. Before using Boundary to securely access any
-    dynamic infrastructure, you should take a tour of the console to understand all the components. Now that you have
-    explored using Boundary from the CLI, and understand the domain model, it's time to take the UI for a spin.
+    Boundary's Admin Console provides an easy way to manage resources. Now that you have learned how to use Boundary to
+    securely access any dynamic infrastructure, you should take a tour of the console to understand all the components.
 
     ## Exploring Roles, Principals and Grants in the Admin UI
 
-    Open the Boundary UI tab. You should see a login screen. To access the password for the `admin` user that was
-    generated for you, grab it from the environment in the Controller terminal tab.
+    Open the Boundary UI tab. You should see a login screen. Use the global admin user you created earlier. Select
+    the `global_auth_method` and use `admin` for the username and `password` for the password.
 
-    ```
-    echo $ADMIN_PASSWORD
-    ```
+    TODO: update this for the script above, not dev mode.
 
     Once you have logged in, you will see the home screen containing all the top level resources in Boundary. Select
     *Roles* in the left sidebar, then select the "Administration" role.
