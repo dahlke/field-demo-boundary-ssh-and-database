@@ -22,6 +22,31 @@ if [ "$ORG_ANON_LISTING_NAME" != "org_anon_listing" ]; then
     exit 1
 fi
 
-# TODO: check the bashrc file
+###
+# Check the expected env vars are set
+###
+if [ "$GLOBAL_ANON_LISTING_ID" = "" ]; then
+    fail-message "You did not set the GLOBAL_ANON_LISTING_ID env var."
+    exit 1
+fi
+
+if [ "$ORG_ANON_LISTING_ID" = "" ]; then
+    fail-message "You did not set the ORG_ANON_LISTING_ID env var."
+    exit 1
+fi
+
+###
+# Check the expected env vars were added to the ~/.bashrc file
+###
+if ! grep -q 'GLOBAL_ANON_LISTING_ID' ~/.bashrc; then
+    fail-message "You did not add the GLOBAL_ANON_LISTING_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'ORG_ANON_LISTING_ID' ~/.bashrc; then
+    fail-message "You did not add the ORG_ANON_LISTING_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
 
 exit 0

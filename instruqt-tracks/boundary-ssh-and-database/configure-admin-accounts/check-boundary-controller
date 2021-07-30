@@ -25,6 +25,31 @@ if [ "$ORG_ADMIN_USER_ACCOUNT_NAME" != "admin" ]; then
     exit 1
 fi
 
-# TODO: check they are in the bashrc
+###
+# Check the expected env vars are set
+###
+if [ "$GLOBAL_ADMIN_USER_ACCOUNT_ID" = "" ]; then
+    fail-message "You did not set the GLOBAL_ADMIN_USER_ACCOUNT_ID env var."
+    exit 1
+fi
+
+if [ "$ORG_ADMIN_USER_ACCOUNT_ID" = "" ]; then
+    fail-message "You did not set the ORG_ADMIN_USER_ACCOUNT_ID env var."
+    exit 1
+fi
+
+###
+# Check the expected env vars were added to the ~/.bashrc file
+###
+if ! grep -q 'GLOBAL_ADMIN_USER_ACCOUNT_ID' ~/.bashrc; then
+    fail-message "You did not add the GLOBAL_ADMIN_USER_ACCOUNT_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'ORG_ADMIN_USER_ACCOUNT_ID' ~/.bashrc; then
+    fail-message "You did not add the ORG_ADMIN_USER_ACCOUNT_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
 
 exit 0
