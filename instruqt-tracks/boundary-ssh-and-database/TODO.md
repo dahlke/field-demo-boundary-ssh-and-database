@@ -9,6 +9,8 @@
 - Packer images
 - Standardize all the arguments to each function call (using `=` or strings, and wrapping in quotes)
 - Update comments in the solve scripts
+- Include Credential Stores w/ Vault?
+- Capitalize Worker / Controller wherever necessary. Clean up the tab names?
 
 # Challenge Scripts (initial review)
 

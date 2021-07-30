@@ -85,6 +85,8 @@ challenges:
     manage Boundary without any generated resources. The recovery block you will use is located at
     `/root/boundary-controller-recovery.hcl`.
 
+    TODO: explain reference architecture
+
     ---
 
     # Setting Up Your Scopes
@@ -435,7 +437,7 @@ challenges:
     <...truncated...>
     ```
 
-    If you go to the Boundary UI tab now and hit refresh in the top right corner, you should be able to see the
+    If you go to the `Boundary UI` tab now and hit refresh in the top right corner, you should be able to see the
     global auth methods now.
 
     However, you'll notice that you still can't see the org auth method. To do that, you'll also need to create the
@@ -1344,7 +1346,7 @@ challenges:
     boundary hosts create static \
       -name  worker-host \
       -description "Boundary Worker host" \
-      -address="boundary-worker" \
+      -address "boundary-worker" \
       -host-catalog-id $PROJECT_HOST_CATALOG_ID
     ```
 
@@ -1551,6 +1553,8 @@ challenges:
     into the shell for the `boundary-worker`, connecting your SSH session via Boundary.
 
     TODO: If you see an error, run the command again.
+
+    TODO: Show that you are connected to the Worker really, by switching to the `Worker` tab and check the IP or create a file or something.
 
     You have now successfully connected to your first target using via SSH using Boundary! Next, you'll learn
     how to use Boundary to connect to a Postgres instance using TCP.
@@ -1869,7 +1873,7 @@ challenges:
     boundary hosts create static \
       -name  postgres \
       -description "Postgres host" \
-      -address="127.0.0.1" \
+      -address "127.0.0.1" \
       -host-catalog-id $PROJECT_HOST_CATALOG_ID
     ```
 
@@ -2043,29 +2047,198 @@ challenges:
   teaser: Learn how you can manage Boundary sessions.
   notes:
   - type: text
-    contents: TODO
+    contents: |-
+      [Sessions](https://www.boundaryproject.io/docs/concepts/domain-model/sessions) are Boundary resources created
+      when connecting to a target.
+
+      A target allows Boundary users to define an endpoint with a protocol and default port to establish a session.
   assignment: |-
+    TODO: log back in as the admin user.
+
+    First, list your active sessions in the project scope. There should be none. Run the following in the
+    `Controller [Terminal 1]` tab.
+
+    ```
+    boundary sessions list -scope-id $PROJECT_SCOPE_ID
+    ```
+
+    Example output:
+
+    ```
+    No sessions found
+    ```
+
+    Next, create you'll want to create a session in the `Controller [Terminal 1]` tab. Sessions are created whenever
+    a connection to a target is established, so you should establish an SSH connection to the Worker node.
+
+    ```
+    boundary connect ssh -target-id $SSH_TARGET_ID
+    ```
+
+    TODO: fails on the first connection again.
+
+    Once you have established your connection to the Worker node in the `Controller [Terminal 1]`, switch to the
+    `Controller [Terminal 2]` tab and list the sessions again. You should now be able to see the session you created
+    when you connected to the Worker node.
+
+    ```
+    boundary sessions list -scope-id $PROJECT_SCOPE_ID
+    ```
+
+    Example output:
+
+    ```
+    Session information:
+      ID:                    s_RYZsdaQx3o
+        Status:              active
+        Created Time:        Thu, 29 Jul 2021 23:51:16 UTC
+        Expiration Time:     Fri, 30 Jul 2021 07:51:16 UTC
+        Updated Time:        Thu, 29 Jul 2021 23:51:16 UTC
+        User ID:             u_qJpvjo26qd
+        Target ID:           ttcp_w6xDbr3tpC
+        Authorized Actions:
+          no-op
+          read
+          read:self
+          cancel
+          cancel:self
+
+    <...truncated...>
+    ```
+
+    Grab the session ID from the output and store it in an environment variable.
+
+    ```
+    export SESSION_ID=<SESSION_ID>
+    ```
+
+    No need to add it to the `~/.bashrc` file this time since sessions are highly ephemeral and it will be gone by
+    the end of this track.
+
+    Note that the status of the sessions is `active`. You can inspect the session by looking it up with it's ID to
+    get more detailed information on the session. Try that now.
+
+    ```
+    boundary sessions read -id $SESSION_ID
+    ```
+
+    Example output:
+
+    ```
+    Session information:
+      Auth Token ID:       at_nIQoAAj2Cv
+      Created Time:        Thu, 29 Jul 2021 23:51:16 UTC
+      Endpoint:            tcp://boundary-worker:22
+      Expiration Time:     Fri, 30 Jul 2021 07:51:16 UTC
+      Host ID:             hst_9XHceFpUWd
+      Host Set ID:         hsst_8ZfC69e9E8
+      ID:                  s_RYZsdaQx3o
+      Status:              active
+      Target ID:           ttcp_w6xDbr3tpC
+      Type:                tcp
+      Updated Time:        Thu, 29 Jul 2021 23:51:16 UTC
+      User ID:             u_qJpvjo26qd
+      Version:             2
+
+    <...truncated...>
+    ```
+
+    If you detect unexpected activity from a session, you can force the cancellation of a session. The command to
+    cancel the session looks very similar to the command to read the session.
+
+    ```
+    boundary sessions cancel -id $SESSION_ID
+    ```
+
+    Example output:
+
+    ```
+    Session information:
+      Auth Token ID:       at_nIQoAAj2Cv
+      Created Time:        Thu, 29 Jul 2021 23:51:16 UTC
+      Endpoint:            tcp://boundary-worker:22
+      Expiration Time:     Fri, 30 Jul 2021 07:51:16 UTC
+      Host ID:             hst_9XHceFpUWd
+      Host Set ID:         hsst_8ZfC69e9E8
+      ID:                  s_RYZsdaQx3o
+      Status:              canceling
+      Target ID:           ttcp_w6xDbr3tpC
+      Type:                tcp
+      Updated Time:        Fri, 30 Jul 2021 00:12:00 UTC
+      User ID:             u_qJpvjo26qd
+      Version:             3
+
+    <...truncated...>
+    ```
+
+    Note the status is now `canceling`.
+
+    ## Advanced session establishment (TODO: separate challenge?)
+
+    In addition to the `boundary connect` command, you can create a session to a target and connect to that session in
+    separate steps. This is accomplished using the `boundary targets authorize-session` command, which generates an
+    authorization token that a user can use to start a session via `boundary connect -authz-token` at their own
+    convenience.
+
+    TODO: why would they want this? Why is it a proxy?
+
+    _NOTE: In the absence of the `-host-id` flag, Boundary will pick a host from the host set if there is more than one
+    host set attached to the target._
+
+    ```
+    boundary targets authorize-session -id $SSH_TARGET_ID -host-id $WORKER_HOST_ID
+    ```
+
+    Example output:
+
+    ```
     TODO
-
-    ```
-    boundary sessions list -scope-id $PROJECT_ID
-    ```
-
-    ```
-    boundary sessions read -id "<session_id>
-    ```
-
-    ```
-    boundary sessions cancel -id "<session_id>
-    ```
-
-    ```
-    boundary targets authorize-session -id "<target_id> -host-id "<host_id>
+    Target information:
+      Authorization Token:
+      CnixvX3sBZ<...truncated...>u7rBNtzaCEGgTB
+      Created Time:          Fri, 30 Jul 2021 00:14:42 UTC
+      Endpoint:              tcp://boundary-worker:22
+      Host ID:               hst_9XHceFpUWd
+      Scope ID:              p_XR52FbugKs
+      Session ID:            s_95zkTCYff6
+      Target ID:             ttcp_w6xDbr3tpC
+      Type:                  tcp
+      User ID:               u_qJpvjo26qd
     ```
 
+    Copy the generated `Authorization Token` value. In the `Controller [Terminal 1]`` tab, establish the connection
+
     ```
-    boundary connect -authz-token=<authorization_token>
+    boundary connect -authz-token=<AUTHORIZATION_TOKEN>
     ```
+
+    Example output:
+
+    ```
+    Proxy listening information:
+      Address:             127.0.0.1
+      Connection Limit:    -1
+      Expiration:          Fri, 30 Jul 2021 08:14:42 UTC
+      Port:                45291
+      Protocol:            tcp
+      Session ID:          s_95zkTCYff6
+    ```
+
+    With the above address and port information, you can connect to the local proxy and have your tcp traffic sent
+    through the Boundary system.
+
+    ```
+    ssh <ADDRESS_FROM_ABOVE> -p <PORT_FROM_ABOVE>
+    ```
+
+    Example:
+
+    ```
+    ssh 127.0.0.1 -p 45291
+    ```
+
+    Congratulations! You now know how to manage session in Boundary. The last step of this track encourages you to
+    take the UI for a spin. It is encouraged that you do so, but not required.
   tabs:
   - title: Controller [Terminal 1]
     type: terminal
@@ -2103,6 +2276,16 @@ challenges:
     contents: "| Resource | Description |\n| --- | --- |\n| Scope\t| Abstract permission boundary modeled as a container. A scope can contain scopes forming a tree. |\n| Organization | Top-level container (scope) which owns zero to many projects and zero to many authentication methods. An organization inherits from scope allowing it to own zero to many groups, roles, policies, targets, host catalogs or credential stores. |\n| Project\t| Child scope of an organization. |\n| User | Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups. |\n| Group\t| Collection of users used for access control. A group is owned by one and only one scope. |\n| Role | Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants |\n| Host | Computing element with a network address reachable from Boundary. |\n| Host catalog | Permission boundary modeled as a container containing scopes forming a tree. |\n| Host set |Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted. |\n| Target | Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets. |"
   - type: text
     contents: '''TODO: Explain Controllers vs Workers and show/ reference architecture.'''
+  - type: text
+    contents: |-
+      TODO: clean this up
+      The Manage Scopes tutorial demonstrated the steps to create a new org (IT_Support) and a project (QA_Tests) under the org.
+
+      The Manage Targets tutorial demonstrated the creation of a host catalog, a host set, and hosts. Then, associated the host set to a target.
+
+      You also enabled a new authorization method (password) for the IT_Support org and created a new user in the Manage Users and Groups tutorial. The Manage Roles and Permissions tutorial showed you how to create a role and assign a grant which specifies a set of permissions.
+
+      Finally, the Manage Sessions tutorial demonstrated session management based on the target you defined for the QA_Tests project.
   assignment: |-
     # Explore the Admin Console
 
@@ -2161,4 +2344,4 @@ challenges:
     port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "14819806217372952738"
+checksum: "18045362543716421433"
