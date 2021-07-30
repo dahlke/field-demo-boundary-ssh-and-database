@@ -1,8 +1,5 @@
 #!/bin/bash -l
 
-# TODO: do we really need this?
-source ~/.bashrc
-
 # Check that the global scope anon listing role was created
 GLOBAL_ANON_LISTING_NAME=$(boundary roles list \
 	-recovery-config /root/boundary-controller-recovery.hcl \

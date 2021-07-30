@@ -1,8 +1,5 @@
 #!/bin/bash -l
 
-# TODO: get the env vars from the solve script
-source ~/.bashrc
-
 # Check that the admin account exists
 GLOBAL_ADMIN_USER_ACCOUNT_NAME=$(boundary accounts list \
 	-recovery-config /root/boundary-controller-recovery.hcl \

@@ -1,10 +1,5 @@
 #!/bin/bash -l
 
-# TODO: get the env vars from the solve script
-source ~/.bashrc
-
-# TODO: check for all 3 roles
-
 # Check that the org scope admin role was created
 GLOBAL_ADMIN_ROLE_NAME=$(boundary roles list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
@@ -39,7 +34,6 @@ fi
 
 
 # TODO: check that the roles are attached to the user?
-
 # TODO: check they are in the bashrc
 
 exit 0

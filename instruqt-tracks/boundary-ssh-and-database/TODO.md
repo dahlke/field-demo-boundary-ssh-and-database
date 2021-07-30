@@ -13,6 +13,7 @@
 - Capitalize Worker / Controller wherever necessary. Clean up the tab names?
 - Slides
 - HashiCups?
+- Fully cover the Domain Model
 
 # Challenge Scripts (initial review)
 

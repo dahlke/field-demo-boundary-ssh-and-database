@@ -1,8 +1,5 @@
 #!/bin/bash -l
 
-# TODO: get the env vars from the solve script
-source ~/.bashrc
-
 # Check that the HashiCups org scope exists
 ORG_SCOPE_NAME=$(boundary scopes list \
 	-recovery-config /root/boundary-controller-recovery.hcl \
