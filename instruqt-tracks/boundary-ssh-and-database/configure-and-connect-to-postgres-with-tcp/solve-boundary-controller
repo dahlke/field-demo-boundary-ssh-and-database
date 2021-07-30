@@ -1,5 +1,8 @@
 #!/bin/bash -l
 
+###
+# Create the Postgres Host, store the ID in the environment
+###
 export POSTGRES_HOST_ID=$(boundary hosts create static \
 	-name  postgres-host \
 	-description "Postgres host" \
@@ -10,6 +13,9 @@ export POSTGRES_HOST_ID=$(boundary hosts create static \
 echo "Postgres Host ID:" $POSTGRES_HOST_ID
 echo "export POSTGRES_HOST_ID=$POSTGRES_HOST_ID" >> ~/.bashrc
 
+###
+# Create the Postgres Host Set, store the ID in the environment
+###
 export POSTGRES_HOST_SET_ID=$(boundary host-sets create static \
 	-name "test-postgres-host-set" \
 	-description "Postgres machine host set" \
@@ -23,6 +29,9 @@ boundary host-sets add-hosts \
 	-id $POSTGRES_HOST_SET_ID \
 	-host=$POSTGRES_HOST_ID
 
+###
+# Create the Postgres Target, store the ID in the environment
+###
 export POSTGRES_TARGET_ID=$(boundary targets create tcp \
 	-name "postgres-test-targets" \
 	-description "Test Postgres target" \

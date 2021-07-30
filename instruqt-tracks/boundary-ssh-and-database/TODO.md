@@ -16,6 +16,9 @@
 - In the check scripts - check against the stored IDs in the bashrc file? Maybe not
 - https://learn.hashicorp.com/tutorials/boundary/manage-intro?in=boundary/basic-administration ???
 - Do I really need 2 admin users?
+- review script comments (make them maximally descriptive)
+
+- DBA_USER_ACCOUNT_ID should be DBA_ACCOUNT_ID, vice a versa
 
 # Challenge Scripts (initial review)
 

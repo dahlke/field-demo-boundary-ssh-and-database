@@ -1,5 +1,8 @@
 #!/bin/bash -l
 
+###
+# Create the DBA Group, store the ID in the environment
+###
 export DBA_GROUP_ID=$(boundary groups create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name "dba" \
@@ -10,6 +13,9 @@ export DBA_GROUP_ID=$(boundary groups create \
 echo "DBA Group ID:" $DBA_GROUP_ID
 echo "export DBA_GROUP_ID=$DBA_GROUP_ID" >> ~/.bashrc
 
+###
+# Create the Postgres Read Only Role, store the ID in the environment
+###
 export PG_READ_ONLY_ROLE_ID=$(boundary roles create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
@@ -30,6 +36,9 @@ boundary roles add-grants \
 	-id $PG_READ_ONLY_ROLE_ID \
 	-grant "id=*;type=*;actions=read,list"
 
+###
+# Create the DBA Account, store the ID in the environment
+###
 export DBA_USER_ACCOUNT_ID=$(boundary accounts create password \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-login-name $DBA_USERNAME \
@@ -40,6 +49,9 @@ export DBA_USER_ACCOUNT_ID=$(boundary accounts create password \
 echo "DBA User Account ID:" $DBA_USER_ACCOUNT_ID
 echo "export DBA_USER_ACCOUNT_ID=$DBA_USER_ACCOUNT_ID" >> ~/.bashrc
 
+###
+# Create the DBA User, store the ID in the environment
+###
 export DBA_USER_ID=$(boundary users create \
 	-recovery-config /root/boundary-controller-recovery.hcl \
 	-name  $DBA_USERNAME \

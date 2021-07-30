@@ -53,7 +53,51 @@ if [ "$DBA_USER_NAME" != "dbauser1" ]; then
 fi
 
 # TODO: check the accounts and members were set up properly
-# TODO: check the bashrc file
 
+###
+# Check the expected env vars are set
+###
+if [ "$DBA_GROUP_ID" = "" ]; then
+    fail-message "You did not set the DBA_GROUP_ID env var."
+    exit 1
+fi
+
+if [ "$PG_READ_ONLY_ROLE_ID" = "" ]; then
+    fail-message "You did not set the PG_READ_ONLY_ROLE_ID env var."
+    exit 1
+fi
+
+if [ "$DBA_USER_ACCOUNT_ID" = "" ]; then
+    fail-message "You did not set the DBA_USER_ACCOUNT_ID env var."
+    exit 1
+fi
+
+if [ "$DBA_USER_ID" = "" ]; then
+    fail-message "You did not set the DBA_USER_ID env var."
+    exit 1
+fi
+
+###
+# Check the expected env vars were added to the ~/.bashrc file
+###
+if ! grep -q 'DBA_GROUP_ID' ~/.bashrc; then
+    fail-message "You did not add the DBA_GROUP_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'PG_READ_ONLY_ROLE_ID' ~/.bashrc; then
+    fail-message "You did not add the PG_READ_ONLY_ROLE_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'DBA_USER_ACCOUNT_ID' ~/.bashrc; then
+    fail-message "You did not add the DBA_USER_ACCOUNT_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'DBA_USER_ID' ~/.bashrc; then
+    fail-message "You did not add the DBA_USER_ID env var to your ~/.bashrc file."
+	exit 1
+fi
 
 exit 0

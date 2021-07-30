@@ -40,6 +40,50 @@ if [ "$SSH_TARGET_NAME" != "ssh-test-targets" ]; then
 	exit 1
 fi
 
-# TODO: check that they are in the bashrc
+###
+# Check the expected env vars are set
+###
+if [ "$PROJECT_HOST_CATALOG_ID" = "" ]; then
+    fail-message "You did not set the PROJECT_HOST_CATALOG_ID env var."
+    exit 1
+fi
+
+if [ "$WORKER_HOST_ID" = "" ]; then
+    fail-message "You did not set the WORKER_HOST_ID env var."
+    exit 1
+fi
+
+if [ "$SSH_HOST_SET_ID" = "" ]; then
+    fail-message "You did not set the SSH_HOST_SET_ID env var."
+    exit 1
+fi
+
+if [ "$SSH_TARGET_ID" = "" ]; then
+    fail-message "You did not set the SSH_TARGET_ID env var."
+    exit 1
+fi
+
+###
+# Check the expected env vars were added to the ~/.bashrc file
+###
+if ! grep -q 'PROJECT_HOST_CATALOG_ID' ~/.bashrc; then
+    fail-message "You did not add the PROJECT_HOST_CATALOG_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'WORKER_HOST_ID' ~/.bashrc; then
+    fail-message "You did not add the WORKER_HOST_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'SSH_HOST_SET_ID' ~/.bashrc; then
+    fail-message "You did not add the SSH_HOST_SET_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'SSH_TARGET_ID' ~/.bashrc; then
+    fail-message "You did not add the SSH_TARGET_ID env var to your ~/.bashrc file."
+	exit 1
+fi
 
 exit 0

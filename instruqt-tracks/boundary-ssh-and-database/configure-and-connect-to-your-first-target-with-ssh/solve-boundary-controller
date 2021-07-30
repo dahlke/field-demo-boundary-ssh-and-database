@@ -1,6 +1,8 @@
 #!/bin/bash -l
 
-# TODO: should I use this same host catalog for the Postgres stuff?
+###
+# Create the Project Host Catalog, store the ID in the environment
+###
 export PROJECT_HOST_CATALOG_ID=$(boundary host-catalogs create static \
 	-scope-id $PROJECT_SCOPE_ID \
 	-name "HashiCups Web App" \
@@ -10,6 +12,9 @@ export PROJECT_HOST_CATALOG_ID=$(boundary host-catalogs create static \
 echo "Host Catalog ID:" $PROJECT_HOST_CATALOG_ID
 echo "export PROJECT_HOST_CATALOG_ID=$PROJECT_HOST_CATALOG_ID" >> ~/.bashrc
 
+###
+# Create the Worker Host, store the ID in the environment
+###
 export WORKER_HOST_ID=$(boundary hosts create static \
 	-name  worker-host \
 	-address "boundary-worker" \
@@ -19,6 +24,9 @@ export WORKER_HOST_ID=$(boundary hosts create static \
 echo "Worker Host ID:" $WORKER_HOST_ID
 echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
 
+###
+# Create the SSH Host Set, store the ID in the environment
+###
 export SSH_HOST_SET_ID=$(boundary host-sets create static \
 	-name "test-ssh-host-set" \
 	-description "Test machine host set" \
@@ -32,6 +40,9 @@ boundary host-sets add-hosts \
 	-id $SSH_HOST_SET_ID \
 	-host=$WORKER_HOST_ID
 
+###
+# Create the SSH Target, store the ID in the environment
+###
 export SSH_TARGET_ID=$(boundary targets create tcp \
 	-name "ssh-test-targets" \
 	-description "Test SSH target" \

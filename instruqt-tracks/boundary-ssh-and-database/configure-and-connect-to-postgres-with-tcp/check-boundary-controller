@@ -30,6 +30,40 @@ if [ "$POSTGRES_TARGET_NAME" != "postgres-test-targets" ]; then
 	exit 1
 fi
 
-# TODO: check that they are in the bashrc
+###
+# Check the expected env vars are set
+###
+if [ "$POSTGRES_HOST_ID" = "" ]; then
+    fail-message "You did not set the POSTGRES_HOST_ID env var."
+    exit 1
+fi
+
+if [ "$POSTGRES_HOST_SET_ID" = "" ]; then
+    fail-message "You did not set the POSTGRES_HOST_SET_ID env var."
+    exit 1
+fi
+
+if [ "$POSTGRES_TARGET_ID" = "" ]; then
+    fail-message "You did not set the POSTGRES_TARGET_ID env var."
+    exit 1
+fi
+
+###
+# Check the expected env vars were added to the ~/.bashrc file
+###
+if ! grep -q 'POSTGRES_HOST_ID' ~/.bashrc; then
+    fail-message "You did not add the POSTGRES_HOST_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'POSTGRES_HOST_SET_ID' ~/.bashrc; then
+    fail-message "You did not add the POSTGRES_HOST_SET_ID env var to your ~/.bashrc file."
+	exit 1
+fi
+
+if ! grep -q 'POSTGRES_TARGET_ID' ~/.bashrc; then
+    fail-message "You did not add the POSTGRES_TARGET_ID env var to your ~/.bashrc file."
+	exit 1
+fi
 
 exit 0
