@@ -1,7 +1,21 @@
 #!/bin/bash -l
 
-# Enable bash history
-HISTFILE=/root/.bash_history
-set -o history
+# Create a session
+boundary connect ssh -target-id $SSH_TARGET_ID &
+
+ # TODO: why do I have to do this twice.
+boundary connect ssh -target-id $SSH_TARGET_ID &
+
+# Get the session ID
+export SESSION_ID=$(boundary sessions list \
+	-scope-id $PROJECT_SCOPE_ID \
+	-format json | jq -r '.items[0].id')
+
+echo "Session ID:" $SESSION_ID
+echo "export SESSION_ID=$SESSION_ID" >> ~/.bashrc
+
+# Cancel the session
+boundary sessions cancel \
+	-id $SESSION_ID
 
 exit 0

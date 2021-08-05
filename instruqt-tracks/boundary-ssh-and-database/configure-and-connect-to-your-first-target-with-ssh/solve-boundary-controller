@@ -13,7 +13,7 @@ echo "Host Catalog ID:" $PROJECT_HOST_CATALOG_ID
 echo "export PROJECT_HOST_CATALOG_ID=$PROJECT_HOST_CATALOG_ID" >> ~/.bashrc
 
 ###
-# Create the Worker Host, store the ID in the environment
+# Create the worker Host, store the ID in the environment
 ###
 export WORKER_HOST_ID=$(boundary hosts create static \
 	-name  worker-host \

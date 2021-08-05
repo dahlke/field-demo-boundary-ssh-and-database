@@ -1,7 +1,5 @@
 #!/bin/bash -l
 
-# Enable bash history
-HISTFILE=/root/.bash_history
-set -o history
+# TODO
 
 exit 0

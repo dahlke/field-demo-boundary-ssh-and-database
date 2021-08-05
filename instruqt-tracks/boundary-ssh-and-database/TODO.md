@@ -8,74 +8,16 @@
 - Packer images
 - Standardize all the arguments to each function call (using `=` or strings, and wrapping in quotes)
 - Boundary Credentials and Credential Stores
-- Integrate Vault (w/ LDAP?)
-- Capitalize Worker / Controller wherever necessary. Clean up the tab names?
 - Slides
-- HashiCups?
 - Fully cover the Domain Model
 - In the check scripts - check against the stored IDs in the bashrc file? Maybe not
-- https://learn.hashicorp.com/tutorials/boundary/manage-intro?in=boundary/basic-administration ???
 - Do I really need 2 admin users?
 - review script comments (make them maximally descriptive)
+- remove VS Code?
+- HashiCups covered in the
 
 - DBA_USER_ACCOUNT_ID should be DBA_ACCOUNT_ID, vice a versa
 
-# Challenge Scripts (initial review)
+# Description
 
-- Update comments in the all the scripts scripts
-
-- getting-started-with-boundary
-  - [x] setup
-  - [x] solve
-  - [x] check
-  - [-] cleanup
-- configure-auth-methods
-  - [-] setup
-  - [x] solve
-  - [x] check
-  - [-] cleanup
-- configure-your-first-roles
-  - [-] setup
-  - [x] solve
-  - [x] check
-  - [-] cleanup
-- configure-admin-accounts
-  - [-] setup
-  - [x] solve
-  - [x] check
-  - [-] cleanup
-- configure-admin-users
-  - [-] setup
-  - [x] solve
-  - [x] check
-  - [-] cleanup
-- configure-admin-roles
-  - [-] setup
-  - [x] solve
-  - [x] check
-  - [-] cleanup
-- configure-and-connect-to-your-first-target-with-ssh
-  - [-] setup
-  - [ ] solve
-  - [ ] check
-  - [-] cleanup
-- configure-dba-group-accounts-users-and-roles
-  - [-] setup
-  - [ ] solve
-  - [ ] check
-  - [-] cleanup
-- configure-and-connect-to-postgres-with-tcp
-  - [-] setup
-  - [ ] solve
-  - [ ] check
-  - [-] cleanup
-- manage-sessions
-  - [-] setup
-  - [ ] solve
-  - [ ] check
-  - [-] cleanup
-- explore-the-admin-ui
-  - [-] setup
-  - [ ] check
-  - [ ] solve
-  - [-] cleanup
+This track is meant for helping users to understand basic administration of a Boundary cluster, starting from scratch. It is meant to help users understand the domain model, the different resources, and how to get started with Boundary. The information here can be used as foundational Boundary knowledge.

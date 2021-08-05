@@ -11,7 +11,7 @@ apt-get update && apt-get install boundary
 boundary config autocomplete install
 
 #########
-# Set up Boundary Worker Config
+# Set up Boundary worker config
 #########
 cat <<-EOF > /root/boundary-worker.hcl
 listener "tcp" {
@@ -43,30 +43,31 @@ EOF
 #########
 # Install VS Code Server
 #########
-curl -fsSL https://code-server.dev/install.sh | sh
+# TODO: remove this if I really don't want to use it.
+# curl -fsSL https://code-server.dev/install.sh | sh
 
 # Create a unit file for VS Code server
-cat <<-EOF > /etc/systemd/system/code-server.service
-[Unit]
-Description=Code Server
-After=network.target
-StartLimitIntervalSec=0
-[Service]
-Type=simple
-Restart=always
-RestartSec=1
-User=root
-ExecStart=/usr/bin/code-server --host 0.0.0.0 --port 8443 --cert --auth none /root/
-[Install]
-WantedBy=multi-user.target
-EOF
+# cat <<-EOF > /etc/systemd/system/code-server.service
+# [Unit]
+# Description=Code Server
+# After=network.target
+# StartLimitIntervalSec=0
+# [Service]
+# Type=simple
+# Restart=always
+# RestartSec=1
+# User=root
+# ExecStart=/usr/bin/code-server --host 0.0.0.0 --port 8443 --cert --auth none /root/
+# [Install]
+# WantedBy=multi-user.target
+# EOF
 
 # Enable and start VS Code server
-systemctl enable code-server
-systemctl start code-server
+# systemctl enable code-server
+# systemctl start code-server
 
 #########
-# Install, Configure and Run Boundary
+# Install, configure and run Boundary
 #########
 sudo cat << EOF > /etc/systemd/system/boundary-worker.service
 [Unit]

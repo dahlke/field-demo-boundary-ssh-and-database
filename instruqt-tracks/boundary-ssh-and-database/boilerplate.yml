@@ -9,10 +9,10 @@
   assignment: |-
     # TODO
   tabs:
-  - title: Controller
+  - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
-  - title: Worker
+  - title: Boundary Worker
     type: terminal
     hostname: boundary-worker
   - title: Boundary UI

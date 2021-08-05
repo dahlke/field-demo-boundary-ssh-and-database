@@ -1,5 +1,11 @@
 # field-demo-boundary-ssh-and-database
 
+## Description
+
+This track is meant for helping users to understand basic administration of a Boundary cluster, starting from scratch. It is meant to help users understand the domain model, the different resources, and how to get started with Boundary. The information here can be used as foundational Boundary knowledge.
+
+## Resources Covered
+
 | Resource | Description |
 | --- | --- |
 | Scope | Abstract permission boundary modeled as a container. A scope can contain scopes forming a tree. |

@@ -1,3 +1,30 @@
 #!/bin/bash -l
 
+# TODO: figure out how to check specifically on the SESSION that was created in the solve
+echo "Sleeping for 5 seconds to give the session time to terminate..."
+sleep 5
+
+# Get the most recently used session
+export SESSION_ID=$(boundary sessions list \
+	-scope-id $PROJECT_SCOPE_ID \
+	-format json | jq -r '.items[0].id')
+
+SESSION_OUTPUT=$(boundary sessions read \
+	-id $SESSION_ID \
+	-format json)
+
+# Confirm it was canceled
+SESSION_REASON=$(echo $SESSION_OUTPUT | jq -r .item.termination_reason)
+if [ "$SESSION_REASON" != "canceled" ]; then
+    fail-message "The session has not been canceled."
+    exit 1
+fi
+
+# Confirm the termination
+SESSION_STATUS=$(echo $SESSION_OUTPUT | jq -r .item.status)
+if [ "$SESSION_STATUS" != "terminated" ]; then
+    fail-message "The session has not been terminated."
+    exit 1
+fi
+
 exit 0

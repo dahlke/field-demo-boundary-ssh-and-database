@@ -45,7 +45,7 @@ challenges:
     contents: |-
       Boundary has already been
       [installed](https://learn.hashicorp.com/tutorials/boundary/getting-started-install?in=boundary/getting-started)
-      for you. A Boundary Controller and a Boundary Worker are also already running.  If you are not familiar with
+      for you. A Boundary controller and a Boundary worker are also already running.  If you are not familiar with
       installing Boundary, the reference architecture, or concepts like scopes, auth methods, users, accounts, and
       more - check out the [Install and Configure Boundary Track](TODO).
   - type: text
@@ -181,7 +181,7 @@ challenges:
 
     You now have your two scopes ready to go and are ready to configure your initial users and roles.
   tabs:
-  - title: Controller
+  - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
   difficulty: advanced
@@ -283,7 +283,7 @@ challenges:
 
     Congratulations! You've created your first auth methods. Next, you'll need to create your first accounts.
   tabs:
-  - title: Controller
+  - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
   difficulty: advanced
@@ -525,7 +525,7 @@ challenges:
     You should now be able to list the auth methods for both the global and org scope, as well as see them in the
     Boundary UI. You're now ready to start configuring your admin users.
   tabs:
-  - title: Controller
+  - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
   - title: Boundary UI
@@ -644,7 +644,7 @@ challenges:
 
     You've created your first accounts. Next, you'll need to create your first users.
   tabs:
-  - title: Controller
+  - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
   - title: Boundary UI
@@ -795,7 +795,7 @@ challenges:
     You have now created your users, and attached them to their respective accounts. It's time to associate those with
     some baseline roles.
   tabs:
-  - title: Controller
+  - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
   - title: Boundary UI
@@ -1203,7 +1203,7 @@ challenges:
     you will learn to connect to your first target, before learning about defining different types of users, roles, and
     groups.
   tabs:
-  - title: Controller
+  - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
   - title: Boundary UI
@@ -1345,7 +1345,7 @@ challenges:
     ```
     boundary hosts create static \
       -name  worker-host \
-      -description "Boundary Worker host" \
+      -description "Boundary worker host" \
       -address "boundary-worker" \
       -host-catalog-id $PROJECT_HOST_CATALOG_ID
     ```
@@ -1355,7 +1355,7 @@ challenges:
     ```
     Host information:
       Created Time:        Mon, 12 Jul 2021 20:37:34 UTC
-      Description:         Boundary Worker host
+      Description:         Boundary worker host
       Host Catalog ID:     hcst_cMzXXWNylL
       ID:                  hst_mnmBqpd9ky
       Name:                worker-host
@@ -1554,15 +1554,15 @@ challenges:
 
     TODO: If you see an error, run the command again.
 
-    TODO: Show that you are connected to the Worker really, by switching to the `Worker` tab and check the IP or create a file or something.
+    TODO: Show that you are connected to the worker really, by switching to the `Worker` tab and check the IP or create a file or something.
 
     You have now successfully connected to your first target using via SSH using Boundary! Next, you'll learn
     how to use Boundary to connect to a Postgres instance using TCP.
   tabs:
-  - title: Controller
+  - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
-  - title: Worker
+  - title: Boundary Worker
     type: terminal
     hostname: boundary-worker
   - title: Boundary UI
@@ -1843,7 +1843,7 @@ challenges:
     Congratulations! You have successfully set up your DBA group, assigned some policies, and added an account and
     user. You're ready to verify the permissions as the DBA user, and connect to your Postgres database.
   tabs:
-  - title: Controller
+  - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
   - title: Boundary UI
@@ -2031,7 +2031,7 @@ challenges:
 
     TODO: throwing an SSL error
   tabs:
-  - title: Controller
+  - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
   - title: Boundary UI
@@ -2069,7 +2069,7 @@ challenges:
     ```
 
     Next, create you'll want to create a session in the `Controller [Terminal 1]` tab. Sessions are created whenever
-    a connection to a target is established, so you should establish an SSH connection to the Worker node.
+    a connection to a target is established, so you should establish an SSH connection to the worker node.
 
     ```
     boundary connect ssh -target-id $SSH_TARGET_ID
@@ -2077,9 +2077,9 @@ challenges:
 
     TODO: fails on the first connection again.
 
-    Once you have established your connection to the Worker node in the `Controller [Terminal 1]`, switch to the
+    Once you have established your connection to the worker node in the `Controller [Terminal 1]`, switch to the
     `Controller [Terminal 2]` tab and list the sessions again. You should now be able to see the session you created
-    when you connected to the Worker node.
+    when you connected to the worker node.
 
     ```
     boundary sessions list -scope-id $PROJECT_SCOPE_ID
@@ -2112,8 +2112,11 @@ challenges:
     export SESSION_ID=<SESSION_ID>
     ```
 
-    No need to add it to the `~/.bashrc` file this time since sessions are highly ephemeral and it will be gone by
-    the end of this track.
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+
+    ```
+    echo "export SESSION_ID=$SESSION_ID" >> ~/.bashrc
+    ```
 
     Note that the status of the sessions is `active`. You can inspect the session by looking it up with it's ID to
     get more detailed information on the session. Try that now.
@@ -2171,7 +2174,8 @@ challenges:
     <...truncated...>
     ```
 
-    Note the status is now `canceling`.
+    Note the status is now `canceling`. It will eventually turn to `terminated` with a `canceled` as the termination
+    reason.
 
     ## Advanced session establishment (TODO: separate challenge?)
 
@@ -2240,13 +2244,13 @@ challenges:
     Congratulations! You now know how to manage session in Boundary. The last step of this track encourages you to
     take the UI for a spin. It is encouraged that you do so, but not required.
   tabs:
-  - title: Controller [Terminal 1]
+  - title: Boundary Controller [Terminal 1]
     type: terminal
     hostname: boundary-controller
-  - title: Controller [Terminal 2]
+  - title: Boundary Controller [Terminal 2]
     type: terminal
     hostname: boundary-controller
-  - title: Worker
+  - title: Boundary Worker
     type: terminal
     hostname: boundary-worker
   - title: Boundary UI
@@ -2287,23 +2291,22 @@ challenges:
 
       Finally, the Manage Sessions tutorial demonstrated session management based on the target you defined for the QA_Tests project.
   assignment: |-
-    # Explore the Admin Console
-
     Boundary's Admin Console provides an easy way to manage resources. Now that you have learned how to use Boundary to
     securely access any dynamic infrastructure, you should take a tour of the console to understand all the components.
 
-    ## Exploring Roles, Principals and Grants in the Admin UI
+    ### Exploring Roles, Principals and Grants
 
-    Open the Boundary UI tab. You should see a login screen. Use the global admin user you created earlier. Select
-    the `global_auth_method` and use `admin` for the username and `password` for the password.
+    Open the Boundary UI tab. You should see a login screen, and by default you are dropped into the global scope. Use
+    the global admin user you created earlier. Select the `global_auth_method` and use "admin" for the username and
+    "password" for the password.
 
     TODO: update this for the script above, not dev mode.
 
     Once you have logged in, you will see the home screen containing all the top level resources in Boundary. Select
-    *Roles* in the left sidebar, then select the "Administration" role.
+    **Roles** in the left sidebar, then select the "Administration" role.
 
-    Notice that `admin` user is listed. *User*, *group*, and *project* are a type of principal which can be assigned to
-    roles.
+    Notice that `admin` user you created earlier is listed, as well as the `u_anon` user you attached anonymous listing
+    roles to earlier.
 
     Click on the *Grants* tab to view the permissions allowed on this role.  Grants represent strings of actions on
     resources: `id=<resource_id>; action=<actions>`
@@ -2328,17 +2331,10 @@ challenges:
     Now that you have taken a tour of the admin UI and understand the generated resources, you are ready to connect
     to your first target via Boundary.
   tabs:
-  - title: Controller
-    type: terminal
-    hostname: boundary-controller
   - title: Boundary UI
     type: service
     hostname: boundary-controller
     port: 9200
-  - title: VS Code
-    type: service
-    hostname: boundary-controller
-    port: 8443
   difficulty: advanced
   timelimit: 600
-checksum: "4916763994698307783"
+checksum: "18297247125658126954"
