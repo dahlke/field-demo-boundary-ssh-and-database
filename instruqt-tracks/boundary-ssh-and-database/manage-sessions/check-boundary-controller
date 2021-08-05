@@ -4,11 +4,13 @@
 echo "Sleeping for 5 seconds to give the session time to terminate..."
 sleep 5
 
-# Get the most recently used session
-export SESSION_ID=$(boundary sessions list \
-	-scope-id $PROJECT_SCOPE_ID \
-	-format json | jq -r '.items[0].id')
+# TODO: check for session ID in the bashrc
 
+echo "NEILNEILNEIL"
+echo $SESSION_ID
+echo "NEILNEILNEIL"
+
+# Get the session information using the SESSION_ID in the bashrc
 SESSION_OUTPUT=$(boundary sessions read \
 	-id $SESSION_ID \
 	-format json)

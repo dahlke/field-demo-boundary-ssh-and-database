@@ -17,7 +17,3 @@
 - HashiCups covered in the
 
 - DBA_USER_ACCOUNT_ID should be DBA_ACCOUNT_ID, vice a versa
-
-# Description
-
-This track is meant for helping users to understand basic administration of a Boundary cluster, starting from scratch. It is meant to help users understand the domain model, the different resources, and how to get started with Boundary. The information here can be used as foundational Boundary knowledge.
