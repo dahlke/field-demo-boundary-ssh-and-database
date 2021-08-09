@@ -1,16 +1,5 @@
 #!/bin/bash -l
 
-# https://www.boundaryproject.io/docs/getting-started#what-is-dev-mode
-
-
-#########
-# Install Boundary
-#########
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-apt-get update && apt-get install boundary
-boundary config autocomplete install
-
 #########
 # Install Postgres client
 #########
@@ -42,8 +31,8 @@ echo "export DBA_USERNAME=$DBA_USERNAME" >> ~/.bashrc
 echo "export DBA_PASSWORD=$DBA_PASSWORD" >> ~/.bashrc
 
 # TODO: this has to be run in the terminal
-eval "$(printf 'foobar\n' | gnome-keyring-daemon --unlock)"
-eval "$(printf 'foobar\n' | gnome-keyring-daemon --start)"
+# eval "$(printf 'foobar\n' | gnome-keyring-daemon --unlock)"
+# eval "$(printf 'foobar\n' | gnome-keyring-daemon --start)"
 
 #########
 # Set up Boundary Controller Config
@@ -51,7 +40,7 @@ eval "$(printf 'foobar\n' | gnome-keyring-daemon --start)"
 
 # TODO: use Vault for the keys eventually
 
-cat <<-EOF > /root/boundary-controller.hcl
+cat <<-EOF > /etc/boundary.d/controller.hcl
 listener "tcp" {
   purpose = "api"
   address = "0.0.0.0"
@@ -103,7 +92,7 @@ kms "aead" {
 disable_mlock = true
 EOF
 
-cat <<-EOF > /root/boundary-controller-recovery.hcl
+cat <<-EOF > /etc/boundary.d/recovery.hcl
 # Recovery KMS block: configures the recovery key for Boundary
 # Use a production KMS such as Vault or AWS KMS for production installs
 kms "aead" {
@@ -117,7 +106,7 @@ disable_mlock = true
 EOF
 
 #########
-# Install, Configure and Run Vault
+# Configure and Run Vault
 #########
 # TODO
 
@@ -130,45 +119,20 @@ export PGPASSWORD=postgres
 psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
 psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
 
-# INIT_OUTPUT=$(boundary database init -config=/root/boundary-controller.hcl -format json)
-INIT_OUTPUT=$(boundary database init -skip-initial-login-role-creation -config=/root/boundary-controller.hcl -format json)
+# INIT_OUTPUT=$(boundary database init -config=/etc/boundary.d/controller.hcl -format json)
+INIT_OUTPUT=$(boundary database init -skip-initial-login-role-creation -config=/etc/boundary.d/controller.hcl -format json)
 touch /root/init-output.txt
 echo $INIT_OUTPUT >> /root/init-output.txt
 
 #########
-# Install VS Code Server
-#########
-curl -fsSL https://code-server.dev/install.sh | sh
-
-# Create a unit file for VS Code server
-cat <<-EOF > /etc/systemd/system/code-server.service
-[Unit]
-Description=Code Server
-After=network.target
-StartLimitIntervalSec=0
-[Service]
-Type=simple
-Restart=always
-RestartSec=1
-User=root
-ExecStart=/usr/bin/code-server --host 0.0.0.0 --port 8443 --cert --auth none /root/
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Enable and start VS Code server
-systemctl enable code-server
-systemctl start code-server
-
-#########
-# Install, Configure and Run Boundary
+# Configure and Run Boundary
 #########
 sudo cat << EOF > /etc/systemd/system/boundary-controller.service
 [Unit]
 Description=Boundary Controller
 
 [Service]
-ExecStart=/usr/bin/boundary server -config /root/boundary-controller.hcl
+ExecStart=/usr/local/bin/boundary server -config /etc/boundary.d/controller.hcl
 User=root
 LimitMEMLOCK=infinity
 Capabilities=CAP_IPC_LOCK+ep
@@ -183,7 +147,5 @@ sudo systemctl daemon-reload
 sudo systemctl enable boundary-controller
 sudo systemctl start boundary-controller
 systemctl status boundary-controller
-
-# journalctl -u boundary-controller.service
 
 exit 0

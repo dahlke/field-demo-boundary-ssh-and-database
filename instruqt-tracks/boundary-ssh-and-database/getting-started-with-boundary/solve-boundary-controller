@@ -4,7 +4,7 @@
 # Create the Org Scope, store the ID in the environment
 ###
 export ORG_SCOPE_ID=$(boundary scopes create \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-name "HashiCups Engineering" \
 	-scope-id global \
 	-skip-admin-role-creation \
@@ -18,7 +18,7 @@ echo "export ORG_SCOPE_ID=$ORG_SCOPE_ID" >> ~/.bashrc
 # Create the Project Scope, store the ID in the environment
 ###
 export PROJECT_SCOPE_ID=$(boundary scopes create \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-name "HashiCups Web App" \
 	-scope-id $ORG_SCOPE_ID \
 	-skip-admin-role-creation \

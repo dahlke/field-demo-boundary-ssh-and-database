@@ -4,7 +4,7 @@
 # Check the DBA group exists
 ###
 DBA_GROUP_NAME=$(boundary groups list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
 	-format json | jq -r ".items[0].name")
 
@@ -17,7 +17,7 @@ fi
 # Check the PG Read Only Role exists
 ###
 PG_READ_ONLY_ROLE_NAME=$(boundary roles list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
 	-format json | jq -r ".items[2].name")
 
@@ -32,7 +32,7 @@ fi
 # Check the DBA account exists
 ###
 DBA_ACCOUNT_NAME=$(boundary accounts list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-auth-method-id $ORG_AUTH_METHOD_ID \
 	-format json | jq -r ".items[1].attributes.login_name")
 
@@ -43,7 +43,7 @@ fi
 
 # Check the DBA user exists
 DBA_USER_NAME=$(boundary users list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
 	-format json | jq -r ".items[1].name")
 

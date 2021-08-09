@@ -2,7 +2,7 @@
 
 # Check that the org scope admin role was created
 GLOBAL_ADMIN_ROLE_NAME=$(boundary roles list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id global \
 	-format json | jq -r ".items[1].name")
 
@@ -12,7 +12,7 @@ if [ "$GLOBAL_ADMIN_ROLE_NAME" != "global_admin" ]; then
 fi
 
 ORG_ADMIN_ROLE_NAME=$(boundary roles list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id global \
 	-format json | jq -r ".items[2].name")
 
@@ -23,7 +23,7 @@ fi
 
 # Check that the project scope admin role was created
 PROJECT_ADMIN_ROLE_NAME=$(boundary roles list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
 	-format json | jq -r ".items[1].name")
 

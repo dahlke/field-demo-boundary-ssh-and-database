@@ -2,7 +2,7 @@
 
 # Check that the global auth method exists
 GLOBAL_AUTH_METHOD_NAME=$(boundary auth-methods list \
-	-recovery-config /root/boundary-controller-recovery.hcl  \
+	-recovery-config /etc/boundary.d/recovery.hcl  \
 	-scope-id global \
 	-format json | jq -r ".items[0].name")
 
@@ -13,7 +13,7 @@ fi
 
 # Check that the project auth method exists
 ORG_AUTH_METHOD_NAME=$(boundary auth-methods list \
-	-recovery-config /root/boundary-controller-recovery.hcl  \
+	-recovery-config /etc/boundary.d/recovery.hcl  \
 	-scope-id $ORG_SCOPE_ID \
 	-format json | jq -r ".items[0].name")
 

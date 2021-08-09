@@ -2,7 +2,7 @@
 
 # Check that the admin account exists
 GLOBAL_ADMIN_USER_ACCOUNT_NAME=$(boundary accounts list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-auth-method-id $GLOBAL_AUTH_METHOD_ID \
 	-format json | jq -r ".items[0].attributes.login_name")
 
@@ -16,7 +16,7 @@ fi
 
 # Check that the admin account exists
 ORG_ADMIN_USER_ACCOUNT_NAME=$(boundary accounts list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-auth-method-id $ORG_AUTH_METHOD_ID \
 	-format json | jq -r ".items[0].attributes.login_name")
 

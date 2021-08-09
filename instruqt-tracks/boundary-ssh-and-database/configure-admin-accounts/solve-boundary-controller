@@ -4,7 +4,7 @@
 # Create an Account for Admin User in the global scope, store the ID in the environment
 ###
 export GLOBAL_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-auth-method-id $GLOBAL_AUTH_METHOD_ID \
 	-login-name $ADMIN_USERNAME \
 	-password $ADMIN_PASSWORD \
@@ -17,7 +17,7 @@ echo "export GLOBAL_ADMIN_USER_ACCOUNT_ID=$GLOBAL_ADMIN_USER_ACCOUNT_ID" >> ~/.b
 # Create an Account for Admin User in the org scope, store the ID in the environment
 ###
 export ORG_ADMIN_USER_ACCOUNT_ID=$(boundary accounts create password \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-auth-method-id $ORG_AUTH_METHOD_ID \
 	-login-name $ADMIN_USERNAME \
 	-password $ADMIN_PASSWORD \

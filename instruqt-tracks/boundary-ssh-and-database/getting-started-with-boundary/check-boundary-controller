@@ -4,7 +4,7 @@
 # Check that the HashiCups org scope exists
 ###
 ORG_SCOPE_NAME=$(boundary scopes list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id global \
 	-format json | jq -r ".items[0].name")
 
@@ -17,7 +17,7 @@ fi
 # Check that the HashiCups App project scope exists
 ###
 PROJECT_SCOPE_NAME=$(boundary scopes list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
 	-format json | jq -r ".items[0].name")
 

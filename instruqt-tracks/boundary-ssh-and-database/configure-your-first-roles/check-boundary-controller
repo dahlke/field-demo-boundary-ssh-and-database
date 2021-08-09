@@ -2,7 +2,7 @@
 
 # Check that the global scope anon listing role was created
 GLOBAL_ANON_LISTING_NAME=$(boundary roles list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id global \
 	-format json | jq -r ".items[0].name")
 
@@ -13,7 +13,7 @@ fi
 
 # Check that the org scope anon listing role was created
 ORG_ANON_LISTING_NAME=$(boundary roles list \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
 	-format json | jq -r ".items[0].name")
 

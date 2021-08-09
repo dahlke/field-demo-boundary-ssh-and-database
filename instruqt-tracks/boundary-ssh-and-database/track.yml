@@ -83,7 +83,7 @@ challenges:
     This allows you to use a key specifid to "recover" Boundary, but you can also use it to authenticate to Boundary
     and manage it as a "global" super user. This allows you to authenticate from the CLI or from Terraform in order to
     manage Boundary without any generated resources. The recovery block you will use is located at
-    `/root/boundary-controller-recovery.hcl`.
+    `/etc/boundary.d/recovery.hcl`.
 
     TODO: explain reference architecture
 
@@ -100,7 +100,7 @@ challenges:
 
     ```
     boundary scopes create -name "HashiCups Engineering" \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -scope-id global \
       -skip-admin-role-creation \
       -skip-default-role-creation
@@ -141,7 +141,7 @@ challenges:
 
     ```
     boundary scopes create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -name "HashiCups Web App" \
       -scope-id $ORG_SCOPE_ID \
       -skip-admin-role-creation \
@@ -211,7 +211,7 @@ challenges:
 
     ```
     boundary auth-methods create password \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -scope-id global \
       -name "global_auth_method" \
       -description "Password auth method for global scope."
@@ -248,7 +248,7 @@ challenges:
 
     ```
     boundary auth-methods create password \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -scope-id $ORG_SCOPE_ID \
       -name "hashicups_eng_auth_method" \
       -description "Password auth method for HashiCups Engineering org scope."
@@ -397,7 +397,7 @@ challenges:
 
     ```
     boundary roles add-grants \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $GLOBAL_ANON_LISTING_ID \
       -grant "id=*;type=auth-method;actions=list,authenticate" \
       -grant "id=*;type=scope;actions=list,no-op" \
@@ -408,7 +408,7 @@ challenges:
 
     ```
     boundary roles add-principals \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $GLOBAL_ANON_LISTING_ID \
       -principal "u_anon"
     ```
@@ -445,7 +445,7 @@ challenges:
 
     ```
     boundary roles create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -name "org_anon_listing" \
       -scope-id $ORG_SCOPE_ID
     ```
@@ -480,14 +480,14 @@ challenges:
 
     ```
     boundary roles add-grants \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $ORG_ANON_LISTING_ID \
       -grant "id=*;type=auth-method;actions=list,authenticate" \
       -grant "type=scope;actions=list" \
       -grant "id={{account.id}};actions=read,change-password"
 
     boundary roles add-principals \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $ORG_ANON_LISTING_ID \
       -principal "u_anon"
     ```
@@ -561,7 +561,7 @@ challenges:
 
     ```
     boundary accounts create password \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -auth-method-id $GLOBAL_AUTH_METHOD_ID \
       -login-name $ADMIN_USERNAME \
       -password $ADMIN_PASSWORD
@@ -604,7 +604,7 @@ challenges:
 
     ```
     boundary accounts create password \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -auth-method-id $ORG_AUTH_METHOD_ID \
       -login-name $ADMIN_USERNAME \
       -password $ADMIN_PASSWORD
@@ -678,7 +678,7 @@ challenges:
 
     ```
     boundary users create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -scope-id global \
       -name $ADMIN_USERNAME \
       -description "Admin user for global scope."
@@ -714,7 +714,7 @@ challenges:
 
     ```
     boundary users add-accounts \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $GLOBAL_ADMIN_USER_ID \
       -account $GLOBAL_ADMIN_USER_ACCOUNT_ID
     ```
@@ -737,7 +737,7 @@ challenges:
 
     ```
     boundary users create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -scope-id $ORG_SCOPE_ID \
       -name $ADMIN_USERNAME \
       -description "Admin user for HashiCups Engineering org scope."
@@ -773,7 +773,7 @@ challenges:
 
     ```
     boundary users add-accounts \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $ORG_ADMIN_USER_ID \
       -account $ORG_ADMIN_USER_ACCOUNT_ID
     ```
@@ -834,7 +834,7 @@ challenges:
 
     ```
     boundary roles create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -scope-id global \
       -name "global_admin"
     ```
@@ -874,7 +874,7 @@ challenges:
 
     ```
     boundary roles create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -name "org_admin" \
       -scope-id $ORG_SCOPE_ID
     ```
@@ -914,7 +914,7 @@ challenges:
 
     ```
     boundary roles create \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -name "project_admin" \
       -scope-id $PROJECT_SCOPE_ID
     ```
@@ -959,7 +959,7 @@ challenges:
 
     ```
     boundary roles add-grants \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $GLOBAL_ADMIN_ROLE_ID \
       -grant "id=*;type=*;actions=*"
     ```
@@ -990,12 +990,12 @@ challenges:
 
     ```
     boundary roles add-grants \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $ORG_ADMIN_ROLE_ID \
       -grant "id=*;type=*;actions=*;output_fields=*"
 
     boundary roles add-grants \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $PROJECT_ADMIN_ROLE_ID \
       -grant "id=*;type=*;actions=*;output_fields=*"
     ```
@@ -1043,17 +1043,17 @@ challenges:
 
     ```
     boundary roles add-principals \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $GLOBAL_ADMIN_ROLE_ID \
       -principal $GLOBAL_ADMIN_USER_ID
 
     boundary roles add-principals \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $ORG_ADMIN_ROLE_ID \
       -principal $GLOBAL_ADMIN_USER_ID
 
     boundary roles add-principals \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $PROJECT_ADMIN_ROLE_ID \
       -principal $GLOBAL_ADMIN_USER_ID
     ```
@@ -1113,12 +1113,12 @@ challenges:
 
     ```
     boundary roles add-principals \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $ORG_ADMIN_ROLE_ID \
       -principal $ORG_ADMIN_USER_ID
 
     boundary roles add-principals \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $PROJECT_ADMIN_ROLE_ID \
       -principal $ORG_ADMIN_USER_ID
     ```
@@ -1766,7 +1766,7 @@ challenges:
 
     ```
     boundary users set-accounts \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $DBA_USER_ID \
       -account=$DBA_USER_ACCOUNT_ID
     ```
@@ -1795,7 +1795,7 @@ challenges:
 
     ```
     boundary groups add-members \
-      -recovery-config /root/boundary-controller-recovery.hcl \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $DBA_GROUP_ID \
       -member=$DBA_USER_ID
     ```
@@ -2294,6 +2294,8 @@ challenges:
     Boundary's Admin Console provides an easy way to manage resources. Now that you have learned how to use Boundary to
     securely access any dynamic infrastructure, you should take a tour of the console to understand all the components.
 
+    TODO: have them add one user or somethign that I can check in a solve script.
+
     ### Exploring Roles, Principals and Grants
 
     Open the Boundary UI tab. You should see a login screen, and by default you are dropped into the global scope. Use
@@ -2337,4 +2339,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 600
-checksum: "5467929764785433057"
+checksum: "8023436545703505440"

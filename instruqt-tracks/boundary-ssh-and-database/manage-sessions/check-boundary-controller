@@ -4,13 +4,7 @@
 echo "Sleeping for 5 seconds to give the session time to terminate..."
 sleep 5
 
-# TODO: check for session ID in the bashrc
-
-echo "NEILNEILNEIL"
-echo $SESSION_ID
-echo "NEILNEILNEIL"
-
-# Get the session information using the SESSION_ID in the bashrc
+# Get the session information using the SESSION_ID in the bashrc file
 SESSION_OUTPUT=$(boundary sessions read \
 	-id $SESSION_ID \
 	-format json)

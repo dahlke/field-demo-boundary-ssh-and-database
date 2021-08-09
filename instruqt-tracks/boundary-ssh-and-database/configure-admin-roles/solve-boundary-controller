@@ -4,7 +4,7 @@
 # Create the Global Admin Role, store the ID in the environment
 ###
 export GLOBAL_ADMIN_ROLE_ID=$(boundary roles create \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-name "global_admin" \
 	-scope-id global \
 	-format json | jq -r .item.id)
@@ -16,7 +16,7 @@ echo "export GLOBAL_ADMIN_ROLE_ID=$GLOBAL_ADMIN_ROLE_ID" >> ~/.bashrc
 # Create the Org Admin Role, store the ID in the environment
 ###
 export ORG_ADMIN_ROLE_ID=$(boundary roles create \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-name "org_admin" \
 	-scope-id global \
 	-grant-scope-id $ORG_SCOPE_ID \
@@ -29,7 +29,7 @@ echo "export ORG_ADMIN_ROLE_ID=$ORG_ADMIN_ROLE_ID" >> ~/.bashrc
 # Create the Project Admin Role, store the ID in the environment
 ###
 export PROJECT_ADMIN_ROLE_ID=$(boundary roles create \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-name "project_admin" \
 	-scope-id $ORG_SCOPE_ID \
 	-grant-scope-id $PROJECT_SCOPE_ID \
@@ -42,17 +42,17 @@ echo "export PROJECT_ADMIN_ROLE_ID=$PROJECT_ADMIN_ROLE_ID" >> ~/.bashrc
 # Attach admin grants to each role, store the ID in the environment
 ###
 boundary roles add-grants \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $GLOBAL_ADMIN_ROLE_ID \
 	-grant "id=*;type=*;actions=*"
 
 boundary roles add-grants \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $ORG_ADMIN_ROLE_ID \
 	-grant "id=*;type=*;actions=*"
 
 boundary roles add-grants \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $PROJECT_ADMIN_ROLE_ID \
 	-grant "id=*;type=*;actions=*"
 
@@ -60,17 +60,17 @@ boundary roles add-grants \
 # Attach all scope admin grants to the global admin user
 ###
 boundary roles add-principals \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $GLOBAL_ADMIN_ROLE_ID \
 	-principal $GLOBAL_ADMIN_USER_ID
 
 boundary roles add-principals \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $ORG_ADMIN_ROLE_ID \
 	-principal $GLOBAL_ADMIN_USER_ID
 
 boundary roles add-principals \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $PROJECT_ADMIN_ROLE_ID \
 	-principal $GLOBAL_ADMIN_USER_ID
 
@@ -78,12 +78,12 @@ boundary roles add-principals \
 # Attach org and project scope admin grants to the org admin user
 ###
 boundary roles add-principals \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $ORG_ADMIN_ROLE_ID \
 	-principal $ORG_ADMIN_USER_ID
 
 boundary roles add-principals \
-	-recovery-config /root/boundary-controller-recovery.hcl \
+	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $PROJECT_ADMIN_ROLE_ID \
 	-principal $ORG_ADMIN_USER_ID
 
