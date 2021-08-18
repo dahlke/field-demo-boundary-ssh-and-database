@@ -1552,8 +1552,6 @@ challenges:
     Be sure to respond `yes` when asked if you are sure you want to continue connecting. You will then be dropped
     into the shell for the `boundary-worker`, connecting your SSH session via Boundary.
 
-    TODO: If you see an error, run the command again.
-
     TODO: Show that you are connected to the worker really, by switching to the `Worker` tab and check the IP or create a file or something.
 
     You have now successfully connected to your first target using via SSH using Boundary! Next, you'll learn
