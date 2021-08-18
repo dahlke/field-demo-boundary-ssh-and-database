@@ -40,6 +40,7 @@ echo "export DBA_PASSWORD=$DBA_PASSWORD" >> ~/.bashrc
 
 # TODO: use Vault for the keys eventually
 
+
 cat <<-EOF > /etc/boundary.d/controller.hcl
 listener "tcp" {
   purpose = "api"
@@ -125,23 +126,8 @@ touch /root/init-output.txt
 echo $INIT_OUTPUT >> /root/init-output.txt
 
 #########
-# Configure and Run Boundary
+# Run Boundary
 #########
-sudo cat << EOF > /etc/systemd/system/boundary-controller.service
-[Unit]
-Description=Boundary Controller
-
-[Service]
-ExecStart=/usr/local/bin/boundary server -config /etc/boundary.d/controller.hcl
-User=root
-LimitMEMLOCK=infinity
-Capabilities=CAP_IPC_LOCK+ep
-CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
 sudo chmod 664 /etc/systemd/system/boundary-controller.service
 sudo systemctl daemon-reload
 sudo systemctl enable boundary-controller

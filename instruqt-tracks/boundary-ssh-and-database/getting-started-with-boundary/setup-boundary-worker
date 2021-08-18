@@ -31,23 +31,8 @@ disable_mlock = true
 EOF
 
 #########
-# Configure and run Boundary
+# Run Boundary
 #########
-sudo cat << EOF > /etc/systemd/system/boundary-worker.service
-[Unit]
-Description=Boundary Worker
-
-[Service]
-ExecStart=/usr/local/bin/boundary server -config /etc/boundary.d/worker.hcl
-User=root
-LimitMEMLOCK=infinity
-Capabilities=CAP_IPC_LOCK+ep
-CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
 sudo chmod 664 /etc/systemd/system/boundary-worker.service
 sudo systemctl daemon-reload
 sudo systemctl enable boundary-worker
