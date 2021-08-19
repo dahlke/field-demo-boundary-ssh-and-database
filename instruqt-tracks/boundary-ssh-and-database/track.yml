@@ -2073,8 +2073,6 @@ challenges:
     boundary connect ssh -target-id $SSH_TARGET_ID
     ```
 
-    TODO: fails on the first connection again.
-
     Once you have established your connection to the worker node in the `Controller [Terminal 1]`, switch to the
     `Controller [Terminal 2]` tab and list the sessions again. You should now be able to see the session you created
     when you connected to the worker node.
@@ -2337,4 +2335,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 600
-checksum: "8023436545703505440"
+checksum: "10680747288383980213"
