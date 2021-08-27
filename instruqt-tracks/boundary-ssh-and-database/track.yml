@@ -2287,21 +2287,10 @@ challenges:
     contents: "| Resource | Description |\n| --- | --- |\n| Scope\t| Abstract permission boundary modeled as a container. A scope can contain scopes forming a tree. |\n| Organization | Top-level container (scope) which owns zero to many projects and zero to many authentication methods. An organization inherits from scope allowing it to own zero to many groups, roles, policies, targets, host catalogs or credential stores. |\n| Project\t| Child scope of an organization. |\n| User | Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups. |\n| Group\t| Collection of users used for access control. A group is owned by one and only one scope. |\n| Role | Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants |\n| Host | Computing element with a network address reachable from Boundary. |\n| Host catalog | Permission boundary modeled as a container containing scopes forming a tree. |\n| Host set |Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted. |\n| Target | Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets. |"
   - type: text
     contents: '''TODO: Explain Controllers vs Workers and show/ reference architecture.'''
-  - type: text
-    contents: |-
-      TODO: clean this up
-      The Manage Scopes tutorial demonstrated the steps to create a new org (IT_Support) and a project (QA_Tests) under the org.
-
-      The Manage Targets tutorial demonstrated the creation of a host catalog, a host set, and hosts. Then, associated the host set to a target.
-
-      You also enabled a new authorization method (password) for the IT_Support org and created a new user in the Manage Users and Groups tutorial. The Manage Roles and Permissions tutorial showed you how to create a role and assign a grant which specifies a set of permissions.
-
-      Finally, the Manage Sessions tutorial demonstrated session management based on the target you defined for the QA_Tests project.
   assignment: |-
     Boundary's Admin Console provides an easy way to manage resources. Now that you have learned how to use Boundary to
-    securely access any dynamic infrastructure, you should take a tour of the console to understand all the components.
-
-    TODO: have them add one user or somethign that I can check in a solve script.
+    securely access any dynamic infrastructure, you should take a quick tour of the console to understand all the
+    components.
 
     ### Exploring Roles, Principals and Grants
 
@@ -2309,36 +2298,32 @@ challenges:
     the global admin user you created earlier. Select the `global_auth_method` and use "admin" for the username and
     "password" for the password.
 
-    TODO: update this for the script above, not dev mode.
-
     Once you have logged in, you will see the home screen containing all the top level resources in Boundary. Select
-    **Roles** in the left sidebar, then select the "Administration" role.
+    **Roles** in the left sidebar. You'll notice the `global_anon_listing`, `global_admin` and `org_admin` roles you
+    created earlier in this track.
 
-    Notice that `admin` user you created earlier is listed, as well as the `u_anon` user you attached anonymous listing
-    roles to earlier.
+    Click on the `global_anon_listing` role, then select the **Grants** tab. You should be able to see the grants that
+    you attached to this role earlier in this track.
 
-    Click on the *Grants* tab to view the permissions allowed on this role.  Grants represent strings of actions on
-    resources: `id=<resource_id>; action=<actions>`
+    Select "Roles" from the sidebar again, then select the `global_admin` user. Switch to the "Principals" tab and you
+    will be able to see the "admin" user you created earlier in this track.
 
-    The grant for Administration role indicates that all actions (`actions=*`) on all resources (`id=*;type=*`) are
-    permitted. Refer to the [documentation](https://www.boundaryproject.io/docs/concepts/security/permissions#permission-grant-formats)
-    for more details.
+    Next, select **Orgs** from the sidebar. You will see see the "HashiCups Engineering" org scope created earlier.
+    Click into the "HashiCups Engineering" org, and you will see the "HashiCups Web App" project scope. Click into
+    the "HashiCups Web App" project scope.
 
-    Return to the *Roles* list and select *Login and Default Grants* role.  Click *Grants* to view its permissions.
-
-    A role can have multiple grants defined. Those grants are deleted when the role is deleted. A grant is also deleted
-    if its associated resource is deleted.
-
-    Select *Projects* and then *Generated project scope*. Notice that you can see *Sessions*, *Targets* and
-    *Host Catalogs*.
-
-    Select *Host Catalogs -> Generated host catalog -> Host Sets -> Generated host set* to view the details of the
-    *Host Set*. You can then select the *Hosts* tab to view attached hosts.
+    You'll now see some different items in the sidebar. Select **Host Catalogs**, then select "HashiCups Web App." You
+    can click on "Hosts" and "Host Sets" to see the resources you created earlier.
 
     ---
 
-    Now that you have taken a tour of the admin UI and understand the generated resources, you are ready to connect
-    to your first target via Boundary.
+    TODO: have them add one user or somethign that I can check in a solve script.
+
+    There is a lot more to see in the Admin UI, feel free to take your time and explore the rest at your own leisure.
+
+    Congratulations! You've learned the basics of managing Boundary in production for SSH targets and Postgres targets.
+
+    TODO: visit these links for settting up Boundary / Boundary deep dive (policies, credential stores, etc.)
   tabs:
   - title: Boundary UI
     type: service
@@ -2346,4 +2331,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 600
-checksum: "11717550412821142608"
+checksum: "5001449943273679539"
