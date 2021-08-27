@@ -184,6 +184,13 @@ challenges:
   - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
+  - title: Boundary Worker
+    type: terminal
+    hostname: boundary-worker
+  - title: Boundary UI
+    type: service
+    hostname: boundary-controller
+    port: 9200
   difficulty: advanced
   timelimit: 600
 - slug: configure-auth-methods
@@ -2032,6 +2039,9 @@ challenges:
   - title: Boundary Controller
     type: terminal
     hostname: boundary-controller
+  - title: Boundary Worker
+    type: terminal
+    hostname: boundary-worker
   - title: Boundary UI
     type: service
     hostname: boundary-controller
@@ -2108,7 +2118,8 @@ challenges:
     export SESSION_ID=<SESSION_ID>
     ```
 
-    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
+    Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes. This is also required
+    to pass the check at the end of this challenge.
 
     ```
     echo "export SESSION_ID=$SESSION_ID" >> ~/.bashrc
@@ -2335,4 +2346,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 600
-checksum: "10680747288383980213"
+checksum: "11717550412821142608"

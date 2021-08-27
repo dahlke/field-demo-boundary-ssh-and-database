@@ -1,16 +1,30 @@
 #!/bin/bash -l
 
 # TODO: figure out how to check specifically on the SESSION that was created in the solve
+source ~/.bashrc
+
 echo "Sleeping for 5 seconds to give the session time to terminate..."
 sleep 5
+
+echo "SESSION ID"
+echo $SESSION_ID
+echo "SESSION ID"
 
 # Get the session information using the SESSION_ID in the bashrc file
 SESSION_OUTPUT=$(boundary sessions read \
 	-id $SESSION_ID \
 	-format json)
 
+echo "SESSION OUTPUT"
+echo $SESSION_REASON
+echo "SESSION OUTPUT"
+
 # Confirm it was canceled
 SESSION_REASON=$(echo $SESSION_OUTPUT | jq -r .item.termination_reason)
+echo "SESSION REASON"
+echo $SESSION_REASON
+echo "SESSION REASON"
+
 if [ "$SESSION_REASON" != "canceled" ]; then
     fail-message "The session has not been canceled."
     exit 1

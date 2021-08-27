@@ -3,18 +3,18 @@
 #########
 # Install Postgres client
 #########
+apt-get update
 apt-get install -y postgresql-client
 
 #########
 # Install Gnome Keyring and dbus-x11 as Boundary requires
 #########
 # TODO: do I even want to use this?
-apt-get install -y gnome-keyring dbus-x11
-apt-get install -y pass
-
-export DISPLAY=:0
-echo "export DISPLAY=:0" >> ~/.bashrc
-export $(dbus-launch)
+# apt-get install -y gnome-keyring dbus-x11
+# apt-get install -y pass
+# export DISPLAY=:0
+# echo "export DISPLAY=:0" >> ~/.bashrc
+# export $(dbus-launch)
 
 #########
 # Put the username / password env vars in the bashrc for solve scripts
@@ -39,7 +39,6 @@ echo "export DBA_PASSWORD=$DBA_PASSWORD" >> ~/.bashrc
 #########
 
 # TODO: use Vault for the keys eventually
-
 
 cat <<-EOF > /etc/boundary.d/controller.hcl
 listener "tcp" {
@@ -119,6 +118,10 @@ sleep 3
 export PGPASSWORD=postgres
 psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE boundary";
 psql -U postgres -h localhost -p 5432 -c "CREATE USER boundary WITH PASSWORD 'boundary' SUPERUSER;"
+
+echo "NEIL NEIL NEIL"
+cat /etc/boundary.d/controller.hcl
+echo "NEIL NEIL NEIL"
 
 # INIT_OUTPUT=$(boundary database init -config=/etc/boundary.d/controller.hcl -format json)
 INIT_OUTPUT=$(boundary database init -skip-initial-login-role-creation -config=/etc/boundary.d/controller.hcl -format json)

@@ -1,6 +1,21 @@
 #!/bin/bash -l
 
 #########
+# Install Postgres client
+#########
+apt-get update
+apt-get install -y postgresql-client
+
+#########
+# Start a Postgres Instance and Initialize the Database
+#########
+docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+sleep 3
+export PGPASSWORD=postgres
+psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE demo";
+psql -U postgres -h localhost -p 5432 -c "CREATE USER demo WITH PASSWORD 'demo' SUPERUSER;"
+
+#########
 # Set up Boundary worker config
 #########
 cat <<-EOF > /etc/boundary.d/worker.hcl

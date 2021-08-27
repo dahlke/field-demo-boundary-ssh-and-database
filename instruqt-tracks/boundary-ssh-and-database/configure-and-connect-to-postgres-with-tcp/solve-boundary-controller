@@ -4,9 +4,9 @@
 # Create the Postgres Host, store the ID in the environment
 ###
 export POSTGRES_HOST_ID=$(boundary hosts create static \
-	-name  postgres-host \
+	-name postgres-host \
 	-description "Postgres host" \
-	-address "localhost" \
+	-address "boundary-worker" \
 	-host-catalog-id $PROJECT_HOST_CATALOG_ID \
 	-format json | jq -r .item.id)
 
@@ -47,6 +47,7 @@ boundary targets add-host-sets \
 	-id $POSTGRES_TARGET_ID \
 	-host-set $POSTGRES_HOST_SET_ID
 
-# TODO: boundary connect postgres -target-id $POSTGRES_TARGET_ID -dbname postgres -username postgres -- -l
+# TODO: boundary connect postgres -target-id $POSTGRES_TARGET_ID -dbname postgres
+ -username postgres -- -l
 
 exit 0
