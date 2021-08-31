@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-# Check that the org scope admin role was created
+# Check that the global scope admin role was created
 GLOBAL_ADMIN_ROLE_NAME=$(boundary roles list \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id global \
@@ -11,10 +11,11 @@ if [ "$GLOBAL_ADMIN_ROLE_NAME" != "global_admin" ]; then
     exit 1
 fi
 
+# Check that the org scope admin role was created
 ORG_ADMIN_ROLE_NAME=$(boundary roles list \
 	-recovery-config /etc/boundary.d/recovery.hcl \
-	-scope-id global \
-	-format json | jq -r ".items[2].name")
+	-scope-id $ORG_SCOPE_ID \
+	-format json | jq -r ".items[1].name")
 
 if [ "$ORG_ADMIN_ROLE_NAME" != "org_admin" ]; then
     fail-message "You did not create the org_admin role."
@@ -24,11 +25,11 @@ fi
 # Check that the project scope admin role was created
 PROJECT_ADMIN_ROLE_NAME=$(boundary roles list \
 	-recovery-config /etc/boundary.d/recovery.hcl \
-	-scope-id $ORG_SCOPE_ID \
-	-format json | jq -r ".items[1].name")
+	-scope-id $PROJECT_SCOPE_ID \
+	-format json | jq -r ".items[0].name")
 
 if [ "$PROJECT_ADMIN_ROLE_NAME" != "project_admin" ]; then
-    fail-message "You did not create the org_admin role."
+    fail-message "You did not create the project_admin role."
     exit 1
 fi
 
