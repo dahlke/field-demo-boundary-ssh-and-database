@@ -25,7 +25,7 @@ SSH_HOST_SET_NAME=$(boundary host-sets list \
 	-host-catalog-id $PROJECT_HOST_CATALOG_ID \
 	-format json | jq -r ".items[0].name")
 
-if [ "$SSH_HOST_SET_NAME" != "test-ssh-host-set" ]; then
+if [ "$SSH_HOST_SET_NAME" != "test-machines" ]; then
     fail-message "You did not create the SSH host set."
 	exit 1
 fi

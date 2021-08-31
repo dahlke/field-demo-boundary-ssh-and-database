@@ -6,7 +6,7 @@
 export PROJECT_HOST_CATALOG_ID=$(boundary host-catalogs create static \
 	-scope-id $PROJECT_SCOPE_ID \
 	-name "HashiCups Web App" \
-	-description "For HashiCups App usage" \
+	-description "For HashiCups Web App usage" \
 	-format json | jq -r .item.id)
 
 echo "Host Catalog ID:" $PROJECT_HOST_CATALOG_ID
@@ -28,7 +28,7 @@ echo "export WORKER_HOST_ID=$WORKER_HOST_ID" >> ~/.bashrc
 # Create the SSH Host Set, store the ID in the environment
 ###
 export SSH_HOST_SET_ID=$(boundary host-sets create static \
-	-name "test-ssh-host-set" \
+	-name "test-machines" \
 	-description "Test machine host set" \
 	-host-catalog-id $PROJECT_HOST_CATALOG_ID \
 	-format json | jq -r .item.id)
