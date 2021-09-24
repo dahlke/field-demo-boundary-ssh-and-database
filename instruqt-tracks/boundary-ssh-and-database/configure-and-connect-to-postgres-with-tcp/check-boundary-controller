@@ -5,7 +5,7 @@ POSTGRES_HOST_NAME=$(boundary hosts list \
 	-host-catalog-id $PROJECT_HOST_CATALOG_ID \
 	-format json | jq -r ".items[-1].name")
 
-if [ "$POSTGRES_HOST_NAME" != "postgres-host" ]; then
+if [ "$POSTGRES_HOST_NAME" != "postgres" ]; then
     fail-message "You did not create the Postgres host."
 	exit 1
 fi

@@ -39,15 +39,15 @@ boundary roles add-grants \
 ###
 # Create the DBA Account, store the ID in the environment
 ###
-export DBA_USER_ACCOUNT_ID=$(boundary accounts create password \
+export DBA_ACCOUNT_ID=$(boundary accounts create password \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-login-name $DBA_USERNAME \
 	-password $DBA_PASSWORD \
 	-auth-method-id $ORG_AUTH_METHOD_ID \
 	-format json | jq -r .item.id)
 
-echo "DBA User Account ID:" $DBA_USER_ACCOUNT_ID
-echo "export DBA_USER_ACCOUNT_ID=$DBA_USER_ACCOUNT_ID" >> ~/.bashrc
+echo "DBA User Account ID:" $DBA_ACCOUNT_ID
+echo "export DBA_ACCOUNT_ID=$DBA_ACCOUNT_ID" >> ~/.bashrc
 
 ###
 # Create the DBA User, store the ID in the environment
@@ -66,12 +66,14 @@ echo "export DBA_USER_ID=$DBA_USER_ID" >> ~/.bashrc
 boundary users set-accounts \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $DBA_USER_ID \
-	-account=$DBA_USER_ACCOUNT_ID
+	-account=$DBA_ACCOUNT_ID
 
 # Then add the user to the DBA group
 boundary groups add-members \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $DBA_GROUP_ID \
 	-member=$DBA_USER_ID
+
+# TODO: Should solve script do the boundary authenticate password command so that this is part of the test?
 
 exit 0

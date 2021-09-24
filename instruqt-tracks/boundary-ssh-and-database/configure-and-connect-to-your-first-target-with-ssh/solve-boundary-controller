@@ -6,7 +6,7 @@
 export PROJECT_HOST_CATALOG_ID=$(boundary host-catalogs create static \
 	-scope-id $PROJECT_SCOPE_ID \
 	-name "HashiCups Web App" \
-	-description "For HashiCups App usage" \
+	-description "For HashiCups Web App usage" \
 	-format json | jq -r .item.id)
 
 echo "Host Catalog ID:" $PROJECT_HOST_CATALOG_ID

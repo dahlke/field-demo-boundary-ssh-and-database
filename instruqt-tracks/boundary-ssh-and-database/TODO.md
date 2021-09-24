@@ -15,5 +15,6 @@
 - review script comments (make them maximally descriptive)
 - remove VS Code?
 - HashiCups covered in the
-
-- DBA_USER_ACCOUNT_ID should be DBA_ACCOUNT_ID, vice a versa
+- Indicate which tab to run commands on
+- Use different usernames for global and org level admin users so it's more clear in the UI
+- In the SSH challenge check the hostname in the check script and in the track.

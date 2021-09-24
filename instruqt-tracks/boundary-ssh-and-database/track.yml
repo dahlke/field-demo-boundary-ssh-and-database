@@ -6,9 +6,9 @@ teaser: Learn how to take a blank canvas Boundary deployment and configure it fo
 description: |-
   In this track, you will take a blank canvas Boundary cluster, and learn how to get it ready for production. That
   includes configuring auth methods, accounts, users, groups, and roles. You will also learn how to manage targets,
-  access to those targets, and how to log in and connect to them. At the end, you will learn how to manage sessions
+  access those targets, and how to log in and connect to them. At the end, you will learn how to manage sessions
   with Boundary, and take a tour of the Boundary Admin UI.
-icon: https://storage.googleapis.com/instruqt-frontend/assets/hashicorp/tracks/boundary.png
+icon: https://storage.googleapis.com/instruqt-hashicorp-tracks/logo/boundary.png
 tags:
 - boundary
 owner: hashicorp
@@ -29,8 +29,8 @@ challenges:
     contents: |-
       Boundary is a tool for managing identity-based access for modern, dynamic infrastructure. Just as infrastructure
       itself can be complex, at first glance Boundary can seem complex as well. As a result, it's helpful to understand
-      how Boundary organizes security principals and resources, as well as how it allows you define granular
-      permissions to those principals.
+      how Boundary organizes security principals and resources, as well as how it allows you to define granular
+      permissions for those principals.
 
       In this track, you will learn how to manage all the different principals and resources in Boundary, as well as
       how to leverage those resources to connect to a host via SSH, as well as a Postgres instance via TCP.
@@ -38,8 +38,8 @@ challenges:
     contents: |-
       In this challenge, you will learn about the following Boundary resources.
 
-      - *Scope*: Abstract permission boundary modeled as a container. A scope can contain scopes forming a tree.
-      - *Organization*: Top-level container (scope) which owns zero to many projects and zero to many authentication methods. An organization inherits from scope allowing it to own zero to many groups, roles, policies, targets, host catalogs or credential stores.
+      - *Scope*: Abstract permission boundary modeled as a container. A scope can contain other scopes forming a tree.
+      - *Organization*: Top-level container (scope) which owns zero to many projects and zero to many authentication methods. An organization inherits from the global scope allowing it to own zero to many groups, roles, policies, targets, host catalogs or credential stores.
       - *Project*: Child scope of an organization.
   - type: text
     contents: |-
@@ -52,7 +52,7 @@ challenges:
     contents: |-
       The Boundary cluster was initialized *without generated resources*...
 
-      What are generated resources? When you run `boundary dev` or boundary `database init`, Boundary automatically
+      What are generated resources? When you run `boundary dev` or `boundary database init`, Boundary automatically
       generates a number of resources to make getting started easier. Default scopes, auth methods, user, account, and
       targets are just some of the resources Boundary will generate unless you tell it not to.
   - type: text
@@ -80,7 +80,7 @@ challenges:
     You're going to specify a role for managing these scopes by selected users in a later challenge.
 
     In this track you will make use of a the [Recovery KMS Workflow](https://www.boundaryproject.io/docs/installing/no-gen-resources#recovery-kms-workflow).
-    This allows you to use a key specifid to "recover" Boundary, but you can also use it to authenticate to Boundary
+    This allows you to use a key specified to "recover" Boundary, but you can also use it to authenticate to Boundary
     and manage it as a "global" super user. This allows you to authenticate from the CLI or from Terraform in order to
     manage Boundary without any generated resources. The recovery block you will use is located at
     `/etc/boundary.d/recovery.hcl`.
@@ -88,6 +88,8 @@ challenges:
     TODO: explain reference architecture
 
     ---
+
+    TODO: explain recovery kms workflow and take out the stuff later on it.
 
     # Setting Up Your Scopes
 
@@ -321,8 +323,8 @@ challenges:
       deleted: anonymous (`u_anon`), authenticate (`u_auth`), and recovery (`u_recovery`).
 
       In this challenge you will use `u_anon`, which represents users that are not authenticated with Boundary. This
-      is useful for providing permissions to users who are not logged in, and want to inspect certain endpoints in
-      Boundary to log in.
+      is useful for providing permissions to users who are not logged in and want to inspect certain endpoints in
+      Boundary that they could use to log in.
   - type: text
     contents: |-
       This is useful not only from the CLI, but the Boundary UI leverages the `u_anon` principal to display the scopes
@@ -338,7 +340,7 @@ challenges:
     to see the scopes or auth methods that you just created. This means the average user is completely left in the
     dark when trying to authenticate.
 
-    The first two roles you will created will allow anonymous (unauthenticated) users the ability to list scopes and
+    The first two roles you will create will allow anonymous (unauthenticated) users the ability to list scopes and
     their auth methods. Once you have created these two roles, you'll attach them to the `u_anon` principal, which
     will allow any user to discover how and where to log in.
 
@@ -348,7 +350,7 @@ challenges:
     ---
 
     First, open the Boundary UI tab. You should see a white screen. This is because currently, Boundary is configured
-    to not allow anonymous users the ability to see the scopes or the auth methods in boundary. To allow for users
+    to not allow anonymous users the ability to see the scopes or the auth methods in boundary. To allow users
     to see the auth methods in the `global` scope, you'll need to create an anonymous role in the `global` scope that
     can list the scopes, auth methods, and allow a user to see their account and update their password.
 
@@ -356,6 +358,7 @@ challenges:
 
     ```
     boundary roles create \
+      -recovery-config /etc/boundary.d/recovery.hcl \
       -scope-id global \
       -name global_anon_listing
     ```
@@ -799,8 +802,9 @@ challenges:
     <...truncated...>
     ```
 
-    You have now created your users, and attached them to their respective accounts. It's time to associate those with
-    some baseline roles.
+    You have now created your users, and attached them to their respective accounts. You can log in
+    as those users, but you can't do much until they have roles associated with them. It's time
+    to associate those with some baseline roles.
   tabs:
   - title: Boundary Controller
     type: terminal
@@ -1165,7 +1169,8 @@ challenges:
     <...truncated...>
     ```
 
-    And you're done configuring your admin users! You can now log in as the admin user.
+    And you're done configuring your admin users! You can now log in as the admin user and start
+    to peruse the UI as one of them.
 
     # TODO: explain the keyring type, do this in the next challenge?
 
@@ -1202,6 +1207,8 @@ challenges:
     ```
     echo "export BOUNDARY_TOKEN=$BOUNDARY_TOKEN" >> ~/.bashrc
     ```
+
+    TODO: explain boundary tokens
 
     You can also now log in through the Boundary UI using the admin username and password in either the global or org
     scopes. Feel free to take the UI for a spin before continuing.
@@ -1269,7 +1276,7 @@ challenges:
 
     Up until now, you've been leveraging the Recovery KMS Workflow to create the anonymous listing users, as well
     as the admin users. Since you now have admin users to leverage, you wil no longer need that workflow as long as
-    you are logged in as an admin user.
+    you are logged in as an admin user and have exported a Boundary token.
 
     ---
 
@@ -1285,7 +1292,7 @@ challenges:
     Scope information:
       ID:                    p_E5Hi8BQlJm
         Version:             1
-        Name:                HashiCups App
+        Name:                HashiCups Web App
         Authorized Actions:
           no-op
           read
@@ -1293,7 +1300,7 @@ challenges:
           delete
     ```
 
-    You should recognize the "HashiCups App" project scope you created in the previous challenge. Currently, there
+    You should recognize the "HashiCups Web App" project scope you created in the previous challenge. Currently, there
     are no targets in the scope. You can confirm that with the following command.
 
     ```
@@ -1309,7 +1316,7 @@ challenges:
     At the end of this challenge, you will have a target that you can connect to, but first, you must configure
     a few things.
 
-    The first thing you'll need to create is a *host catalog* named "HashiCups App" in the "HashiCups App" project
+    The first thing you'll need to create is a *host catalog* named "HashiCups Web App" in the "HashiCups Web App" project
     scope.
 
     ```
@@ -1331,7 +1338,7 @@ challenges:
       Updated Time:        Mon, 12 Jul 2021 16:48:28 UTC
       Version:             1
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Grab the host catalog ID from the output and store it in an environment variable for later usage.
@@ -1370,7 +1377,7 @@ challenges:
       Updated Time:        Mon, 12 Jul 2021 20:37:34 UTC
       Version:             1
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Grab the host ID from the output and store it in an environment variable for later usage.
@@ -1388,12 +1395,12 @@ challenges:
     A *host set* groups together hosts, which provide logically equivalent services. Targets work off of host sets,
     so even if there is only one hosts, you will still create a host set to contain one host.
 
-    Create a host set named "test-machines".
+    Create a host set named "test-ssh-host-set".
 
     ```
     boundary host-sets create static \
-      -name "test-machines" \
-      -description "Test machine host set" \
+      -name "test-ssh-host-set" \
+      -description "Test SSH host set" \
       -host-catalog-id $PROJECT_HOST_CATALOG_ID
     ```
 
@@ -1402,15 +1409,15 @@ challenges:
     ```
     Host Set information:
       Created Time:        Mon, 12 Jul 2021 21:19:47 UTC
-      Description:         Test machine host set
+      Description:         Test SSH host set
       Host Catalog ID:     hcst_nsnTh5hZsc
       ID:                  hsst_mr3TQkIVdd
-      Name:                test-machines
+      Name:                test-ssh-host-set
       Type:                static
       Updated Time:        Mon, 12 Jul 2021 21:19:47 UTC
       Version:             1
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Grab the host set ID from the output and store it in an environment variable for later usage.
@@ -1425,7 +1432,7 @@ challenges:
     echo "export SSH_HOST_SET_ID=$SSH_HOST_SET_ID" >> ~/.bashrc
     ```
 
-    Now you can add the hosts you created above to the host set.
+    Now you can add the host you created above to the host set.
 
     ```
     boundary host-sets add-hosts \
@@ -1441,12 +1448,12 @@ challenges:
       Description:         Test machine host set
       Host Catalog ID:     hcst_1ZjlMIfOyd
       ID:                  hsst_PKHzKx6sQu
-      Name:                test-machines
+      Name:                test-ssh-host-set
       Type:                static
       Updated Time:        Thu, 15 Jul 2021 19:59:46 UTC
       Version:             2
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     With the hosts added to the host set and the host catalog, it's time to define the target that you will ultimately
@@ -1476,7 +1483,7 @@ challenges:
       Updated Time:               Mon, 12 Jul 2021 20:46:41 UTC
       Version:                    1
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Grab the target ID from the output and store it in an environment variable for later usage.
@@ -1508,12 +1515,12 @@ challenges:
       Description:         Test machine host set
       Host Catalog ID:     hcst_cMzXXWNylL
       ID:                  hsst_pl5Yv1yf7Y
-      Name:                test-machines
+      Name:                test-ssh-host-set
       Type:                static
       Updated Time:        Mon, 12 Jul 2021 20:46:31 UTC
       Version:             2
 
-    <...truncated..>
+    <...truncated...>
 
     Host IDs:
       hst_mnmBqpd9ky
@@ -1540,7 +1547,7 @@ challenges:
       Updated Time:               Wed, 30 Jun 2021 00:37:51 UTC
       Version:                    1
 
-    <...truncated..>
+    <...truncated...>
 
       Host Sets:
         Host Catalog ID:          hcst_jLHX9jl2kL
@@ -1557,9 +1564,20 @@ challenges:
     ```
 
     Be sure to respond `yes` when asked if you are sure you want to continue connecting. You will then be dropped
-    into the shell for the `boundary-worker`, connecting your SSH session via Boundary.
+    into the shell for the `boundary-worker`, connecting your SSH session via Boundary. You can confirm that you are
+    connected to the `boundary-worker` by running `hostname`.
 
-    TODO: Show that you are connected to the worker really, by switching to the `Worker` tab and check the IP or create a file or something.
+    ```
+    hostname
+    ```
+
+    Example output:
+
+    ```
+    boundary-worker
+    ```
+
+    See the `boundary-worker` hostname returned.
 
     You have now successfully connected to your first target using via SSH using Boundary! Next, you'll learn
     how to use Boundary to connect to a Postgres instance using TCP.
@@ -1609,8 +1627,6 @@ challenges:
 
     In this challenge, you'll create a group, one account for a DBA and one user for a DBA, as an example.
 
-    TODO: for now this uses the recovery-config, but I should fix the admin user to use that.
-
     ---
 
     This time, you'll start out by creating a group for the "HashiCups Engineering DBAs" team, under the HashiCups
@@ -1634,7 +1650,7 @@ challenges:
       Updated Time:        Tue, 20 Jul 2021 00:08:58 UTC
       Version:             1
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Grab the DBA group ID from the output and store it in an environment variable for later usage.
@@ -1659,7 +1675,7 @@ challenges:
       -description "Role with read-only permission for Postgres."
     ```
 
-    Grab the DBA group ID from the output and store it in an environment variable for later usage.
+    Grab the DBA role ID from the output and store it in an environment variable for later usage.
 
     ```
     export PG_READ_ONLY_ROLE_ID=<PG_READ_ONLY_ROLE_ID>
@@ -1671,10 +1687,12 @@ challenges:
     echo "export PG_READ_ONLY_ROLE_ID=$PG_READ_ONLY_ROLE_ID" >> ~/.bashrc
     ```
 
+    TODO: review if this works, use the one from the solve script
+
     ```
     boundary roles add-principals \
-      -id $DBA_GROUP_ID \
-      -principal $PG_READ_ONLY_ROLE_ID
+      -id $PG_READ_ONLY_ROLE_ID \
+      -principal $DBA_GROUP_ID
     ```
 
     ```
@@ -1713,20 +1731,22 @@ challenges:
         Parent Scope ID:   global
         Type:              org
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Grab the DBA account ID from the output and store it in an environment variable for later usage.
 
     ```
-    export DBA_USER_ACCOUNT_ID=<DBA_USER_ACCOUNT_ID>
+    export DBA_ACCOUNT_ID=<DBA_ACCOUNT_ID>
     ```
 
     Then add it to the `~/.bashrc` file for usage in later challenges, or session refreshes.
 
     ```
-    echo "export DBA_USER_ACCOUNT_ID=$DBA_USER_ACCOUNT_ID" >> ~/.bashrc
+    echo "export DBA_ACCOUNT_ID=$DBA_ACCOUNT_ID" >> ~/.bashrc
     ```
+
+    Create the user.
 
     ```
     boundary users create \
@@ -1752,7 +1772,7 @@ challenges:
         Parent Scope ID:   global
         Type:              org
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Grab the DBA user ID from the output and store it in an environment variable for later usage.
@@ -1771,9 +1791,8 @@ challenges:
 
     ```
     boundary users set-accounts \
-      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $DBA_USER_ID \
-      -account=$DBA_USER_ACCOUNT_ID
+      -account=$DBA_ACCOUNT_ID
     ```
 
     Example output:
@@ -1793,14 +1812,13 @@ challenges:
         Parent Scope ID:   global
         Type:              org
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Add the user to the group.
 
     ```
     boundary groups add-members \
-      -recovery-config /etc/boundary.d/recovery.hcl \
       -id $DBA_GROUP_ID \
       -member=$DBA_USER_ID
     ```
@@ -1816,7 +1834,7 @@ challenges:
       Updated Time:        Mon, 19 Jul 2021 23:11:38 UTC
       Version:             2
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Finally, confirm that you can log in with the DBA user's credentials.
@@ -1895,7 +1913,7 @@ challenges:
       Updated Time:        Tue, 20 Jul 2021 22:54:57 UTC
       Version:             1
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Grab the Postgres host ID from the output and store it in an environment variable for later usage.
@@ -1909,6 +1927,8 @@ challenges:
     ```
     echo "export POSTGRES_HOST_ID=$POSTGRES_HOST_ID" >> ~/.bashrc
     ```
+
+    Create a new host set named "test-postgres-host-set".
 
     ```
     boundary host-sets create static \
@@ -1930,7 +1950,7 @@ challenges:
       Updated Time:        Wed, 21 Jul 2021 00:55:41 UTC
       Version:             1
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Grab the Postgres host set ID from the output and store it in an environment variable for later usage.
@@ -1944,6 +1964,8 @@ challenges:
     ```
     echo "export POSTGRES_HOST_SET_ID=$POSTGRES_HOST_SET_ID" >> ~/.bashrc
     ```
+
+    Add the Postgres host to the host set.
 
     ```
     boundary host-sets add-hosts \
@@ -1964,12 +1986,14 @@ challenges:
       Updated Time:        Wed, 21 Jul 2021 00:57:03 UTC
       Version:             2
 
-    <...truncated..>
+    <...truncated...>
     ```
+
+    Create a new target names "tests" for Postgres.
 
     ```
     boundary targets create tcp \
-      -name "tests" \
+      -name "postgres-test-targets" \
       -description "Test target" \
       -default-port 5432 \
       -scope-id $PROJECT_SCOPE_ID \
@@ -1983,14 +2007,14 @@ challenges:
       Created Time:               Wed, 21 Jul 2021 00:57:21 UTC
       Description:                Test target
       ID:                         ttcp_lUwoQUFcsi
-      Name:                       tests
+      Name:                       postgres-test-targets
       Session Connection Limit:   -1
       Session Max Seconds:        28800
       Type:                       tcp
       Updated Time:               Wed, 21 Jul 2021 00:57:21 UTC
       Version:                    1
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Grab the Postgres target ID from the output and store it in an environment variable for later usage.
@@ -2005,6 +2029,8 @@ challenges:
     echo "export POSTGRES_TARGET_ID=$POSTGRES_TARGET_ID" >> ~/.bashrc
     ```
 
+    Add the host set to the target.
+
     ```
     boundary targets add-host-sets \
       -id $POSTGRES_TARGET_ID \
@@ -2018,23 +2044,37 @@ challenges:
       Created Time:               Wed, 21 Jul 2021 00:57:21 UTC
       Description:                Test target
       ID:                         ttcp_lUwoQUFcsi
-      Name:                       tests
+      Name:                       postgres-test-targets
       Session Connection Limit:   -1
       Session Max Seconds:        28800
       Type:                       tcp
       Updated Time:               Wed, 21 Jul 2021 00:57:53 UTC
       Version:                    2
 
-    <...truncated..>
+    <...truncated...>
     ```
 
     Connect to it...
 
     ```
-    boundary connect postgres -target-id $POSTGRES_TARGET_ID
+    boundary connect postgres -target-id $POSTGRES_TARGET_ID -username=postgres
     ```
 
-    TODO: throwing an SSL error
+    and type the password, "postgres", when asked.
+
+    Example output:
+
+    ```
+    Password for user postgres:
+    psql (12.8 (Ubuntu 12.8-0ubuntu0.20.04.1), server 13.4 (Debian 13.4-1.pgdg100+1))
+    WARNING: psql major version 12, server major version 13.
+         Some psql features might not work.
+    Type "help" for help.
+
+    postgres=#
+    ```
+
+    Congratulations! You have successfully set up a new host, host set, and target for Postgres and connected to your Postgres database with Boundary.
   tabs:
   - title: Boundary Controller
     type: terminal
@@ -2052,7 +2092,7 @@ challenges:
   id: 6n8fgeuzipfy
   type: challenge
   title: Manage Sessions
-  teaser: Learn how you can manage Boundary sessions.
+  teaser: Learn to manage Boundary sessions.
   notes:
   - type: text
     contents: |-
@@ -2064,7 +2104,7 @@ challenges:
     TODO: log back in as the admin user.
 
     First, list your active sessions in the project scope. There should be none. Run the following in the
-    `Controller [Terminal 1]` tab.
+    `Boundary Controller [Terminal 1]` tab.
 
     ```
     boundary sessions list -scope-id $PROJECT_SCOPE_ID
@@ -2076,15 +2116,15 @@ challenges:
     No sessions found
     ```
 
-    Next, create you'll want to create a session in the `Controller [Terminal 1]` tab. Sessions are created whenever
+    Next, you'll want to create a session in the `Boundary Controller [Terminal 1]` tab. Sessions are created whenever
     a connection to a target is established, so you should establish an SSH connection to the worker node.
 
     ```
     boundary connect ssh -target-id $SSH_TARGET_ID
     ```
 
-    Once you have established your connection to the worker node in the `Controller [Terminal 1]`, switch to the
-    `Controller [Terminal 2]` tab and list the sessions again. You should now be able to see the session you created
+    Once you have established your connection to the worker node in the `Boundary Controller [Terminal 1]` tab, switch to the
+    `Boundary Controller [Terminal 2]` tab and list the sessions again. You should now be able to see the session you created
     when you connected to the worker node.
 
     ```
@@ -2125,7 +2165,7 @@ challenges:
     echo "export SESSION_ID=$SESSION_ID" >> ~/.bashrc
     ```
 
-    Note that the status of the sessions is `active`. You can inspect the session by looking it up with it's ID to
+    Note that the status of the session is `active`. You can inspect the session by looking it up with its ID to
     get more detailed information on the session. Try that now.
 
     ```
@@ -2274,11 +2314,12 @@ challenges:
   notes:
   - type: text
     contents: |-
+      TODO: review all these notes and make sure they make sense and the copy //www.boundaryproject.io/docs/installing/no-gen-resources#recovery-kms-workflow).
       Boundary enables simple and secure access to dynamic infrastructure by:
 
       - Identity-based access controls: Streamline just-in-time access to privileged sessions (e.g. TCP, SSH, RDP) for users and applications. Tightly control access permissions with extensible role-based access controls.
       - Access Automation: Define your perimeter of resources, identities, and access controls as code through Boundary's fully-instrumented Terraform Provider, REST API, CLI, and SDK. Automate the discovery of new resources and enforcement of existing policies as resources are provisioned.
-      - Session Visibility: Security administrators gain monitor and managed the privileged sessions established with Boundary. Export session logs to your analytics tool of choice.
+      - Session Visibility: Security administrators gain the ability to monitor and manage privileged sessions established with Boundary. Export session logs to your analytics tool of choice.
 
       In this track, you will learn how to use Boundary to dynamically access hosts via SSH, as well as remote Postgres database access.
   - type: text
@@ -2287,10 +2328,21 @@ challenges:
     contents: "| Resource | Description |\n| --- | --- |\n| Scope\t| Abstract permission boundary modeled as a container. A scope can contain scopes forming a tree. |\n| Organization | Top-level container (scope) which owns zero to many projects and zero to many authentication methods. An organization inherits from scope allowing it to own zero to many groups, roles, policies, targets, host catalogs or credential stores. |\n| Project\t| Child scope of an organization. |\n| User | Any entity authorized to access Boundary using authentication credentials specific to one of the configured authentication methods. A user can belong to zero or more groups. |\n| Group\t| Collection of users used for access control. A group is owned by one and only one scope. |\n| Role | Collection of capabilities granted to any principal (user, group, or project) the role is assigned to. A role belongs to one and only one scope, and owns zero or more direct grants |\n| Host | Computing element with a network address reachable from Boundary. |\n| Host catalog | Permission boundary modeled as a container containing scopes forming a tree. |\n| Host set |Subset of hosts from the set of hosts of the host catalog it belongs to. A host set belongs to one and only one host; therefore, it gets deleted when its host catalog is deleted. |\n| Target | Networked service a user can connect to and interact with through Boundary. A target can contain zero or more host sets. |"
   - type: text
     contents: '''TODO: Explain Controllers vs Workers and show/ reference architecture.'''
+  - type: text
+    contents: |-
+      TODO: clean this up
+      The Manage Scopes tutorial demonstrated the steps to create a new org (IT_Support) and a project (QA_Tests) under the org.
+
+      The Manage Targets tutorial demonstrated the creation of a host catalog, a host set, and hosts. Then, associated the host set to a target.
+
+      You also enabled a new authorization method (password) for the IT_Support org and created a new user in the Manage Users and Groups tutorial. The Manage Roles and Permissions tutorial showed you how to create a role and assign a grant which specifies a set of permissions.
+
+      Finally, the Manage Sessions tutorial demonstrated session management based on the target you defined for the QA_Tests project.
   assignment: |-
     Boundary's Admin Console provides an easy way to manage resources. Now that you have learned how to use Boundary to
-    securely access any dynamic infrastructure, you should take a quick tour of the console to understand all the
-    components.
+    securely access any dynamic infrastructure, you should take a tour of the console to understand all the components.
+
+    TODO: have them add one user or somethign that I can check in a solve script.
 
     ### Exploring Roles, Principals and Grants
 
@@ -2298,32 +2350,44 @@ challenges:
     the global admin user you created earlier. Select the `global_auth_method` and use "admin" for the username and
     "password" for the password.
 
+    TODO: update this for the script above, not dev mode.
+
     Once you have logged in, you will see the home screen containing all the top level resources in Boundary. Select
-    **Roles** in the left sidebar. You'll notice the `global_anon_listing`, `global_admin` and `org_admin` roles you
-    created earlier in this track.
+    **Roles** in the left sidebar, then select the "Administration" role.
 
-    Click on the `global_anon_listing` role, then select the **Grants** tab. You should be able to see the grants that
-    you attached to this role earlier in this track.
+    Notice that `admin` user you created earlier is listed, as well as the `u_anon` user you attached anonymous listing
+    roles to earlier.
 
-    Select "Roles" from the sidebar again, then select the `global_admin` user. Switch to the "Principals" tab and you
-    will be able to see the "admin" user you created earlier in this track.
+    Click on the *Grants* tab to view the permissions allowed on this role.  Grants represent strings of actions on
+    resources: `id=<resource_id>; action=<actions>`
 
-    Next, select **Orgs** from the sidebar. You will see see the "HashiCups Engineering" org scope created earlier.
-    Click into the "HashiCups Engineering" org, and you will see the "HashiCups Web App" project scope. Click into
-    the "HashiCups Web App" project scope.
+    TODO: the administration role doesn't exist, which one do I want?
 
-    You'll now see some different items in the sidebar. Select **Host Catalogs**, then select "HashiCups Web App." You
-    can click on "Hosts" and "Host Sets" to see the resources you created earlier.
+    The grant for Administration role indicates that all actions (`actions=*`) on all resources (`id=*;type=*`) are
+    permitted. Refer to the [documentation](https://www.boundaryproject.io/docs/concepts/security/permissions#permission-grant-formats)
+    for more details.
+
+    TODO: make sure this shows up in the role list
+
+    Return to the *Roles* list and select *Login and Default Grants* role.  Click *Grants* to view its permissions.
+
+    A role can have multiple grants defined. Those grants are deleted when the role is deleted. A grant is also deleted
+    if its associated resource is deleted.
+
+    TODO: I don't see u_anon user listed in principals of global_admin role.
+
+    TODO: update to use the real project scope
+
+    Select *Projects* and then *Generated project scope*. Notice that you can see *Sessions*, *Targets* and
+    *Host Catalogs*.
+
+    Select *Host Catalogs -> Generated host catalog -> Host Sets -> Generated host set* to view the details of the
+    *Host Set*. You can then select the *Hosts* tab to view attached hosts.
 
     ---
 
-    TODO: have them add one user or somethign that I can check in a solve script.
-
-    There is a lot more to see in the Admin UI, feel free to take your time and explore the rest at your own leisure.
-
-    Congratulations! You've learned the basics of managing Boundary in production for SSH targets and Postgres targets.
-
-    TODO: visit these links for settting up Boundary / Boundary deep dive (policies, credential stores, etc.)
+    Now that you have taken a tour of the admin UI and understand the generated resources, you are ready to connect
+    to your first target via Boundary.
   tabs:
   - title: Boundary UI
     type: service
@@ -2331,4 +2395,4 @@ challenges:
     port: 9200
   difficulty: advanced
   timelimit: 600
-checksum: "5001449943273679539"
+checksum: "6664131551485192067"

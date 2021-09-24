@@ -1,6 +1,8 @@
 #!/bin/bash -l
 
-# Check that the org scope admin role was created
+# TODO: double check this file works and is stable
+
+# Check that the global scope admin role was created in the global scope
 GLOBAL_ADMIN_ROLE_NAME=$(boundary roles list \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id global \
@@ -11,6 +13,7 @@ if [ "$GLOBAL_ADMIN_ROLE_NAME" != "global_admin" ]; then
     exit 1
 fi
 
+# Check that the org scope admin role was created in the global scope
 ORG_ADMIN_ROLE_NAME=$(boundary roles list \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id global \
@@ -21,17 +24,16 @@ if [ "$ORG_ADMIN_ROLE_NAME" != "org_admin" ]; then
     exit 1
 fi
 
-# Check that the project scope admin role was created
+# Check that the project scope admin role was created in the org scope
 PROJECT_ADMIN_ROLE_NAME=$(boundary roles list \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-scope-id $ORG_SCOPE_ID \
 	-format json | jq -r ".items[1].name")
 
 if [ "$PROJECT_ADMIN_ROLE_NAME" != "project_admin" ]; then
-    fail-message "You did not create the org_admin role."
+    fail-message "You did not create the project_admin role."
     exit 1
 fi
-
 
 # TODO: check that the roles are attached to the user?
 
