@@ -5,6 +5,7 @@ PROJECT_HOST_CATALOG_ID=$(boundary host-catalogs list \
 	-scope-id $PROJECT_SCOPE_ID \
 	-format json | jq -r ".items[0].id")
 
+# TODO: this will fail cause it is null at this stage
 if [ "$PROJECT_HOST_CATALOG_ID" = "" ]; then
     fail-message "You did not create the Host Catalog."
 	exit 1

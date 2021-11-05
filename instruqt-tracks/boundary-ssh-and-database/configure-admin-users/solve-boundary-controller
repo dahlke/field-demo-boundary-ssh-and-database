@@ -41,5 +41,4 @@ boundary users add-accounts \
 	-id $ORG_ADMIN_USER_ID \
 	-account $ORG_ADMIN_USER_ACCOUNT_ID
 
-
 exit 0

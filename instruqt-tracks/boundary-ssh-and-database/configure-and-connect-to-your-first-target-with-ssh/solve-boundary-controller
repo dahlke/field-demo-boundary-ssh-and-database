@@ -58,6 +58,8 @@ boundary targets add-host-sets \
 	-id $SSH_TARGET_ID \
 	-host-set $SSH_HOST_SET_ID
 
+# TODO: this is not working anymore
+
 # TODO: boundary connect ssh -target-id $SSH_TARGET_ID
 
 exit 0

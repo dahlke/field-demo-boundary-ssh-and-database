@@ -12,6 +12,9 @@ export GLOBAL_ANON_LISTING_ID=$(boundary roles create \
 echo "Global Anon Listing ID:" $GLOBAL_ANON_LISTING_ID
 echo "export GLOBAL_ANON_LISTING_ID=$GLOBAL_ANON_LISTING_ID" >> ~/.bashrc
 
+#####
+# Add the required grants to the global anon listing role
+#####
 boundary roles add-grants \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $GLOBAL_ANON_LISTING_ID \
@@ -19,6 +22,9 @@ boundary roles add-grants \
 	-grant "id=*;type=scope;actions=list,no-op" \
 	-grant "id={{account.id}};actions=read,change-password"
 
+#####
+# Add the global anon listing role to the principals
+#####
 boundary roles add-principals \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $GLOBAL_ANON_LISTING_ID \
@@ -36,6 +42,9 @@ export ORG_ANON_LISTING_ID=$(boundary roles create \
 echo "Org Anon Listing ID:" $ORG_ANON_LISTING_ID
 echo "export ORG_ANON_LISTING_ID=$ORG_ANON_LISTING_ID" >> ~/.bashrc
 
+#####
+# Add the required grants to the org anon listing role
+#####
 boundary roles add-grants \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $ORG_ANON_LISTING_ID \
@@ -43,6 +52,9 @@ boundary roles add-grants \
 	-grant "type=scope;actions=list" \
 	-grant "id={{account.id}};actions=read,change-password"
 
+#####
+# Add the org anon listing role to the principals
+#####
 boundary roles add-principals \
 	-recovery-config /etc/boundary.d/recovery.hcl \
 	-id $ORG_ANON_LISTING_ID \
